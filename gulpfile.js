@@ -102,4 +102,5 @@ gulp.task("test", function (done) {
 gulp.task("build", function(done) { gulp.series("copy", "html", "lint", "test")(); done(); });
 gulp.task("development", function(done) { gulp.series("watch", "copy", "html", "lint", "test", "server")(); done(); });
 gulp.task("production", function(done) { gulp.series("copy", "scripts", "html")(); done(); });
-gulp.task("default",  function(done) { gulp.series(config.env)(); done(); });
+gulp.task("default", function(done) { gulp.series("copy", "scripts", "html")(); done(); });
+// gulp.task("default",  function(done) { gulp.series(config.env)(); done(); });
