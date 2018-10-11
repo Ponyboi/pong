@@ -32,6 +32,7 @@ gulp.task("copy", function (done) {
 // Runs the r.js command
 gulp.task("scripts", function(done) { 
 		shell.task(config.requirejsCommand + " -o public/scripts/build.js");
+		done();
 });
 
 // HTML preprocessor
