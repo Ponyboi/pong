@@ -1,10 +1,7 @@
-language: ruby
+language: python
 cache:
 - bundler
 before_script:
-- bundle exec rake db:create
-- bundle exec rake db:migrate
-- bundle exec rake assets:precompile
 script:
 - gulp build
 deploy:
