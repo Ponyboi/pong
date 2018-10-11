@@ -1,10 +1,10 @@
 language: python
 cache:
-- bundler
+  directories:
+    - "node_modules"
 before_script:
 - npm install --save-dev gulpjs/gulp.git#4.0
-script:
-- gulp build
+script: gulp build
 deploy:
   provider: heroku
   api_key:
