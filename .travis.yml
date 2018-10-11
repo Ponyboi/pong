@@ -2,6 +2,7 @@ language: python
 cache:
 - bundler
 before_script:
+- npm install --save-dev gulpjs/gulp.git#4.0
 script:
 - gulp build
 deploy:
