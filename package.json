@@ -27,7 +27,8 @@
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
-    "gulp": "github:gulpjs/gulp#4.0"
+    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-concat": "^2.6.1"
   },
   "scripts": {
     "gulp": "./node_modules/gulp/bin/gulp.js",
