@@ -20,12 +20,12 @@ gulp.task("copy", function (done) {
 		gulp.src([pathManager.PUBLIC_ASSETS + "/**/*.*"]).pipe(gulp.dest(pathManager.PUBLIC_BUILD + "/assets"));
 		gulp.src([pathManager.PUBLIC_CSS + "/**/*.*"]).pipe(gulp.dest(pathManager.PUBLIC_BUILD + "/css"));
 
-		if (config.env != "production") {
+		// if (config.env != "production") {
 			gulp.src([pathManager.PUBLIC_LIB + "/**/*.*"]).pipe(gulp.dest(pathManager.PUBLIC_BUILD + "/lib"));
 			gulp.src([pathManager.PUBLIC_SCRIPTS + "/**/*.js"]).pipe(gulp.dest(pathManager.PUBLIC_BUILD + "/scripts"));
-		} else {
+		// } else {
 			gulp.src([pathManager.PUBLIC_LIB + "/requirejs/require.js"]).pipe(gulp.dest(pathManager.PUBLIC_BUILD + "/lib/requirejs"));
-		}
+		// }
 	done();
 });
 
