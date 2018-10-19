@@ -5,8 +5,6 @@ cache:
 before_script:
 - npm install -g gulpjs/gulp.git#4.0
 script: gulp
-after_script:
-- gulp
 deploy:
   provider: heroku
   api_key: 4bc44f10-4e28-491a-a317-40c1e26fb174
