@@ -1,11 +1,15 @@
-let players = 0;
+import SocketClient from './SocketClient';
 
-function handleNewPlayer() {
-  players = players + 1;
+// functions
+function handleNewPlayer(message) {
   const canvas = document.getElementById('canvas');
-  canvas.html(`currently ${players} players`)
+  canvas.innerText = `currently ${message.players} players`;
 };
 
+// events
+SocketClient.on('update', handleNewPlayer);
+
+// export object
 const gameManager = {
   handleNewPlayer
 };

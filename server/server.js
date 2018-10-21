@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import http from 'http';
 
-// import socketManager from './socketManager';
+import socketManager from './socketManager';
 const PORT = 666;
 
 // --- create web server

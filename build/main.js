@@ -9670,10 +9670,7 @@ module.exports = yeast;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _js_gameManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./js/gameManager */ "./public/js/gameManager.js");
-/* harmony import */ var _js_SocketClient__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./js/SocketClient */ "./public/js/SocketClient.js");
-
-
-console.log('hello world');
+ // entry for client
 
 /***/ }),
 
@@ -9681,7 +9678,7 @@ console.log('hello world');
 /*!***********************************!*\
   !*** ./public/js/SocketClient.js ***!
   \***********************************/
-/*! no exports provided */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9689,10 +9686,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/lib/index.js");
 /* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(socket_io_client__WEBPACK_IMPORTED_MODULE_0__);
 
-var client = socket_io_client__WEBPACK_IMPORTED_MODULE_0___default()('http://localhost:666');
-client.on('connect', function () {
-  console.log('connected');
-});
+var client = socket_io_client__WEBPACK_IMPORTED_MODULE_0___default()('http://localhost:666'); // this is not a good implementation, have to actually make this a proper class later
+
+/* harmony default export */ __webpack_exports__["default"] = (client);
 
 /***/ }),
 
@@ -9705,15 +9701,18 @@ client.on('connect', function () {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-var players = 0;
+/* harmony import */ var _SocketClient__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SocketClient */ "./public/js/SocketClient.js");
+ // functions
 
-function handleNewPlayer() {
-  players = players + 1;
+function handleNewPlayer(message) {
   var canvas = document.getElementById('canvas');
-  canvas.html("currently ".concat(players, " players"));
+  canvas.innerText = "currently ".concat(message.players, " players");
 }
 
-;
+; // events
+
+_SocketClient__WEBPACK_IMPORTED_MODULE_0__["default"].on('update', handleNewPlayer); // export object
+
 var gameManager = {
   handleNewPlayer: handleNewPlayer
 };

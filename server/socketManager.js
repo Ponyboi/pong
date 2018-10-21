@@ -9,19 +9,20 @@ let clients = [];
 function listen(server) {
   socketServer = socketIO(server);
 
-  io.on('connection', function (socket) {
-    socket.emit('news', { hello: 'world' });
-    socket.on('my other event', function (data) {
-      console.log(data);
-    });
+  socketServer.on('connection', function (socket) {
+    // add client
+    clients.push(socket);
+
+    // tell client how many other players there are
+    socket.emit('update', {players: clients.length});
   });
 
 };
 
 // export object
 const socketManager = {
-  get io() {
-    return io;
+  get socketServer() {
+    return socketServer;
   },
   get clients() {
     return clients;
