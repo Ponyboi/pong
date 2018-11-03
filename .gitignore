@@ -1,3 +1,6 @@
+# Pong
+build/
+
 # Logs
 logs
 *.log
@@ -71,7 +74,3 @@ typings/
 
 # Serverless directories
 .serverless
-
-# Pong
-
-/public/build
