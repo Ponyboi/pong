@@ -3,7 +3,7 @@ import SocketClient from 'components/SocketClient';
 // functions
 function handleNewPlayer(message) {
   const canvas = document.getElementById('canvas');
-  canvas.innerText = `currently ${message.players} players`;
+  // canvas.innerText = `currently ${message.players} players`;
 };
 
 // events
