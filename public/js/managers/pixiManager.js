@@ -1,6 +1,9 @@
 import * as PIXI from 'pixi.js';
 
+import TextComponent from 'components/TextComponent';
+
 import { GAME_SIZE } from 'constants/sizes';
+
 import { getCanvasContainer } from 'helpers/canvasHelper';
 
 /*
@@ -20,17 +23,12 @@ canvas.appendChild(app.view);
  */
 const setupApp = () => {
   // player count
-  const playerCountText = new PIXI.Text("123 connected player(s)", {
-    fontFamily: 'Roboto',
-    fontSize: 16,
-    fill: '#ffffff',
+  const playerCountText = new TextComponent('n connected player(s)', {
+    position: {
+      x: app.screen.width / 2,
+      y: 20,
+    },
   });
-
-  playerCountText.anchor.x = 0.5;
-  playerCountText.anchor.y = 0.5;
-
-  playerCountText.x = app.screen.width / 2;
-  playerCountText.y = 15;
 
   app.stage.addChild(playerCountText);
 
