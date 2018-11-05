@@ -1,6 +1,7 @@
 /**
  * sets component's anchor to given point, otherwise uses the center
  *
+ * @type {PIXI.Container} component
  * @type {PIXI.Point || PIXI.ObservablePoint} [point]
  */
 const setDefaultAnchor = (component, point = {}) => {
@@ -8,6 +9,7 @@ const setDefaultAnchor = (component, point = {}) => {
   component.anchor.y = point.y || 0.5;
 };
 /**
+ * @type {PIXI.Container} component
  * @type {PIXI.ObservablePoint} [point]
  */
 const setDefaultPosition = (component, point = {}) => {

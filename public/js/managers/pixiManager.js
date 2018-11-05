@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 
+import Player from 'components/Player';
 import TextComponent from 'components/TextComponent';
-import PaddleComponent from 'components/PaddleComponent';
 
 import { GAME_SIZE } from 'constants/sizes';
 import { PRIMARY_PLAYER_DEFAULT_POS, SECONDARY_PLAYER_DEFAULT_POS } from 'constants/positions';
@@ -38,15 +38,15 @@ const setupApp = () => {
   stage.addChild(playerCountText);
 
   // opposing player
-  const secondaryPaddle = new PaddleComponent({position: SECONDARY_PLAYER_DEFAULT_POS});
-  stage.addChild(secondaryPaddle);
+  const secondaryPlayer = new Player({position: SECONDARY_PLAYER_DEFAULT_POS});
+  stage.addChild(secondaryPlayer.view);
 
   // active player
-  const primaryPaddle = new PaddleComponent({position: PRIMARY_PLAYER_DEFAULT_POS});
-  stage.addChild(primaryPaddle);
+  const primaryPlayer = new Player({position: PRIMARY_PLAYER_DEFAULT_POS});
+  stage.addChild(primaryPlayer.view);
 };
 
-// create singleton
+// set up singleton
 const pixiManager = {
   app: app,
   setupApp: setupApp,
