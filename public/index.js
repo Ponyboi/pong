@@ -4,4 +4,4 @@ import pixiManager from 'managers/pixiManager';
 import './styles/main.css';
 
 // entry for client-side of the app
-pixiManager.renderApp();
+pixiManager.setupApp();

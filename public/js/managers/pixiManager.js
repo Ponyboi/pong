@@ -1,40 +1,46 @@
-import {
-  Application as PixiApplication,
-} from 'pixi.js';
+import * as PIXI from 'pixi.js';
 
-import {GAME_SIZE} from 'constants/sizes';
-import {getCanvasContainer} from 'helpers/canvasHelper';
+import { GAME_SIZE } from 'constants/sizes';
+import { getCanvasContainer } from 'helpers/canvasHelper';
 
 /*
   singleton for Pixi
     use this to do generic stuff
 */
 
-const app = new PixiApplication(GAME_SIZE);
+const app = new PIXI.Application(GAME_SIZE);
 app.renderer.backgroundColor = 0x080808;
 
+// render it onto document
+const canvas = getCanvasContainer();
+canvas.appendChild(app.view);
+
 /**
- * renders pixi's view onto the canvas
- * (currently also refreshes, but there might be an internal handler)
- *
+ * TODO this will easily get bloated, create a class to help with this or something
  */
-const renderApp = () => {
-  const canvas = getCanvasContainer();
+const setupApp = () => {
+  // player count
+  const playerCountText = new PIXI.Text("123 connected player(s)", {
+    fontFamily: 'Roboto',
+    fontSize: 16,
+    fill: '#ffffff',
+  });
 
-  // clear out old view
-  if (canvas.firstChild) {
-    canvas.firstChild.remove();
-  };
+  playerCountText.anchor.x = 0.5;
+  playerCountText.anchor.y = 0.5;
 
-  // add pixi's view to node
-  canvas.appendChild(app.view);
+  playerCountText.x = app.screen.width / 2;
+  playerCountText.y = 15;
+
+  app.stage.addChild(playerCountText);
+
+  // ...
 };
-
 
 // create singleton
 const pixiManager = {
   app: app,
-  renderApp: renderApp,
+  setupApp: setupApp,
 };
 
 export default pixiManager;
