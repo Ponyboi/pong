@@ -28,7 +28,9 @@ canvas.appendChild(app.view);
 const setupApp = () => {
   const stage = app.stage;
 
+  // draw the field and score
   drawField();
+  drawScores();
 
   // player count label - todo
   const playerCountText = new TextComponent('0 connected player(s)', {
@@ -47,13 +49,15 @@ const setupApp = () => {
   const primaryPlayer = new Player({position: PRIMARY_PLAYER_DEFAULT_POS});
   stage.addChild(primaryPlayer.view);
 };
-
+/**
+ * draw some graphics for the playing field
+ */
 const drawField = () => {
   const stage = app.stage;
   const fieldGraphics = new PIXI.Graphics();
 
   const { width, height } = DASH_SIZE;
-  const dashVerticalOffset = (PADDLE_SIZE.height / 2) + 10;
+  const dashVerticalOffset = (PADDLE_SIZE.height / 2) + 15;
   const dashCount = (GAME_SIZE.width / width) / 2;
 
   for (let i = 0; i < dashCount; i ++) {
@@ -72,6 +76,43 @@ const drawField = () => {
 
   fieldGraphics.endFill();
   stage.addChild(fieldGraphics);
+};
+/**
+ * draw the Scores
+ */
+const drawScores = () => {
+  const stage = app.stage;
+  const scoreStyles = {
+    fill: 0x6d6d6d,
+    fontSize: 36,
+    fontWeight: 'bold',
+  };
+
+  const fieldVerticalCenter = app.screen.height / 2;
+  const scoreOffset = {
+    x: 35,
+    y: 45,
+  };
+
+  // secondary player, score is above
+  const secondaryPlayerScore = new TextComponent('0', {
+    ...scoreStyles,
+    position: {
+      x: scoreOffset.x,
+      y: fieldVerticalCenter - scoreOffset.y,
+    },
+  });
+  stage.addChild(secondaryPlayerScore);
+
+  // active player, score is below
+  const primaryPlayerScore = new TextComponent('1', {
+    ...scoreStyles,
+    position: {
+      x: scoreOffset.x,
+      y: fieldVerticalCenter + scoreOffset.y,
+    },
+  });
+  stage.addChild(primaryPlayerScore);
 };
 
 // set up singleton
