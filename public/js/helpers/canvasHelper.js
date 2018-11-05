@@ -8,7 +8,7 @@
  * @returns {Element}
  */
 const getCanvasContainer = () => {
-  return document.getElementById('canvas');
+  return document.getElementById('pixi-canvas');
 };
 
 export {

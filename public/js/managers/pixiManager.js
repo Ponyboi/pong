@@ -11,8 +11,7 @@ import {getCanvasContainer} from 'helpers/canvasHelper';
 */
 
 const app = new PixiApplication(GAME_SIZE);
-app.renderer.backgroundColor = 0x1f1d1d;
-
+app.renderer.backgroundColor = 0x080808;
 
 /**
  * renders pixi's view onto the canvas
