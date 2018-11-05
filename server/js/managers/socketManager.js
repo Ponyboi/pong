@@ -1,22 +1,29 @@
 import socketIO from 'socket.io';
 
-// socket.io server
+/** @type {Socket.IO-server} */
 let socketServer;
 
-// client cache
-let clients = [];
+/** @type {Object} */
+let clients = {}; // map of clients based on their socket.id
 
 function listen(server) {
   socketServer = socketIO(server);
 
-  socketServer.on('connection', function (socket) {
+  // Client connected to us!
+  socketServer.on('connection', (socket) => {
+    const clientId = socket.id;
+
     // add client
-    clients.push(socket);
+    clients[clientId] = socket;
 
     // tell client how many other players there are
-    socket.emit('update', {players: clients.length});
-  });
+    socket.emit('update', {players: Object.keys(clients).length});
 
+    // event - client disconnected, remove them
+    socket.on('disconnect', () => {
+      clients[clientId] = null;
+    });
+  });
 };
 
 // export object
