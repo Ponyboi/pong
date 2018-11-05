@@ -32,15 +32,6 @@ const setupApp = () => {
   drawField();
   drawScores();
 
-  // player count label - todo
-  const playerCountText = new TextComponent('0 connected player(s)', {
-    position: {
-      x: app.screen.width / 2,
-      y: 13,
-    },
-  });
-  stage.addChild(playerCountText);
-
   // opposing player
   const secondaryPlayer = new Player({position: SECONDARY_PLAYER_DEFAULT_POS});
   stage.addChild(secondaryPlayer.view);

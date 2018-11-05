@@ -6,6 +6,7 @@ let socketServer;
 /** @type {Object} */
 let clients = {}; // map of clients based on their socket.id
 
+// listen in on that server
 function listen(server) {
   socketServer = socketIO(server);
 
@@ -16,15 +17,25 @@ function listen(server) {
     // add client
     clients[clientId] = socket;
 
-    // tell client how many other players there are
-    socket.emit('update', {players: Object.keys(clients).length});
+    // server tells everyone there's an update on player count
+    socketServer.emit('update', {
+      playerCount: getClientCount(),
+    });
 
-    // event - client disconnected, remove them
+    // event - client disconnected so remove them and then tell everyone else
     socket.on('disconnect', () => {
-      clients[clientId] = null;
+      delete clients[clientId];
+
+      socketServer.emit('update', {
+        playerCount: getClientCount(),
+      });
     });
   });
 };
+/**
+ * @returns {Number}
+ */
+const getClientCount = () => (Object.keys(clients).length);
 
 // export object
 const socketManager = {
@@ -35,6 +46,7 @@ const socketManager = {
     return clients;
   },
   listen: listen,
+  getClientCount: getClientCount,
 };
 
 export default socketManager;
