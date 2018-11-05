@@ -1,4 +1,4 @@
-import SocketClient from './SocketClient';
+import SocketClient from 'components/SocketClient';
 
 // functions
 function handleNewPlayer(message) {

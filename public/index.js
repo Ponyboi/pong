@@ -1,3 +1,3 @@
-import gameManager from './js/gameManager';
+import gameManager from 'managers/gameManager';
 
 // entry for client
