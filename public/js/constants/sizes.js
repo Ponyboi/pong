@@ -15,7 +15,13 @@ const PADDLE_SIZE = {
   height: 20,
 };
 
+const DASH_SIZE = {
+  width: 10,
+  height: 3,
+};
+
 export {
+  DASH_SIZE,
   GAME_SIZE,
   PADDLE_SIZE,
 }

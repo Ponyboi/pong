@@ -3,16 +3,16 @@ import * as PIXI from 'pixi.js';
 import Player from 'components/Player';
 import TextComponent from 'components/TextComponent';
 
-import { GAME_SIZE } from 'constants/sizes';
+import { DASH_SIZE, GAME_SIZE, PADDLE_SIZE } from 'constants/sizes';
 import { PRIMARY_PLAYER_DEFAULT_POS, SECONDARY_PLAYER_DEFAULT_POS } from 'constants/positions';
 
 import { getCanvasContainer } from 'helpers/canvasHelper';
 
 /*
-  singleton for Pixi
+  singleton for Pixi.js
     use this to do generic stuff
 */
-
+// set up Application
 const app = new PIXI.Application(GAME_SIZE);
 app.renderer.backgroundColor = 0x080808;
 
@@ -28,11 +28,13 @@ canvas.appendChild(app.view);
 const setupApp = () => {
   const stage = app.stage;
 
-  // player count label
-  const playerCountText = new TextComponent('n connected player(s)', {
+  drawField();
+
+  // player count label - todo
+  const playerCountText = new TextComponent('0 connected player(s)', {
     position: {
       x: app.screen.width / 2,
-      y: 20,
+      y: 13,
     },
   });
   stage.addChild(playerCountText);
@@ -44,6 +46,32 @@ const setupApp = () => {
   // active player
   const primaryPlayer = new Player({position: PRIMARY_PLAYER_DEFAULT_POS});
   stage.addChild(primaryPlayer.view);
+};
+
+const drawField = () => {
+  const stage = app.stage;
+  const fieldGraphics = new PIXI.Graphics();
+
+  const { width, height } = DASH_SIZE;
+  const dashVerticalOffset = (PADDLE_SIZE.height / 2) + 10;
+  const dashCount = (GAME_SIZE.width / width) / 2;
+
+  for (let i = 0; i < dashCount; i ++) {
+    const dashDistance = (width * 2) * i + (width / 2);
+    // upper line
+    fieldGraphics.beginFill(0x333333);
+    fieldGraphics.drawRect(dashDistance, SECONDARY_PLAYER_DEFAULT_POS.y - dashVerticalOffset, width, height);
+
+    // lower line
+    fieldGraphics.drawRect(dashDistance, PRIMARY_PLAYER_DEFAULT_POS.y + dashVerticalOffset, width, height);
+
+    // center line
+    fieldGraphics.beginFill(0x6d6d6d);
+    fieldGraphics.drawRect(dashDistance, app.screen.height / 2, width, height);
+  };
+
+  fieldGraphics.endFill();
+  stage.addChild(fieldGraphics);
 };
 
 // set up singleton
