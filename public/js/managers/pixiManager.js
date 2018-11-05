@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 
 import TextComponent from 'components/TextComponent';
+import PlayerComponent from 'components/PlayerComponent';
 
 import { GAME_SIZE } from 'constants/sizes';
 
@@ -19,7 +20,7 @@ const canvas = getCanvasContainer();
 canvas.appendChild(app.view);
 
 /**
- * TODO this will easily get bloated, create a class to help with this or something
+ * set up the components and elements that will show up on the screen
  */
 const setupApp = () => {
   // player count
@@ -33,6 +34,8 @@ const setupApp = () => {
   app.stage.addChild(playerCountText);
 
   // ...
+  const primaryPlayer = new PlayerComponent();
+  app.stage.addChild(primaryPlayer.component);
 };
 
 // create singleton

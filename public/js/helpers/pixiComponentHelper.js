@@ -1,4 +1,6 @@
 /**
+ * sets component's anchor to given point, otherwise uses the center
+ *
  * @type {PIXI.Point || PIXI.ObservablePoint} [point]
  */
 const setDefaultAnchor = (component, point = {}) => {
