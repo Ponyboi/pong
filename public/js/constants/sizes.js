@@ -12,7 +12,7 @@ const GAME_SIZE = {
 
 const PADDLE_SIZE = {
   width: 100,
-  height: 30,
+  height: 20,
 };
 
 export {
