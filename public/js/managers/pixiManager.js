@@ -28,7 +28,7 @@ canvas.appendChild(app.view);
 const setupApp = () => {
   const stage = app.stage;
 
-  // player count
+  // player count label
   const playerCountText = new TextComponent('n connected player(s)', {
     position: {
       x: app.screen.width / 2,

@@ -3,7 +3,9 @@ import {
 } from 'pixi.js';
 
 import { PADDLE_SIZE } from 'constants/sizes';
-
+/*
+  Player controller class
+*/
 class Player {
   /** @default */
   constructor(options = {}) {
@@ -11,21 +13,20 @@ class Player {
 
     /** @type {Point} */
     this.position = position || {x: 0, y: 0};
+
     /** @type {Object} */
     this.size = size || PADDLE_SIZE;
 
-    /** @type {} */
-    this.view = this.drawHitbox(this.position, this.size);
+    /** @type {PIXI.Graphic} */
+    this.view = this.render();
   };
   /**
    * draw the rectangle, temporary implementation
    *
-   * @param
-   * @param
-   * @returns
+   * @returns {PIXI.Graphic}
    */
-  drawHitbox(position = {}, size = {}) {
-    let graphics = this.graphics;
+  render() {
+    let graphics = this.view;
 
     // instantiate the PIXI.Graphics primitive if it doesn't exist
     if (!graphics) {
@@ -36,18 +37,18 @@ class Player {
       graphics.clear();
     };
 
-    // draw rectangle
-    const { x, y } = position;
-    const { width, height } = size;
+    // draw rectangle - make sure current position always exists
+    const { x, y } = this.position;
+    const { width, height } = this.size;
 
     // since graphics have no anchor, we're just going to adjust where the graphics are drawn to match it up
-    const adjustedPosition = {
+    const adjustedPos = {
       x: (x - width / 2),
       y: (y - height / 2),
     };
 
     graphics.beginFill(0xFFFFFF);
-    graphics.drawRect(adjustedPosition.x, adjustedPosition.y, width, height);
+    graphics.drawRect(adjustedPos.x, adjustedPos.y, width, height);
     graphics.endFill();
 
     return graphics;
