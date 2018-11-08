@@ -13,6 +13,7 @@ class Player {
 
     /** @type {Point} */
     this.position = position || {x: 0, y: 0};
+    this.input = {x: 0, y: 0};
 
     /** @type {Object} */
     this.size = size || PADDLE_SIZE;
