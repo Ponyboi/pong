@@ -7,6 +7,7 @@ import { GAME_SIZE } from 'constants/sizes';
 */
 
 const gameHorizontalCenter = GAME_SIZE.width / 2; // center of screen
+const gameVerticalCenter = GAME_SIZE.height / 2; // center of screen
 
 // for paddles
 const paddleEdgeDistance = 45; // how many pixels respectively from the edge of the screen?
@@ -23,7 +24,14 @@ const SECONDARY_PLAYER_DEFAULT_POS = {
   y: 0 + paddleEdgeDistance,
 };
 
+// ball
+const BALL_DEFAULT_POS = {
+  x: gameHorizontalCenter,
+  y: gameVerticalCenter,
+};
+
 export {
+  BALL_DEFAULT_POS,
   PRIMARY_PLAYER_DEFAULT_POS,
   SECONDARY_PLAYER_DEFAULT_POS,
 };

@@ -5,7 +5,7 @@ import Ball from 'components/Ball';
 import TextComponent from 'components/TextComponent';
 
 import { DASH_SIZE, GAME_SIZE, PADDLE_SIZE } from 'constants/sizes';
-import { PRIMARY_PLAYER_DEFAULT_POS, SECONDARY_PLAYER_DEFAULT_POS } from 'constants/positions';
+import { BALL_DEFAULT_POS, PRIMARY_PLAYER_DEFAULT_POS, SECONDARY_PLAYER_DEFAULT_POS } from 'constants/positions';
 
 import { getCanvasContainer } from 'helpers/canvasHelper';
 
@@ -28,7 +28,8 @@ const primaryPlayer = new Player({position: PRIMARY_PLAYER_DEFAULT_POS});
 // opposing player
 const secondaryPlayer = new Player({position: SECONDARY_PLAYER_DEFAULT_POS});
 // ball
-const ball = new Ball({position: {x: 100, y: 100}});
+// components
+const ball = new Ball({position: BALL_DEFAULT_POS});
 
 /**
  * set up the components and elements that will show up on the screen
