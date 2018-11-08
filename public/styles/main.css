@@ -1,0 +1,22 @@
+/* one day this will be better */
+
+body {
+  background-color: #080808ed;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#pixi-canvas canvas {
+  border: 5px solid #2d2d2d;
+  border-radius: 5px;
+}
+
+#app-header {
+  color: white;
+  font-size: 12px;
+  font-family: 'Roboto';
+  padding: 5px;
+}

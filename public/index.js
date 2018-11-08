@@ -1,3 +1,7 @@
-import gameManager from './js/gameManager';
+import gameManager from 'managers/gameManager';
+import pixiManager from 'managers/pixiManager';
 
-// entry for client
+import './styles/main.css';
+
+// entry for client-side of the app
+pixiManager.setupApp();
