@@ -20,12 +20,22 @@ app.renderer.backgroundColor = 0x080808;
 const canvas = getCanvasContainer();
 canvas.appendChild(app.view);
 
+var gameManager = null;
+// active player
+const primaryPlayer = new Player({position: PRIMARY_PLAYER_DEFAULT_POS});
+// opposing player
+const secondaryPlayer = new Player({position: SECONDARY_PLAYER_DEFAULT_POS});
+
 /**
  * set up the components and elements that will show up on the screen
  *
  * todo: this will potentially grow to be unmaintainable, figure out a better solution
  */
-const setupApp = () => {
+const setupApp = (gm) => {
+  gameManager = gm;
+  document.addEventListener('keydown', onKeyDown);
+  document.addEventListener('keyup', onKeyUp);
+
   const stage = app.stage;
 
   // draw the field and score
@@ -33,13 +43,23 @@ const setupApp = () => {
   drawScores();
 
   // opposing player
-  const secondaryPlayer = new Player({position: SECONDARY_PLAYER_DEFAULT_POS});
   stage.addChild(secondaryPlayer.view);
 
   // active player
-  const primaryPlayer = new Player({position: PRIMARY_PLAYER_DEFAULT_POS});
   stage.addChild(primaryPlayer.view);
+
+  appInitUpdate(gameManager);
 };
+
+const appInitUpdate = (gm) => {
+  gameManager = gm;
+  app.ticker.add(function(delta) {
+    primaryPlayer.position.x += primaryPlayer.input.x * delta;
+    primaryPlayer.view.position.x = primaryPlayer.position.x;
+    app.render();
+  });
+  setInterval(function() {console.log(primaryPlayer.position.x)}, 100);
+}
 /**
  * draw some graphics for the playing field
  */
@@ -105,6 +125,32 @@ const drawScores = () => {
   });
   stage.addChild(primaryPlayerScore);
 };
+const onKeyDown = (key) => {
+  // A Key is 65
+  // Left arrow is 37
+  if (key.keyCode === 65 || key.keyCode === 37) {
+      primaryPlayer.input.x = -1;
+  }
+
+  // D Key is 68
+  // Right arrow is 39
+  if (key.keyCode === 68 || key.keyCode === 39) {
+      primaryPlayer.input.x = 1;
+  }
+}
+const onKeyUp = (key) => {
+  // A Key is 65
+  // Left arrow is 37
+  if (key.keyCode === 65 || key.keyCode === 37) {
+      primaryPlayer.input.x = 0;
+  }
+
+  // D Key is 68
+  // Right arrow is 39
+  if (key.keyCode === 68 || key.keyCode === 39) {
+      primaryPlayer.input.x = 0;
+  }
+}
 
 // set up singleton
 const pixiManager = {
