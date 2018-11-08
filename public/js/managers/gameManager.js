@@ -1,20 +1,23 @@
-import SocketClient from 'components/SocketClient';
+/*
+  singleton of functions to handle the game
+*/
+const gameManager = {
+  handleNewPlayer: handleNewPlayer,
+};
 
-// functions
-function handleNewPlayer(message = {}) {
-  console.log('handleNewPlayer');
+/**
+ * adds a new player
+ *
+ * @param {Object} message - from server
+ */
+const handleNewPlayer = (message = {}) => {
   const { playerCount } = message;
 
   const canvas = document.getElementById('app-header');
   canvas.innerText = `${playerCount} connected player(s)`;
 };
 
-// events
-SocketClient.on('update', handleNewPlayer);
-
-// export object
-const gameManager = {
-  handleNewPlayer: handleNewPlayer,
-};
-
 export default gameManager;
+export {
+  handleNewPlayer,
+};

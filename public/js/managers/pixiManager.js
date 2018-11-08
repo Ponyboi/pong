@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 
 import Player from 'components/Player';
 import Ball from 'components/Ball';
+import SocketClient from 'components/SocketClient';
 import TextComponent from 'components/TextComponent';
 
 import { DASH_SIZE, GAME_SIZE, PADDLE_SIZE } from 'constants/sizes';
@@ -66,7 +67,8 @@ const appInitUpdate = (gm) => {
     primaryPlayer.position.x += primaryPlayer.input.x * delta;
     primaryPlayer.view.position.x = primaryPlayer.position.x;
 
-    setInterval(function() {console.log(primaryPlayer.position.x)}, 100);
+    secondaryPlayer.position.x += secondaryPlayer.input.x * delta;
+    secondaryPlayer.view.position.x = secondaryPlayer.position.x;
   });
 }
 /**
@@ -146,6 +148,9 @@ const onKeyDown = (key) => {
   if (key.keyCode === 68 || key.keyCode === 39) {
       primaryPlayer.input.x = 1;
   }
+
+  // tell server
+  SocketClient.emit('playerInput', primaryPlayer.input);
 }
 const onKeyUp = (key) => {
   // A Key is 65
@@ -159,7 +164,22 @@ const onKeyUp = (key) => {
   if (key.keyCode === 68 || key.keyCode === 39) {
       primaryPlayer.input.x = 0;
   }
+
+  // tell server
+  SocketClient.emit('playerInput', primaryPlayer.input);
 }
+/**
+ *
+ *
+ * @param {Object}
+ */
+const handleOtherPlayerInput = (input) => {
+  secondaryPlayer.input = input;
+};
+
+// received an event from the server indicating that another player made an input
+// note this is not an ideal design choice but servers as an example
+SocketClient.on('playerInput', handleOtherPlayerInput)
 
 // set up singleton
 const pixiManager = {

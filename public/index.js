@@ -1,3 +1,4 @@
+import eventManager from 'managers/eventManager';
 import gameManager from 'managers/gameManager';
 import pixiManager from 'managers/pixiManager';
 

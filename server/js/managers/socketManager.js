@@ -30,6 +30,11 @@ function listen(server) {
         playerCount: getClientCount(),
       });
     });
+
+    // event - client made an input so tell everyone else
+    socket.on('playerInput', (...data) => {
+      socket.broadcast.emit('playerInput', ...data);
+    });
   });
 };
 /**
