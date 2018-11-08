@@ -16,6 +16,7 @@ import { getCanvasContainer } from 'helpers/canvasHelper';
 // set up Application
 const app = new PIXI.Application(GAME_SIZE);
 app.renderer.backgroundColor = 0x080808;
+const globalTicker = new PIXI.ticker.Ticker();
 
 // render it onto document
 const canvas = getCanvasContainer();
@@ -160,6 +161,7 @@ const onKeyUp = (key) => {
 const pixiManager = {
   app: app,
   setupApp: setupApp,
+  globalTicker: globalTicker,
 };
 
 export default pixiManager;

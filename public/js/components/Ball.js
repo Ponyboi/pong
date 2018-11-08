@@ -1,7 +1,4 @@
-import {
-  DisplayObject as PIXI_DisplayObject,
-  // ticker,
-} from 'pixi.js';
+import { DisplayObject as PIXI_DisplayObject } from 'pixi.js';
 
 import { removeCustomProperties, setComponentProperties } from 'helpers/pixiComponentHelper';
 
@@ -12,12 +9,13 @@ class Ball extends PIXI_DisplayObject {
   constructor(options, ...args) {
     super(options, removeCustomProperties(options), ...args);
 
+    // default variables
     this.radius = BALL_RADIUS;
-
     this.view = this.getView();
-
     setComponentProperties(this.view, options);
-    // this.ticker = new ticker.Ticker().add(this.update.bind(this));
+
+    this.position = options.position || {x: 0, y: 0};
+    this.velocity = {x: 1, y: 1};
   };
 
   getView() {
@@ -31,9 +29,16 @@ class Ball extends PIXI_DisplayObject {
 
     return graphics;
   };
-
+  /**
+   * constant update
+   */
   update() {
-    this.view.position.x += 1;
+    // update our internal position
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
+
+    // set the view's position
+    this.view.position = this.position;
   }
 };
 
