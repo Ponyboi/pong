@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 
 import Player from 'components/Player';
+import Ball from 'components/Ball';
 import TextComponent from 'components/TextComponent';
 
 import { DASH_SIZE, GAME_SIZE, PADDLE_SIZE } from 'constants/sizes';
@@ -25,6 +26,8 @@ var gameManager = null;
 const primaryPlayer = new Player({position: PRIMARY_PLAYER_DEFAULT_POS});
 // opposing player
 const secondaryPlayer = new Player({position: SECONDARY_PLAYER_DEFAULT_POS});
+// ball
+const ball = new Ball({position: {x: 100, y: 100}});
 
 /**
  * set up the components and elements that will show up on the screen
@@ -38,6 +41,7 @@ const setupApp = (gm) => {
 
   const stage = app.stage;
 
+  // -- render starts here
   // draw the field and score
   drawField();
   drawScores();

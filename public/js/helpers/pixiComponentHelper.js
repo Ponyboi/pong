@@ -1,3 +1,5 @@
+import { omit } from 'lodash';
+
 /**
  * sets component's anchor to given point, otherwise uses the center
  *
@@ -5,6 +7,8 @@
  * @type {PIXI.Point || PIXI.ObservablePoint} [point]
  */
 const setDefaultAnchor = (component, point = {}) => {
+  if (!component.anchor) return;
+
   component.anchor.x = point.x || 0.5;
   component.anchor.y = point.y || 0.5;
 };
@@ -13,6 +17,8 @@ const setDefaultAnchor = (component, point = {}) => {
  * @type {PIXI.ObservablePoint} [point]
  */
 const setDefaultPosition = (component, point = {}) => {
+  if (!component.position) return;
+
   component.position.x = point.x || 0;
   component.position.y = point.y || 0;
 };
@@ -24,14 +30,25 @@ const setDefaultPosition = (component, point = {}) => {
  * @type {Object} [options.anchor]
  * @type {Object} [options.position]
  */
-const setComponentDefaults = (component, options = {}) => {
+const setComponentProperties = (component, options = {}) => {
   setDefaultAnchor(component, options.anchor);
   setDefaultPosition(component, options.position);
 };
+/**
+ * removes properties from given options
+ */
+const removeCustomProperties = (options = {}) => {
+  // remove custom attributes from the options and leave only the styles
+  return omit(options, [
+    'anchor',
+    'position',
+  ]);
+};
 
-// export default setComponentDefaults;
+// export default setComponentProperties;
 export {
   setDefaultAnchor,
   setDefaultPosition,
-  setComponentDefaults,
+  setComponentProperties,
+  removeCustomProperties,
 }
