@@ -16,7 +16,6 @@ import { getCanvasContainer } from 'helpers/canvasHelper';
 // set up Application
 const app = new PIXI.Application(GAME_SIZE);
 app.renderer.backgroundColor = 0x080808;
-const globalTicker = new PIXI.ticker.Ticker();
 
 // render it onto document
 const canvas = getCanvasContainer();
@@ -28,7 +27,6 @@ const primaryPlayer = new Player({position: PRIMARY_PLAYER_DEFAULT_POS});
 // opposing player
 const secondaryPlayer = new Player({position: SECONDARY_PLAYER_DEFAULT_POS});
 // ball
-// components
 const ball = new Ball({position: BALL_DEFAULT_POS});
 
 /**
@@ -54,17 +52,22 @@ const setupApp = (gm) => {
   // active player
   stage.addChild(primaryPlayer.view);
 
+  // ball
+  stage.addChild(ball.view);
+
   appInitUpdate(gameManager);
 };
 
 const appInitUpdate = (gm) => {
   gameManager = gm;
   app.ticker.add(function(delta) {
+    ball.update();
+
     primaryPlayer.position.x += primaryPlayer.input.x * delta;
     primaryPlayer.view.position.x = primaryPlayer.position.x;
-    app.render();
+
+    setInterval(function() {console.log(primaryPlayer.position.x)}, 100);
   });
-  setInterval(function() {console.log(primaryPlayer.position.x)}, 100);
 }
 /**
  * draw some graphics for the playing field
@@ -162,7 +165,6 @@ const onKeyUp = (key) => {
 const pixiManager = {
   app: app,
   setupApp: setupApp,
-  globalTicker: globalTicker,
 };
 
 export default pixiManager;
