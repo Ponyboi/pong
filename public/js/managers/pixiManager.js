@@ -169,17 +169,11 @@ const onKeyUp = (key) => {
   SocketClient.emit('playerInput', primaryPlayer.input);
 }
 /**
- *
- *
  * @param {Object}
  */
 const handleOtherPlayerInput = (input) => {
   secondaryPlayer.input = input;
 };
-
-// received an event from the server indicating that another player made an input
-// note this is not an ideal design choice but servers as an example
-SocketClient.on('playerInput', handleOtherPlayerInput)
 
 // set up singleton
 const pixiManager = {
@@ -188,3 +182,8 @@ const pixiManager = {
 };
 
 export default pixiManager;
+
+export {
+  pixiManager,
+  handleOtherPlayerInput,
+};
