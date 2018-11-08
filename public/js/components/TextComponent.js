@@ -1,7 +1,6 @@
-import { omit } from 'lodash';
 import { Text as PIXI_Text } from 'pixi.js';
 
-import { setComponentDefaults } from 'helpers/pixiComponentHelper';
+import { removeCustomProperties, setComponentProperties } from 'helpers/pixiComponentHelper';
 
 // default style of this component for our app
 const baseStyles = {
@@ -18,13 +17,8 @@ const baseStyles = {
 class TextComponent extends PIXI_Text {
   /** @default */
   constructor(text, options, ...args) {
-    // remove custom attributes from the options and leave only the styles
-    const stylesToPass = omit(options, [
-      'anchor',
-      'position',
-    ]);
-
     // apply base styles and then use styles from options
+    const stylesToPass = removeCustomProperties(options);
     const combinedStyles = {
       ...baseStyles,
       ...stylesToPass,
@@ -34,7 +28,7 @@ class TextComponent extends PIXI_Text {
     super(text, combinedStyles, ...args);
 
     // set default stuff
-    setComponentDefaults(this, options);
+    setComponentProperties(this, options);
   };
 };
 

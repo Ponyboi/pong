@@ -1,10 +1,11 @@
 import * as PIXI from 'pixi.js';
 
 import Player from 'components/Player';
+import Ball from 'components/Ball';
 import TextComponent from 'components/TextComponent';
 
 import { DASH_SIZE, GAME_SIZE, PADDLE_SIZE } from 'constants/sizes';
-import { PRIMARY_PLAYER_DEFAULT_POS, SECONDARY_PLAYER_DEFAULT_POS } from 'constants/positions';
+import { BALL_DEFAULT_POS, PRIMARY_PLAYER_DEFAULT_POS, SECONDARY_PLAYER_DEFAULT_POS } from 'constants/positions';
 
 import { getCanvasContainer } from 'helpers/canvasHelper';
 
@@ -25,6 +26,8 @@ var gameManager = null;
 const primaryPlayer = new Player({position: PRIMARY_PLAYER_DEFAULT_POS});
 // opposing player
 const secondaryPlayer = new Player({position: SECONDARY_PLAYER_DEFAULT_POS});
+// ball
+const ball = new Ball({position: BALL_DEFAULT_POS});
 
 /**
  * set up the components and elements that will show up on the screen
@@ -38,6 +41,7 @@ const setupApp = (gm) => {
 
   const stage = app.stage;
 
+  // -- render starts here
   // draw the field and score
   drawField();
   drawScores();
@@ -48,17 +52,22 @@ const setupApp = (gm) => {
   // active player
   stage.addChild(primaryPlayer.view);
 
+  // ball
+  stage.addChild(ball.view);
+
   appInitUpdate(gameManager);
 };
 
 const appInitUpdate = (gm) => {
   gameManager = gm;
   app.ticker.add(function(delta) {
+    ball.update();
+
     primaryPlayer.position.x += primaryPlayer.input.x * delta;
     primaryPlayer.view.position.x = primaryPlayer.position.x;
-    app.render();
+
+    setInterval(function() {console.log(primaryPlayer.position.x)}, 100);
   });
-  setInterval(function() {console.log(primaryPlayer.position.x)}, 100);
 }
 /**
  * draw some graphics for the playing field
