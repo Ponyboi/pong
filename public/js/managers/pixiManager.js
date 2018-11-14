@@ -1,5 +1,7 @@
 import * as PIXI from 'pixi.js';
 
+import gameState from 'data/gameState';
+
 import inputState from 'managers/inputManager';
 
 import Player from 'components/Player';
@@ -24,22 +26,19 @@ app.renderer.backgroundColor = 0x080808;
 const canvas = getCanvasContainer();
 canvas.appendChild(app.view);
 
-var gameManager = null;
 // active player
-const primaryPlayer = new Player({position: PRIMARY_PLAYER_DEFAULT_POS});
+const primaryPlayer = new Player({position: gameState.primaryPlayerPos});
 // opposing player
-const secondaryPlayer = new Player({position: SECONDARY_PLAYER_DEFAULT_POS});
+const secondaryPlayer = new Player({position: gameState.secondaryPlayerPos});
 // ball
-const ball = new Ball({position: BALL_DEFAULT_POS});
+const ball = new Ball({position: gameState.ballPos});
 
 /**
  * set up the components and elements that will show up on the screen
  *
  * todo: this will potentially grow to be unmaintainable, figure out a better solution
  */
-const setupApp = (gm) => {
-  gameManager = gm;
-
+const setupApp = () => {
   const stage = app.stage;
 
   // -- render starts here
@@ -56,11 +55,10 @@ const setupApp = (gm) => {
   // ball
   stage.addChild(ball.view);
 
-  appInitUpdate(gameManager);
+  appInitUpdate();
 };
 
-const appInitUpdate = (gm) => {
-  gameManager = gm;
+const appInitUpdate = () => {
   app.ticker.add(function(delta) {
     // keyboard update
     if (inputState.left) {

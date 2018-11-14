@@ -7,6 +7,9 @@ const inputState = {
   right: false,
 };
 
+/**
+ * when a key is down
+ */
 const onKeyDown = (key) => {
   const keycode = key.keyCode;
 
@@ -25,7 +28,9 @@ const onKeyDown = (key) => {
   // tell server
   // SocketClient.emit('playerInput', primaryPlayer.input);
 };
-
+/**
+ * when a key is up
+ */
 const onKeyUp = (key) => {
   const keycode = key.keyCode;
 
