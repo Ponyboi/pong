@@ -20,9 +20,6 @@ const onKeyDown = (key) => {
   if (keycode === KEY.D || keycode === KEY.RIGHT) {
     inputEmitter.emit('rightDown');
   };
-
-  // tell server
-  // SocketClient.emit('playerInput', primaryPlayer.input);
 };
 /**
  * when a key is up
@@ -34,17 +31,13 @@ const onKeyUp = (key) => {
   // Left arrow is 37
   if (keycode === KEY.A || keycode === KEY.LEFT) {
     inputEmitter.emit('leftUp');
-
-  }
+  };
 
   // D Key is 68
   // Right arrow is 39
   if (keycode === KEY.D || keycode === KEY.RIGHT) {
     inputEmitter.emit('rightUp');
-  }
-
-  // tell server
-  // SocketClient.emit('playerInput', primaryPlayer.input);
+  };
 };
 
 export default inputEmitter;

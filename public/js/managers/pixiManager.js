@@ -74,14 +74,7 @@ const appInitUpdate = () => {
     // secondaryPlayer.position.x += secondaryPlayer.input.x * delta;
     secondaryPlayer.view.position.x = secondaryPlayer.position.x;
   });
-}
-/**
- * @param {Object}
- */
-const handleOtherPlayerInput = (input) => {
-  secondaryPlayer.input = input;
 };
-
 // set up singleton
 const pixiManager = {
   app: app,
@@ -89,8 +82,6 @@ const pixiManager = {
 };
 
 export default pixiManager;
-
 export {
   pixiManager,
-  handleOtherPlayerInput,
 };
