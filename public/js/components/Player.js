@@ -1,13 +1,18 @@
 import {
   Graphics as PIXI_Graphics,
+  Point as PIXI_Point,
 } from 'pixi.js';
 import { Rectangle as Intersects_Rectangle } from 'yy-intersects';
+
+import gameState, { updatePrimaryPlayerPositionState } from 'data/gameState';
+
+import GameComponent from 'components/GameComponent';
 
 import { PADDLE_SIZE } from 'constants/sizes';
 /*
   Player controller class
 */
-class Player {
+class Player extends GameComponent {
   /** @default */
   constructor(options = {}) {
     const { position, size } = options;
@@ -26,8 +31,6 @@ class Player {
     this.shape = new Intersects_Rectangle(this);
   };
   /**
-   * draw the rectangle, temporary implementation
-   *
    * @returns {PIXI.Graphic}
    */
   render() {
@@ -43,20 +46,30 @@ class Player {
     };
 
     // draw rectangle - make sure current position always exists
-    const { x, y } = this.position;
     const { width, height } = this.size;
 
-    // since graphics have no anchor, we're just going to adjust where the graphics are drawn to match it up
-    const adjustedPos = {
-      x: (x - width / 2),
-      y: (y - height / 2),
-    };
-
     graphics.beginFill(0xFFFFFF);
-    graphics.drawRect(adjustedPos.x, adjustedPos.y, width, height);
+    graphics.drawRect(0, 0, width, height);
     graphics.endFill();
 
     return graphics;
+  };
+  /**
+   * update
+   */
+  update() {
+    this.reduceVelocity();
+
+    // since graphics have no anchor, we're just going to adjust where the graphics are drawn to match it up
+    const { x, y } = this.position;
+    const { width, height } = this.size;
+
+    const adjustedPos = {
+      x: x - (width / 2),
+      y: y - (height / 2),
+    };
+
+    this.view.position = new PIXI_Point(adjustedPos.x, adjustedPos.y);
   };
 };
 

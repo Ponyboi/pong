@@ -1,15 +1,51 @@
 import SocketClient from 'components/SocketClient';
 
+import { updatePrimaryPlayerActionState, updateSecondaryPlayerPositionState } from 'data/gameState';
+
+import { convertPrimaryToSecondaryPos } from 'helpers/gamePositionHelper';
+
 import { handleNewPlayer } from 'managers/gameManager';
-import { handleOtherPlayerInput } from 'managers/pixiManager';
+import inputEmitter from 'managers/inputManager';
+import { resetBallToCenter } from 'managers/pixiManager';
 
 /*
-  attach event listeners onto our SocketClient, and handle what to do with it
+  I guess this just passes events around???
 */
 
-// this one's meant to be a very broad update event, handling new player is just temporary
-SocketClient.on('update', handleNewPlayer);
+// the other player(s) is telling us something
+SocketClient.on('message', (message = {}) => {
+  console.log('received message', message);
+  const { action } = message;
 
-// received an event from the server indicating that another player made an input
-// note this is not an ideal design choice but servers as an example
-SocketClient.on('playerInput', handleOtherPlayerInput)
+  switch(action) {
+    case 'resetBall':
+      resetBallToCenter();
+      break;
+    default:
+      break;
+  }
+});
+
+// number of players has changed
+SocketClient.on('playerUpdate', handleNewPlayer);
+
+// receiving the game state from the other player
+SocketClient.on('newGameStateUpdate', (newGameState) => {
+  // the other player's position is the secondary player to us
+  const secondaryPlayerPos = convertPrimaryToSecondaryPos(newGameState.primaryPlayerPos);
+  updateSecondaryPlayerPositionState(secondaryPlayerPos);
+});
+
+// handle input events
+inputEmitter.on('leftDown', () => {
+  updatePrimaryPlayerActionState('left');
+});
+inputEmitter.on('leftUp', () => {
+  updatePrimaryPlayerActionState(null);
+});
+inputEmitter.on('rightDown', () => {
+  updatePrimaryPlayerActionState('right');
+});
+inputEmitter.on('rightUp', () => {
+  updatePrimaryPlayerActionState(null);
+});

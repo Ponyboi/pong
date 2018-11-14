@@ -1,211 +1,155 @@
 import * as PIXI from 'pixi.js';
 import Intersects from 'yy-intersects';
 
-import Player from 'components/Player';
-import Ball from 'components/Ball';
-import SocketClient from 'components/SocketClient';
-import TextComponent from 'components/TextComponent';
+import gameState, { updateBallPositionState, updatePrimaryPlayerPositionState } from 'data/gameState';
 
-import { DASH_SIZE, GAME_SIZE, PADDLE_SIZE, PLAYER_LIMITS, PLAYER_TRAITS } from 'constants/sizes';
-import { BALL_DEFAULT_POS, PRIMARY_PLAYER_DEFAULT_POS, SECONDARY_PLAYER_DEFAULT_POS } from 'constants/positions';
+import Player from 'components/Player';
+import BallComponent from 'components/BallComponent';
+import ScoreComponent from 'components/ScoreComponent';
+
+import { GAME_SIZE } from 'constants/sizes';
+import { DEFAULT_PLAYER_SPEED } from 'constants/physics';
+import { PRIMARY_SCORE_POS, SECONDARY_SCORE_POS, BALL_DEFAULT_POS } from 'constants/positions';
 
 import { getCanvasContainer } from 'helpers/canvasHelper';
+import { createFieldView, drawScores } from 'helpers/pixiGameDrawHelper';
 
 /*
   singleton for Pixi.js
-    use this to do generic stuff
+    use this to draw and update the view
 */
+
 // set up Application
 const app = new PIXI.Application(GAME_SIZE);
 app.renderer.backgroundColor = 0x080808;
-
 // render it onto document
 const canvas = getCanvasContainer();
 canvas.appendChild(app.view);
 
-var gameManager = null;
 // active player
-const primaryPlayer = new Player({position: PRIMARY_PLAYER_DEFAULT_POS});
+const primaryPlayer = new Player({
+  position: gameState.primaryPlayerPos,
+});
 // opposing player
-const secondaryPlayer = new Player({position: SECONDARY_PLAYER_DEFAULT_POS});
+const secondaryPlayer = new Player({
+  position: gameState.secondaryPlayerPos,
+});
 // ball
-const ball = new Ball({position: BALL_DEFAULT_POS});
+const ball = new BallComponent({
+  position: gameState.ballPos,
+});
+// primaryPlayerScore
+const primaryScoreComponent = new ScoreComponent({
+  position: PRIMARY_SCORE_POS,
+  text: gameState.primaryScoreComponent,
+});
+// secondaryPlayerScore
+const secondaryScoreComponent = new ScoreComponent({
+  position: SECONDARY_SCORE_POS,
+  text: gameState.secondaryPlayerScore,
+});
 
 /**
  * set up the components and elements that will show up on the screen
  *
  * todo: this will potentially grow to be unmaintainable, figure out a better solution
  */
-const setupApp = (gm) => {
-  gameManager = gm;
-  document.addEventListener('keydown', onKeyDown);
-  document.addEventListener('keyup', onKeyUp);
-
+const initApp = () => {
   const stage = app.stage;
 
-  // -- render starts here
-  // draw the field and score
-  drawField();
-  drawScores();
+  // draw the field
+  const fieldView = createFieldView();
+  stage.addChild(fieldView);
 
-  // opposing player
-  stage.addChild(secondaryPlayer.view);
+  // draw scores
+  stage.addChild(primaryScoreComponent.view);
+  stage.addChild(secondaryScoreComponent.view);
 
   // active player
   stage.addChild(primaryPlayer.view);
 
+  // opposing player
+  stage.addChild(secondaryPlayer.view);
+
   // ball
   stage.addChild(ball.view);
+  resetBallToCenter();
 
-  appInitUpdate(gameManager);
+  // after adding all the components, we can then start a ticker to update everything
+  appInitUpdate();
 };
+/**
+ * puts the ball back in the middle and pushes it in a random direction
+ */
+const resetBallToCenter = () => {
+  updateBallPositionState(BALL_DEFAULT_POS);
+  ball.position = gameState.ballPos;
 
-const appInitUpdate = (gm) => {
-  gameManager = gm;
-  app.ticker.add(function(delta) {
+  // then reset the velocity
+  const startRight = Math.round(Math.random());
+  const startUp = Math.round(Math.random());
+
+  ball.velocity = new PIXI.Point(
+    startRight ? 3 : -3,
+    startUp ? 3 : -3,
+  );
+};
+/**
+ * add a constant ticker to update the game
+ */
+const appInitUpdate = () => {
+  app.ticker.add((delta) => {
+    // see if player is moving
+    handleUpdateGameState(delta);
+
+    // assign data from state the the components and update them
+    ball.position = gameState.ballPos;
     ball.update();
 
-    var pPlayerFuturePos = primaryPlayer.position.x + primaryPlayer.input.x * delta * PLAYER_TRAITS.speed;
-    if (pPlayerFuturePos >= PLAYER_LIMITS.rightEnd) {
-      primaryPlayer.position.x = PLAYER_LIMITS.rightEnd;
-      primaryPlayer.view.position.x = PLAYER_LIMITS.rightEnd;
-    } else if (pPlayerFuturePos <= PLAYER_LIMITS.leftEnd) {
-      primaryPlayer.position.x = PLAYER_LIMITS.leftEnd;
-      primaryPlayer.view.position.x = PLAYER_LIMITS.leftEnd;
-    } else {
-      primaryPlayer.position.x += primaryPlayer.input.x * delta * PLAYER_TRAITS.speed;
-      primaryPlayer.view.position.x = primaryPlayer.position.x;
-    }
+    // active player
+    primaryPlayer.position = gameState.primaryPlayerPos;
+    primaryPlayer.update();
 
-    var sPlayerFuturePos = secondaryPlayer.position.x + secondaryPlayer.input.x * delta * PLAYER_TRAITS.speed;
-    if (sPlayerFuturePos >= PLAYER_LIMITS.rightEnd) {
-      secondaryPlayer.position.x = PLAYER_LIMITS.rightEnd;
-      secondaryPlayer.view.position.x = PLAYER_LIMITS.rightEnd;
-    } else if (sPlayerFuturePos <= PLAYER_LIMITS.leftEnd) {
-      secondaryPlayer.position.x = PLAYER_LIMITS.leftEnd;
-      secondaryPlayer.view.position.x = PLAYER_LIMITS.leftEnd;
-    } else {
-      secondaryPlayer.position.x += secondaryPlayer.input.x * delta * PLAYER_TRAITS.speed;
-      secondaryPlayer.view.position.x = secondaryPlayer.position.x;
-    }
-    if (ball.shape.collidesPoint(new PIXI.Point(BALL_DEFAULT_POS))) {
-      console.log('wow');
-    };
+    // opposing player
+    secondaryPlayer.position = gameState.secondaryPlayerPos;
+    secondaryPlayer.update();
+
+    // active player's score
+    primaryScoreComponent.text = gameState.primaryPlayerScore;
+    primaryScoreComponent.update();
+
+    // opposing player's score
+    secondaryScoreComponent.text = gameState.secondaryPlayerScore;
+    secondaryScoreComponent.update();
   });
-}
-/**
- * draw some graphics for the playing field
- */
-const drawField = () => {
-  const stage = app.stage;
-  const fieldGraphics = new PIXI.Graphics();
-
-  const { width, height } = DASH_SIZE;
-  const dashVerticalOffset = (PADDLE_SIZE.height / 2) + 15;
-  const dashCount = (GAME_SIZE.width / width) / 2;
-
-  for (let i = 0; i < dashCount; i ++) {
-    const dashDistance = (width * 2) * i + (width / 2);
-    // upper line
-    fieldGraphics.beginFill(0x333333);
-    fieldGraphics.drawRect(dashDistance, SECONDARY_PLAYER_DEFAULT_POS.y - dashVerticalOffset, width, height);
-
-    // lower line
-    fieldGraphics.drawRect(dashDistance, PRIMARY_PLAYER_DEFAULT_POS.y + dashVerticalOffset, width, height);
-
-    // center line
-    fieldGraphics.beginFill(0x6d6d6d);
-    fieldGraphics.drawRect(dashDistance, app.screen.height / 2, width, height);
-  };
-
-  fieldGraphics.endFill();
-  stage.addChild(fieldGraphics);
 };
 /**
- * draw the Scores
+ * look at the player's current action and do stuff according to it
  */
-const drawScores = () => {
-  const stage = app.stage;
-  const scoreStyles = {
-    fill: 0x6d6d6d,
-    fontSize: 36,
-    fontWeight: 'bold',
+const handleUpdateGameState = (delta) => {
+
+  // update ball's position
+  const ballVelocityDelta = new PIXI.Point(ball.velocity.x, ball.velocity.y);
+  const ballNextPosition = ball.getNextPosition();
+  updateBallPositionState(ballNextPosition);
+
+  // update player position
+  const playerSpeedDelta = DEFAULT_PLAYER_SPEED * delta;
+  if (gameState.primaryPlayerState === 'left') {
+    primaryPlayer.velocity.x = -playerSpeedDelta;
+  };
+  if (gameState.primaryPlayerState === 'right') {
+    primaryPlayer.velocity.x = playerSpeedDelta;
   };
 
-  const fieldVerticalCenter = app.screen.height / 2;
-  const scoreOffset = {
-    x: 35,
-    y: 45,
-  };
-
-  // secondary player, score is above
-  const secondaryPlayerScore = new TextComponent('0', {
-    ...scoreStyles,
-    position: {
-      x: scoreOffset.x,
-      y: fieldVerticalCenter - scoreOffset.y,
-    },
-  });
-  stage.addChild(secondaryPlayerScore);
-
-  // active player, score is below
-  const primaryPlayerScore = new TextComponent('1', {
-    ...scoreStyles,
-    position: {
-      x: scoreOffset.x,
-      y: fieldVerticalCenter + scoreOffset.y,
-    },
-  });
-  stage.addChild(primaryPlayerScore);
-};
-const onKeyDown = (key) => {
-  // A Key is 65
-  // Left arrow is 37
-  if (key.keyCode === 65 || key.keyCode === 37) {
-      primaryPlayer.input.x = -1;
-  }
-
-  // D Key is 68
-  // Right arrow is 39
-  if (key.keyCode === 68 || key.keyCode === 39) {
-      primaryPlayer.input.x = 1;
-  }
-
-  // tell server
-  SocketClient.emit('playerInput', primaryPlayer.input);
-}
-const onKeyUp = (key) => {
-  // A Key is 65
-  // Left arrow is 37
-  if (key.keyCode === 65 || key.keyCode === 37) {
-      primaryPlayer.input.x = 0;
-  }
-
-  // D Key is 68
-  // Right arrow is 39
-  if (key.keyCode === 68 || key.keyCode === 39) {
-      primaryPlayer.input.x = 0;
-  }
-
-  // tell server
-  SocketClient.emit('playerInput', primaryPlayer.input);
-}
-/**
- * @param {Object}
- */
-const handleOtherPlayerInput = (input) => {
-  secondaryPlayer.input = input;
+  // always update player position state
+  const primaryPlayerNextPosition = primaryPlayer.getNextPosition();
+  updatePrimaryPlayerPositionState(primaryPlayerNextPosition);
 };
 
-// set up singleton
-const pixiManager = {
-  app: app,
-  setupApp: setupApp,
-};
-
-export default pixiManager;
-
+export default app;
 export {
-  pixiManager,
-  handleOtherPlayerInput,
+  app,
+  initApp,
+  resetBallToCenter,
 };

@@ -47,6 +47,20 @@ const LEFT_WALL_LINE = {
   p2: new PIXI.Point(0, GAME_SIZE.height),
 };
 
+// scores
+const scoreOffset = {
+  x: 35,
+  y: 45,
+};
+const PRIMARY_SCORE_POS = {
+  x: scoreOffset.x,
+  y: gameVerticalCenter + scoreOffset.y,
+};
+const SECONDARY_SCORE_POS = {
+  x: scoreOffset.x,
+  y: gameVerticalCenter - scoreOffset.y,
+};
+
 // these are the points that make up the wall
 const WALL_LINES = {
   TOP: TOP_WALL_LINE,

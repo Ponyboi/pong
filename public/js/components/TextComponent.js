@@ -8,7 +8,6 @@ const baseStyles = {
   fontSize: 16,
   fill: '#ffffff',
 };
-
 /*
   extend the base PIXI.Text class to see if we can standardize it for our app
 

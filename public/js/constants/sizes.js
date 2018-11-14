@@ -20,6 +20,11 @@ const DASH_SIZE = {
   height: 3,
 };
 
+const BALL_SIZE = {
+  width: 15,
+  height: 15,
+};
+
 const PLAYER_TRAITS = {
   speed: 3
 }
@@ -33,6 +38,7 @@ export {
   DASH_SIZE,
   GAME_SIZE,
   PADDLE_SIZE,
+  BALL_SIZE,
   PLAYER_LIMITS,
   PLAYER_TRAITS
 }
