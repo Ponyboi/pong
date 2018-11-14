@@ -1,11 +1,7 @@
-// import eventEmitter from 'events';
+import EventEmitter from 'events';
 import KEY from 'constants/key';
 
-// this is the state of buttons being pressed
-const inputState = {
-  left: false,
-  right: false,
-};
+const inputEmitter = new EventEmitter();
 
 /**
  * when a key is down
@@ -16,14 +12,14 @@ const onKeyDown = (key) => {
   // A Key is 65
   // Left arrow is 37
   if (keycode === KEY.A || keycode === KEY.LEFT) {
-      inputState.left = true;
-  }
+    inputEmitter.emit('leftDown');
+  };
 
   // D Key is 68
   // Right arrow is 39
   if (keycode === KEY.D || keycode === KEY.RIGHT) {
-      inputState.right = true;
-  }
+    inputEmitter.emit('rightDown');
+  };
 
   // tell server
   // SocketClient.emit('playerInput', primaryPlayer.input);
@@ -37,23 +33,24 @@ const onKeyUp = (key) => {
   // A Key is 65
   // Left arrow is 37
   if (keycode === KEY.A || keycode === KEY.LEFT) {
-      inputState.left = false;
+    inputEmitter.emit('leftUp');
+
   }
 
   // D Key is 68
   // Right arrow is 39
   if (keycode === KEY.D || keycode === KEY.RIGHT) {
-      inputState.right = false;
+    inputEmitter.emit('rightUp');
   }
 
   // tell server
   // SocketClient.emit('playerInput', primaryPlayer.input);
 };
 
-export default inputState;
+export default inputEmitter;
 
 export {
-  inputState,
+  inputEmitter,
   onKeyDown,
   onKeyUp,
 }

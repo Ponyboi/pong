@@ -2,8 +2,6 @@ import * as PIXI from 'pixi.js';
 
 import gameState from 'data/gameState';
 
-import inputState from 'managers/inputManager';
-
 import Player from 'components/Player';
 import Ball from 'components/Ball';
 import SocketClient from 'components/SocketClient';
@@ -60,22 +58,18 @@ const setupApp = () => {
 
 const appInitUpdate = () => {
   app.ticker.add(function(delta) {
-    // keyboard update
-    if (inputState.left) {
-      primaryPlayer.position.x -= 1;
-    };
-
-    if (inputState.right) {
-      primaryPlayer.position.x += 1;
-    };
-
     // call updates of each object
     ball.update();
 
-    primaryPlayer.position.x += primaryPlayer.input.x * delta;
+    if (gameState.primaryPlayerState === 'left') {
+      primaryPlayer.position.x -= 5 * delta;
+    };
+    if (gameState.primaryPlayerState === 'right') {
+      primaryPlayer.position.x += 5 * delta;
+    };
     primaryPlayer.view.position.x = primaryPlayer.position.x;
 
-    secondaryPlayer.position.x += secondaryPlayer.input.x * delta;
+    // secondaryPlayer.position.x += secondaryPlayer.input.x * delta;
     secondaryPlayer.view.position.x = secondaryPlayer.position.x;
   });
 }
