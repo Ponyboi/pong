@@ -1,4 +1,5 @@
 import socketIO from 'socket.io';
+import gameState from 'components/gameState';
 
 /** @type {Socket.IO-server} */
 let socketServer;
@@ -16,18 +17,30 @@ function listen(server) {
 
     // add client
     clients[clientId] = socket;
+    gameState.players[clientId] = { x: 0, y: 0 };
 
     // server tells everyone there's an update on player count
     socketServer.emit('update', {
-      playerCount: getClientCount(),
+      gameState: gameState
     });
 
     // event - client disconnected so remove them and then tell everyone else
     socket.on('disconnect', () => {
       delete clients[clientId];
+      delete gameState.players[clientId];
+      gameState.updatePlayerCount();
 
       socketServer.emit('update', {
-        playerCount: getClientCount(),
+        gameState: gameState
+      });
+    });
+    socket.on('update', () => {
+      delete clients[clientId];
+      delete gameState.players[clientId];
+      gameState.updatePlayerCount();
+
+      socketServer.emit('update', {
+        gameState: gameState
       });
     });
   });
