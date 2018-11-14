@@ -5,16 +5,16 @@ import {
 import { Rectangle as Intersects_Rectangle } from 'yy-intersects';
 
 import gameState, { updatePrimaryPlayerPositionState } from 'data/gameState';
-
+import { DASH_SIZE, GAME_SIZE, PADDLE_SIZE, PLAYER_LIMITS, PLAYER_TRAITS } from 'constants/sizes';
 import GameComponent from 'components/GameComponent';
 
-import { PADDLE_SIZE } from 'constants/sizes';
 /*
   Player controller class
 */
 class Player extends GameComponent {
   /** @default */
   constructor(options = {}) {
+    super(options);
     const { position, size } = options;
 
     /** @type {Point} */
@@ -57,20 +57,33 @@ class Player extends GameComponent {
   /**
    * update
    */
-  update() {
+  update(delta) {
     this.reduceVelocity();
 
     // since graphics have no anchor, we're just going to adjust where the graphics are drawn to match it up
-    const { x, y } = this.position;
-    const { width, height } = this.size;
+    var playerFuturePos = this.position.x + this.input.x * delta * PLAYER_TRAITS.speed;
+    if (playerFuturePos >= PLAYER_LIMITS.rightEnd) {
+      this.position.x = PLAYER_LIMITS.rightEnd;
+      this.view.position.x = PLAYER_LIMITS.rightEnd;
+    } else if (playerFuturePos <= PLAYER_LIMITS.leftEnd) {
+      this.position.x = PLAYER_LIMITS.leftEnd;
+      this.view.position.x = PLAYER_LIMITS.leftEnd;
+    } else {
+      this.position.x += this.input.x * delta * PLAYER_TRAITS.speed;
+      var adjustedPos = this.getAdjustedPos(this.position, this.size);
+      this.view.position = new PIXI_Point(adjustedPos.x, adjustedPos.y);
+    }
+  };
+  getAdjustedPos(position, size) {
+    const { x, y } = position;
+    const { width, height } = size;
 
     const adjustedPos = {
       x: x - (width / 2),
       y: y - (height / 2),
     };
-
-    this.view.position = new PIXI_Point(adjustedPos.x, adjustedPos.y);
-  };
+    return adjustedPos;
+  }
 };
 
 export default Player;
