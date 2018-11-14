@@ -31,12 +31,12 @@ const secondaryPlayer = new Player({position: gameState.secondaryPlayerPos});
 // ball
 const ball = new Ball({position: gameState.ballPos});
 // primaryPlayerScore
-const primaryPlayerScore = new ScoreComponent({
+const primaryScoreComponent = new ScoreComponent({
   position: PRIMARY_SCORE_POS,
-  text: gameState.primaryPlayerScore,
+  text: gameState.primaryScoreComponent,
 });
 // secondaryPlayerScore
-const secondaryPlayerScore = new ScoreComponent({
+const secondaryScoreComponent = new ScoreComponent({
   position: SECONDARY_SCORE_POS,
   text: gameState.secondaryPlayerScore,
 });
@@ -46,7 +46,7 @@ const secondaryPlayerScore = new ScoreComponent({
  *
  * todo: this will potentially grow to be unmaintainable, figure out a better solution
  */
-const setupApp = () => {
+const initApp = () => {
   const stage = app.stage;
 
   // draw the field
@@ -54,19 +54,19 @@ const setupApp = () => {
   stage.addChild(fieldView);
 
   // draw scores
-  stage.addChild(primaryPlayerScore.view);
-  stage.addChild(secondaryPlayerScore.view);
-
-  // opposing player
-  stage.addChild(secondaryPlayer.view);
+  stage.addChild(primaryScoreComponent.view);
+  stage.addChild(secondaryScoreComponent.view);
 
   // active player
   stage.addChild(primaryPlayer.view);
 
+  // opposing player
+  stage.addChild(secondaryPlayer.view);
+
   // ball
   stage.addChild(ball.view);
 
-  // after adding all the components, finally we can update
+  // after adding all the components, we can then start a ticker to update everything
   appInitUpdate();
 };
 /**
@@ -75,35 +75,50 @@ const setupApp = () => {
 const appInitUpdate = () => {
   const updateableComponents = [primaryPlayer, secondaryPlayer, ball];
 
-  app.ticker.add(function(delta) {
-    // update player position
-    const playerSpeed = 4.5 * delta;
-    if (gameState.primaryPlayerState === 'left') {
-      const nextPos = new PIXI.Point(gameState.primaryPlayerPos.x - playerSpeed, gameState.primaryPlayerPos.y);
-      updatePrimaryPlayerPos(nextPos);
-      primaryPlayer.position = nextPos;
-    };
-    if (gameState.primaryPlayerState === 'right') {
-      const nextPos = new PIXI.Point(gameState.primaryPlayerPos.x + playerSpeed, gameState.primaryPlayerPos.y);
-      updatePrimaryPlayerPos(nextPos);
-      primaryPlayer.position = nextPos;
-    };
+  app.ticker.add((delta) => {
+    // see if player is moving
+    handlePlayerMovement(delta);
 
-    secondaryPlayer.position = gameState.secondaryPlayerPos;
+    // assign data from state the the components and update them
+    ball.update(); // todo
 
-    // call updates of each object
-    ball.update();
+    // active player
+    primaryPlayer.position = gameState.primaryPlayerPos;
     primaryPlayer.update();
+
+    // opposing player
+    secondaryPlayer.position = gameState.secondaryPlayerPos;
     secondaryPlayer.update();
+
+    // active player's score
+    primaryScoreComponent.text = gameState.primaryPlayerScore;
+    primaryScoreComponent.update();
+
+    // opposing player's score
+    secondaryScoreComponent.text = gameState.secondaryPlayerScore;
+    secondaryScoreComponent.update();
   });
 };
-// set up singleton
-const pixiManager = {
-  app: app,
-  setupApp: setupApp,
+/**
+ * look at the player's current action and do stuff according to it
+ */
+const handlePlayerMovement = (delta) => {
+  // update player position
+  const playerSpeed = 4.5 * delta;
+
+  if (gameState.primaryPlayerState === 'left') {
+    const nextPos = new PIXI.Point(gameState.primaryPlayerPos.x - playerSpeed, gameState.primaryPlayerPos.y);
+    updatePrimaryPlayerPos(nextPos);
+  };
+
+  if (gameState.primaryPlayerState === 'right') {
+    const nextPos = new PIXI.Point(gameState.primaryPlayerPos.x + playerSpeed, gameState.primaryPlayerPos.y);
+    updatePrimaryPlayerPos(nextPos);
+  };
 };
 
-export default pixiManager;
+export default app;
 export {
-  pixiManager,
+  app,
+  initApp,
 };
