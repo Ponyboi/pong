@@ -18,15 +18,20 @@ function listen(server) {
     clients[clientId] = socket;
 
     // server tells everyone there's an update on player count
-    socketServer.emit('update', {
+    socketServer.emit('playerUpdate', {
       playerCount: getClientCount(),
+    });
+
+    // generic message from one player to broadcast to others
+    socket.on('message', (...data) => {
+      socket.broadcast.emit('message', ...data);
     });
 
     // event - client disconnected so remove them and then tell everyone else
     socket.on('disconnect', () => {
       delete clients[clientId];
 
-      socketServer.emit('update', {
+      socketServer.emit('playerUpdate', {
         playerCount: getClientCount(),
       });
     });

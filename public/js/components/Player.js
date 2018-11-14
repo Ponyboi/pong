@@ -3,28 +3,23 @@ import {
   Point as PIXI_Point,
 } from 'pixi.js';
 
+import gameState, { updatePrimaryPlayerPositionState } from 'data/gameState';
+
+import GameComponent from 'components/GameComponent';
+
 import { PADDLE_SIZE } from 'constants/sizes';
 /*
   Player controller class
 */
-class Player {
+class Player extends GameComponent {
   /** @default */
   constructor(options = {}) {
-    const { position, size } = options;
-
-    /** @type {Point} */
-    this.position = position || {x: 0, y: 0};
-    this.input = {x: 0, y: 0};
-
-    /** @type {Object} */
-    this.size = size || PADDLE_SIZE;
-
-    /** @type {PIXI.Graphic} */
-    this.view = this.render();
+    super({
+      size: PADDLE_SIZE,
+      ...options,
+    });
   };
   /**
-   * draw the rectangle, temporary implementation
-   *
    * @returns {PIXI.Graphic}
    */
   render() {
@@ -52,6 +47,8 @@ class Player {
    * update
    */
   update() {
+    this.reduceVelocity();
+
     // since graphics have no anchor, we're just going to adjust where the graphics are drawn to match it up
     const { x, y } = this.position;
     const { width, height } = this.size;

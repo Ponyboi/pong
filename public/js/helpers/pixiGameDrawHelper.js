@@ -1,7 +1,5 @@
 import * as PIXI from 'pixi.js';
 
-import TextComponent from 'components/TextComponent';
-
 import { DASH_SIZE, GAME_SIZE, PADDLE_SIZE } from 'constants/sizes';
 import { BALL_DEFAULT_POS, PRIMARY_PLAYER_DEFAULT_POS, SECONDARY_PLAYER_DEFAULT_POS } from 'constants/positions';
 
@@ -9,8 +7,10 @@ const fieldVerticalCenter = GAME_SIZE.height / 2;
 
 /**
  * draw some graphics for the playing field
+ *
+ * @returns {PIXI.View?}
  */
-const drawField = (stage) => {
+const createFieldView = () => {
   const fieldGraphics = new PIXI.Graphics();
 
   const { width, height } = DASH_SIZE;
@@ -32,45 +32,9 @@ const drawField = (stage) => {
   };
 
   fieldGraphics.endFill();
-  stage.addChild(fieldGraphics);
-};
-/**
- * draw the Scores
- */
-const drawScores = (stage) => {
-  const scoreStyles = {
-    fill: 0x6d6d6d,
-    fontSize: 36,
-    fontWeight: 'bold',
-  };
-
-  const scoreOffset = {
-    x: 35,
-    y: 45,
-  };
-
-  // secondary player, score is above
-  const secondaryPlayerScore = new TextComponent('0', {
-    ...scoreStyles,
-    position: {
-      x: scoreOffset.x,
-      y: fieldVerticalCenter - scoreOffset.y,
-    },
-  });
-  stage.addChild(secondaryPlayerScore);
-
-  // active player, score is below
-  const primaryPlayerScore = new TextComponent('1', {
-    ...scoreStyles,
-    position: {
-      x: scoreOffset.x,
-      y: fieldVerticalCenter + scoreOffset.y,
-    },
-  });
-  stage.addChild(primaryPlayerScore);
+  return fieldGraphics;
 };
 
 export {
-  drawField,
-  drawScores,
+  createFieldView,
 }

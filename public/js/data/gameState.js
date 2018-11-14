@@ -5,7 +5,7 @@ import { BALL_DEFAULT_POS, PRIMARY_PLAYER_DEFAULT_POS, SECONDARY_PLAYER_DEFAULT_
 
 import onChange from 'helpers/onChange';
 
-// default state stuff
+// default state
 const defaultState = {
   /** @type {PIXI.Point} */
   ballPos: BALL_DEFAULT_POS,
@@ -15,17 +15,21 @@ const defaultState = {
   primaryPlayerState: null,
   /** @type {PIXI.Point} */
   secondaryPlayerPos: SECONDARY_PLAYER_DEFAULT_POS,
-};
 
+  /** @type {Number} */
+  primaryPlayerScore: 0,
+  /** @type {Number} */
+  secondaryPlayerScore: 0,
+};
 // clone default state
 const gameState = {...defaultState};
 /**
- * @params {PIXI.Point} newPos
+ * @params {PIXI.Point} newState
  */
-const updatePrimaryPlayerPos = (newPos) => {
-  if (gameState.primaryPlayerPos === newPos) return; // no update if no change
+const updatePrimaryPlayerPositionState = (newState) => {
+  if (gameState.primaryPlayerPos === newState) return; // no update if no change
 
-  gameState.primaryPlayerPos = newPos;
+  gameState.primaryPlayerPos = newState;
 
   // only tell the other player of changes when position changes
   SocketClient.emit('gameStateUpdate', gameState);
@@ -33,32 +37,32 @@ const updatePrimaryPlayerPos = (newPos) => {
 /**
  * @params {String} newState
  */
-const updatePrimaryPlayerState = (newState) => {
+const updatePrimaryPlayerActionState = (newState) => {
   if (gameState.primaryPlayerState === newState) return; // no update if no change
 
   gameState.primaryPlayerState = newState;
 };
 /**
- * @params {PIXI.Point} newPos
+ * @params {PIXI.Point} newState
  */
-const updateBallPos = (newPos) => {
-  if (gameState.ballPos === newPos) return; // no update if no change
+const updateBallPositionState = (newState) => {
+  if (gameState.ballPos === newState) return; // no update if no change
 
-  gameState.ballPos = newPos;
+  gameState.ballPos = newState;
 };
 /**
- * @params {PIXI.Point} newPos
+ * @params {PIXI.Point} newState
  */
-const updateSecondaryPlayerPos = (newPos) => {
-  if (gameState.secondaryPlayerPos === newPos) return; // no update if no change
+const updateSecondaryPlayerPositionState = (newState) => {
+  if (gameState.secondaryPlayerPos === newState) return; // no update if no change
 
-  gameState.secondaryPlayerPos = newPos;
+  gameState.secondaryPlayerPos = newState;
 };
 
 export default gameState;
 export {
-  updatePrimaryPlayerPos,
-  updatePrimaryPlayerState,
-  updateBallPos,
-  updateSecondaryPlayerPos,
+  updatePrimaryPlayerPositionState,
+  updatePrimaryPlayerActionState,
+  updateBallPositionState,
+  updateSecondaryPlayerPositionState,
 };
