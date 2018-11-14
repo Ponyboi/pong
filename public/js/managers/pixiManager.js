@@ -1,5 +1,7 @@
 import * as PIXI from 'pixi.js';
 
+import inputState from 'managers/inputManager';
+
 import Player from 'components/Player';
 import Ball from 'components/Ball';
 import SocketClient from 'components/SocketClient';
@@ -37,8 +39,6 @@ const ball = new Ball({position: BALL_DEFAULT_POS});
  */
 const setupApp = (gm) => {
   gameManager = gm;
-  document.addEventListener('keydown', onKeyDown);
-  document.addEventListener('keyup', onKeyUp);
 
   const stage = app.stage;
 
@@ -62,6 +62,16 @@ const setupApp = (gm) => {
 const appInitUpdate = (gm) => {
   gameManager = gm;
   app.ticker.add(function(delta) {
+    // keyboard update
+    if (inputState.left) {
+      primaryPlayer.position.x -= 1;
+    };
+
+    if (inputState.right) {
+      primaryPlayer.position.x += 1;
+    };
+
+    // call updates of each object
     ball.update();
 
     primaryPlayer.position.x += primaryPlayer.input.x * delta;
@@ -136,38 +146,6 @@ const drawScores = () => {
   });
   stage.addChild(primaryPlayerScore);
 };
-const onKeyDown = (key) => {
-  // A Key is 65
-  // Left arrow is 37
-  if (key.keyCode === 65 || key.keyCode === 37) {
-      primaryPlayer.input.x = -1;
-  }
-
-  // D Key is 68
-  // Right arrow is 39
-  if (key.keyCode === 68 || key.keyCode === 39) {
-      primaryPlayer.input.x = 1;
-  }
-
-  // tell server
-  SocketClient.emit('playerInput', primaryPlayer.input);
-}
-const onKeyUp = (key) => {
-  // A Key is 65
-  // Left arrow is 37
-  if (key.keyCode === 65 || key.keyCode === 37) {
-      primaryPlayer.input.x = 0;
-  }
-
-  // D Key is 68
-  // Right arrow is 39
-  if (key.keyCode === 68 || key.keyCode === 39) {
-      primaryPlayer.input.x = 0;
-  }
-
-  // tell server
-  SocketClient.emit('playerInput', primaryPlayer.input);
-}
 /**
  * @param {Object}
  */
