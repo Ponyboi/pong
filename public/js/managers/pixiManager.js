@@ -5,7 +5,7 @@ import Ball from 'components/Ball';
 import SocketClient from 'components/SocketClient';
 import TextComponent from 'components/TextComponent';
 
-import { DASH_SIZE, GAME_SIZE, PADDLE_SIZE } from 'constants/sizes';
+import { DASH_SIZE, GAME_SIZE, PADDLE_SIZE, PLAYER_LIMITS, PLAYER_TRAITS } from 'constants/sizes';
 import { BALL_DEFAULT_POS, PRIMARY_PLAYER_DEFAULT_POS, SECONDARY_PLAYER_DEFAULT_POS } from 'constants/positions';
 
 import { getCanvasContainer } from 'helpers/canvasHelper';
@@ -64,11 +64,29 @@ const appInitUpdate = (gm) => {
   app.ticker.add(function(delta) {
     ball.update();
 
-    primaryPlayer.position.x += primaryPlayer.input.x * delta;
-    primaryPlayer.view.position.x = primaryPlayer.position.x;
+    var pPlayerFuturePos = primaryPlayer.position.x + primaryPlayer.input.x * delta * PLAYER_TRAITS.speed;
+    if (pPlayerFuturePos >= PLAYER_LIMITS.rightEnd) {
+      primaryPlayer.position.x = PLAYER_LIMITS.rightEnd;
+      primaryPlayer.view.position.x = PLAYER_LIMITS.rightEnd;
+    } else if (pPlayerFuturePos <= PLAYER_LIMITS.leftEnd) {
+      primaryPlayer.position.x = PLAYER_LIMITS.leftEnd;
+      primaryPlayer.view.position.x = PLAYER_LIMITS.leftEnd;
+    } else {
+      primaryPlayer.position.x += primaryPlayer.input.x * delta * PLAYER_TRAITS.speed;
+      primaryPlayer.view.position.x = primaryPlayer.position.x;
+    }
 
-    secondaryPlayer.position.x += secondaryPlayer.input.x * delta;
-    secondaryPlayer.view.position.x = secondaryPlayer.position.x;
+    var sPlayerFuturePos = secondaryPlayer.position.x + secondaryPlayer.input.x * delta * PLAYER_TRAITS.speed;
+    if (sPlayerFuturePos >= PLAYER_LIMITS.rightEnd) {
+      secondaryPlayer.position.x = PLAYER_LIMITS.rightEnd;
+      secondaryPlayer.view.position.x = PLAYER_LIMITS.rightEnd;
+    } else if (sPlayerFuturePos <= PLAYER_LIMITS.leftEnd) {
+      secondaryPlayer.position.x = PLAYER_LIMITS.leftEnd;
+      secondaryPlayer.view.position.x = PLAYER_LIMITS.leftEnd;
+    } else {
+      secondaryPlayer.position.x += secondaryPlayer.input.x * delta * PLAYER_TRAITS.speed;
+      secondaryPlayer.view.position.x = secondaryPlayer.position.x;
+    }
   });
 }
 /**
