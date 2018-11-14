@@ -4,12 +4,13 @@ import gameState, { updatePrimaryPlayerPos } from 'data/gameState';
 
 import Player from 'components/Player';
 import Ball from 'components/Ball';
-import SocketClient from 'components/SocketClient';
+import ScoreComponent from 'components/ScoreComponent';
 
 import { GAME_SIZE } from 'constants/sizes';
+import { PRIMARY_SCORE_POS, SECONDARY_SCORE_POS } from 'constants/positions';
 
 import { getCanvasContainer } from 'helpers/canvasHelper';
-import { drawField, drawScores } from 'helpers/pixiGameDrawHelper';
+import { createFieldView, drawScores } from 'helpers/pixiGameDrawHelper';
 
 /*
   singleton for Pixi.js
@@ -29,6 +30,16 @@ const primaryPlayer = new Player({position: gameState.primaryPlayerPos});
 const secondaryPlayer = new Player({position: gameState.secondaryPlayerPos});
 // ball
 const ball = new Ball({position: gameState.ballPos});
+// primaryPlayerScore
+const primaryPlayerScore = new ScoreComponent({
+  position: PRIMARY_SCORE_POS,
+  text: gameState.primaryPlayerScore,
+});
+// secondaryPlayerScore
+const secondaryPlayerScore = new ScoreComponent({
+  position: SECONDARY_SCORE_POS,
+  text: gameState.secondaryPlayerScore,
+});
 
 /**
  * set up the components and elements that will show up on the screen
@@ -38,9 +49,13 @@ const ball = new Ball({position: gameState.ballPos});
 const setupApp = () => {
   const stage = app.stage;
 
-  // draw the field and score
-  drawField(stage);
-  drawScores(stage);
+  // draw the field
+  const fieldView = createFieldView();
+  stage.addChild(fieldView);
+
+  // draw scores
+  stage.addChild(primaryPlayerScore.view);
+  stage.addChild(secondaryPlayerScore.view);
 
   // opposing player
   stage.addChild(secondaryPlayer.view);
@@ -58,6 +73,8 @@ const setupApp = () => {
  * add a constant ticker to update the game
  */
 const appInitUpdate = () => {
+  const updateableComponents = [primaryPlayer, secondaryPlayer, ball];
+
   app.ticker.add(function(delta) {
     // update player position
     const playerSpeed = 4.5 * delta;

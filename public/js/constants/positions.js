@@ -30,8 +30,24 @@ const BALL_DEFAULT_POS = {
   y: gameVerticalCenter,
 };
 
+// scores
+const scoreOffset = {
+  x: 35,
+  y: 45,
+};
+const PRIMARY_SCORE_POS = {
+  x: scoreOffset.x,
+  y: gameVerticalCenter + scoreOffset.y,
+};
+const SECONDARY_SCORE_POS = {
+  x: scoreOffset.x,
+  y: gameVerticalCenter - scoreOffset.y,
+};
+
 export {
   BALL_DEFAULT_POS,
   PRIMARY_PLAYER_DEFAULT_POS,
   SECONDARY_PLAYER_DEFAULT_POS,
+  PRIMARY_SCORE_POS,
+  SECONDARY_SCORE_POS,
 };

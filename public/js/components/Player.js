@@ -13,8 +13,7 @@ class Player {
     const { position, size } = options;
 
     /** @type {Point} */
-    this.position = position || {x: 0, y: 0};
-    this.input = {x: 0, y: 0};
+    this.position = position || new PIXI_Point();
 
     /** @type {Object} */
     this.size = size || PADDLE_SIZE;

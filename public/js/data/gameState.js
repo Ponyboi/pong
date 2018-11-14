@@ -15,6 +15,11 @@ const defaultState = {
   primaryPlayerState: null,
   /** @type {PIXI.Point} */
   secondaryPlayerPos: SECONDARY_PLAYER_DEFAULT_POS,
+
+  /** @type {Number} */
+  primaryPlayerScore: 0,
+  /** @type {Number} */
+  secondaryPlayerScore: 0,
 };
 
 // clone default state
