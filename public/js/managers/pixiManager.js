@@ -60,13 +60,19 @@ const setupApp = () => {
 const appInitUpdate = () => {
   app.ticker.add(function(delta) {
     // update player position
+    const playerSpeed = 4.5 * delta;
     if (gameState.primaryPlayerState === 'left') {
-      primaryPlayer.position.x -= 5 * delta;
+      const nextPos = new PIXI.Point(gameState.primaryPlayerPos.x - playerSpeed, gameState.primaryPlayerPos.y);
+      updatePrimaryPlayerPos(nextPos);
+      primaryPlayer.position = nextPos;
     };
     if (gameState.primaryPlayerState === 'right') {
-      primaryPlayer.position.x += 5 * delta;
+      const nextPos = new PIXI.Point(gameState.primaryPlayerPos.x + playerSpeed, gameState.primaryPlayerPos.y);
+      updatePrimaryPlayerPos(nextPos);
+      primaryPlayer.position = nextPos;
     };
-    updatePrimaryPlayerPos(primaryPlayer.position);
+
+    secondaryPlayer.position = gameState.secondaryPlayerPos;
 
     // call updates of each object
     ball.update();
