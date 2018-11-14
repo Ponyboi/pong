@@ -1,4 +1,7 @@
 import { DisplayObject as PIXI_DisplayObject } from 'pixi.js';
+import { Rectangle as Intersects_Rectangle } from 'yy-intersects';
+
+import { WALL_LINES } from 'constants/positions';
 
 import { removeCustomProperties, setComponentProperties } from 'helpers/pixiComponentHelper';
 
@@ -16,6 +19,14 @@ class Ball extends PIXI_DisplayObject {
 
     this.position = options.position || {x: 0, y: 0};
     this.velocity = {x: 1, y: 1};
+
+    /** @type {Intersects.Rectangle} */
+    this.shape = new Intersects_Rectangle(this.view, {
+      width: 15,
+      height: 15,
+      center: this.position,
+      noRotate: true,
+    });
   };
 
   getView() {
@@ -39,6 +50,21 @@ class Ball extends PIXI_DisplayObject {
 
     // set the view's position
     this.view.position = this.position;
+
+    // update collision detecter
+    this.shape.update();
+    if (this.shape.collidesLine(WALL_LINES.TOP.p1, WALL_LINES.TOP.p2)) {
+      console.log('hit TOP wall');
+    };
+    if (this.shape.collidesLine(WALL_LINES.RIGHT.p1, WALL_LINES.RIGHT.p2)) {
+      console.log('hit RIGHT wall');
+    };
+    if (this.shape.collidesLine(WALL_LINES.BOTTOM.p1, WALL_LINES.BOTTOM.p2)) {
+      console.log('hit BOTTOM wall');
+    };
+    if (this.shape.collidesLine(WALL_LINES.LEFT.p1, WALL_LINES.LEFT.p2)) {
+      console.log('hit LEFT wall');
+    };
   }
 };
 

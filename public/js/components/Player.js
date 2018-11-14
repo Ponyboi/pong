@@ -1,6 +1,7 @@
 import {
   Graphics as PIXI_Graphics,
 } from 'pixi.js';
+import { Rectangle as Intersects_Rectangle } from 'yy-intersects';
 
 import { PADDLE_SIZE } from 'constants/sizes';
 /*
@@ -20,6 +21,9 @@ class Player {
 
     /** @type {PIXI.Graphic} */
     this.view = this.render();
+
+    /** @type {Intersects.Rectangle} */
+    this.shape = new Intersects_Rectangle(this);
   };
   /**
    * draw the rectangle, temporary implementation

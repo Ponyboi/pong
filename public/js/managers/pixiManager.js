@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import Intersects from 'yy-intersects';
 
 import Player from 'components/Player';
 import Ball from 'components/Ball';
@@ -69,6 +70,10 @@ const appInitUpdate = (gm) => {
 
     secondaryPlayer.position.x += secondaryPlayer.input.x * delta;
     secondaryPlayer.view.position.x = secondaryPlayer.position.x;
+
+    if (ball.shape.collidesPoint(new PIXI.Point(BALL_DEFAULT_POS))) {
+      console.log('wow');
+    };
   });
 }
 /**
