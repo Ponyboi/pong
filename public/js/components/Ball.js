@@ -30,7 +30,7 @@ class Ball extends PIXI_DisplayObject {
     return graphics;
   };
   /**
-   * constant update
+   * update
    */
   update() {
     // update our internal position

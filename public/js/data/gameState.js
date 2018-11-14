@@ -18,12 +18,18 @@ const defaultState = {
 };
 
 // clone default state
-const _gameState = {...defaultState};
+const gameState = {...defaultState};
+/**
+ * @params {PIXI.Point} newPos
+ */
+const updatePrimaryPlayerPos = (newPos) => {
+  if (gameState.primaryPlayerPos === newPos) return; // no update if no change
 
-// when the game state changes, emit it to the server
-const gameState = onChange(_gameState, () => {
-  SocketClient.emit('gameStateUpdate', _gameState);
-});
+  gameState.primaryPlayerPos = newPos;
+
+  // only tell the other player of changes when position changes
+  SocketClient.emit('gameStateUpdate', gameState);
+};
 /**
  * @params {String} newState
  */
@@ -43,14 +49,6 @@ const updateBallPos = (newPos) => {
 /**
  * @params {PIXI.Point} newPos
  */
-const updatePrimaryPlayerPos = (newPos) => {
-  if (gameState.primaryPlayerPos === newPos) return; // no update if no change
-
-  gameState.primaryPlayerPos = newPos;
-};
-/**
- * @params {PIXI.Point} newPos
- */
 const updateSecondaryPlayerPos = (newPos) => {
   if (gameState.secondaryPlayerPos === newPos) return; // no update if no change
 
@@ -59,8 +57,8 @@ const updateSecondaryPlayerPos = (newPos) => {
 
 export default gameState;
 export {
-  updateBallPos,
   updatePrimaryPlayerPos,
   updatePrimaryPlayerState,
+  updateBallPos,
   updateSecondaryPlayerPos,
 };

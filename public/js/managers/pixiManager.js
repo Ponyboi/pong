@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 
-import gameState from 'data/gameState';
+import gameState, { updatePrimaryPlayerPos } from 'data/gameState';
 
 import Player from 'components/Player';
 import Ball from 'components/Ball';
@@ -38,7 +38,6 @@ const ball = new Ball({position: gameState.ballPos});
 const setupApp = () => {
   const stage = app.stage;
 
-  // -- render starts here
   // draw the field and score
   drawField(stage);
   drawScores(stage);
@@ -60,19 +59,25 @@ const setupApp = () => {
  */
 const appInitUpdate = () => {
   app.ticker.add(function(delta) {
-    // call updates of each object
-    ball.update();
-
+    // update player position
+    const playerSpeed = 4.5 * delta;
     if (gameState.primaryPlayerState === 'left') {
-      primaryPlayer.position.x -= 5 * delta;
+      const nextPos = new PIXI.Point(gameState.primaryPlayerPos.x - playerSpeed, gameState.primaryPlayerPos.y);
+      updatePrimaryPlayerPos(nextPos);
+      primaryPlayer.position = nextPos;
     };
     if (gameState.primaryPlayerState === 'right') {
-      primaryPlayer.position.x += 5 * delta;
+      const nextPos = new PIXI.Point(gameState.primaryPlayerPos.x + playerSpeed, gameState.primaryPlayerPos.y);
+      updatePrimaryPlayerPos(nextPos);
+      primaryPlayer.position = nextPos;
     };
-    primaryPlayer.view.position.x = primaryPlayer.position.x;
 
-    // secondaryPlayer.position.x += secondaryPlayer.input.x * delta;
-    secondaryPlayer.view.position.x = secondaryPlayer.position.x;
+    secondaryPlayer.position = gameState.secondaryPlayerPos;
+
+    // call updates of each object
+    ball.update();
+    primaryPlayer.update();
+    secondaryPlayer.update();
   });
 };
 // set up singleton
