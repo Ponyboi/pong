@@ -1,12 +1,13 @@
 import * as PIXI from 'pixi.js';
 
-import gameState, { updatePrimaryPlayerPos } from 'data/gameState';
+import gameState, { updatePrimaryPlayerPositionState } from 'data/gameState';
 
 import Player from 'components/Player';
 import BallComponent from 'components/BallComponent';
 import ScoreComponent from 'components/ScoreComponent';
 
 import { GAME_SIZE } from 'constants/sizes';
+import { DEFAULT_PLAYER_SPEED } from 'constants/physics';
 import { PRIMARY_SCORE_POS, SECONDARY_SCORE_POS } from 'constants/positions';
 
 import { getCanvasContainer } from 'helpers/canvasHelper';
@@ -107,20 +108,19 @@ const appInitUpdate = () => {
  * look at the player's current action and do stuff according to it
  */
 const handlePlayerMovement = (delta) => {
-  // update player position
-  const playerSpeed = 4.5 * delta;
+  const deltaSpeed = DEFAULT_PLAYER_SPEED * delta;
 
+  // update player position
   if (gameState.primaryPlayerState === 'left') {
-    primaryPlayer.velocity.x = -playerSpeed;
-    // const nextPos = new PIXI.Point(gameState.primaryPlayerPos.x - playerSpeed, gameState.primaryPlayerPos.y);
-    // updatePrimaryPlayerPos(nextPos);
+    primaryPlayer.velocity.x = -deltaSpeed;
   };
 
   if (gameState.primaryPlayerState === 'right') {
-    primaryPlayer.velocity.x = playerSpeed;
-    // const nextPos = new PIXI.Point(gameState.primaryPlayerPos.x + playerSpeed, gameState.primaryPlayerPos.y);
-    // updatePrimaryPlayerPos(nextPos);
+    primaryPlayer.velocity.x = deltaSpeed;
   };
+
+  // always update position state
+  updatePrimaryPlayerPositionState(primaryPlayer.getNextPosition());
 };
 
 export default app;

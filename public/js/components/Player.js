@@ -3,7 +3,7 @@ import {
   Point as PIXI_Point,
 } from 'pixi.js';
 
-import gameState, { updatePrimaryPlayerPos } from 'data/gameState';
+import gameState, { updatePrimaryPlayerPositionState } from 'data/gameState';
 
 import GameComponent from 'components/GameComponent';
 
@@ -47,7 +47,7 @@ class Player extends GameComponent {
    * update
    */
   update() {
-    this.applyVelocity();
+    this.reduceVelocity();
 
     // since graphics have no anchor, we're just going to adjust where the graphics are drawn to match it up
     const { x, y } = this.position;
