@@ -1,6 +1,8 @@
 import SocketClient from 'components/SocketClient';
 
-import { updatePrimaryPlayerState } from 'data/gameState';
+import { updatePrimaryPlayerState, updateSecondaryPlayerPos } from 'data/gameState';
+
+import { convertPrimaryToSecondaryPos } from 'helpers/gamePositionHelper';
 
 import { handleNewPlayer } from 'managers/gameManager';
 import inputEmitter from 'managers/inputManager';
@@ -14,7 +16,10 @@ SocketClient.on('update', handleNewPlayer);
 
 // receiving the game state from the other player
 SocketClient.on('newGameStateUpdate', (newGameState) => {
-  console.log('received new game state');
+  // the other player's position is the secondary player to us
+  const secondaryPlayerPos = convertPrimaryToSecondaryPos(newGameState.primaryPlayerPos);
+  console.log('newGameStateUpdate secondaryPlayerPos', secondaryPlayerPos);
+  updateSecondaryPlayerPos(secondaryPlayerPos);
 });
 // handle input events
 inputEmitter.on('leftDown', () => {

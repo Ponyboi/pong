@@ -1,5 +1,6 @@
 import {
   Graphics as PIXI_Graphics,
+  Point as PIXI_Point,
 } from 'pixi.js';
 
 import { PADDLE_SIZE } from 'constants/sizes';
@@ -39,20 +40,28 @@ class Player {
     };
 
     // draw rectangle - make sure current position always exists
-    const { x, y } = this.position;
     const { width, height } = this.size;
 
-    // since graphics have no anchor, we're just going to adjust where the graphics are drawn to match it up
-    const adjustedPos = {
-      x: (x - width / 2),
-      y: (y - height / 2),
-    };
-
     graphics.beginFill(0xFFFFFF);
-    graphics.drawRect(adjustedPos.x, adjustedPos.y, width, height);
+    graphics.drawRect(0, 0, width, height);
     graphics.endFill();
 
     return graphics;
+  };
+  /**
+   * update
+   */
+  update() {
+    // since graphics have no anchor, we're just going to adjust where the graphics are drawn to match it up
+    const { x, y } = this.position;
+    const { width, height } = this.size;
+
+    const adjustedPos = {
+      x: x - (width / 2),
+      y: y - (height / 2),
+    };
+
+    this.view.position = new PIXI_Point(adjustedPos.x, adjustedPos.y);
   };
 };
 
