@@ -49,6 +49,7 @@ module.exports.webConfig = {
     alias: {
       components: path.resolve(appPath, 'js/components'),
       constants: path.resolve(appPath, 'js/constants'),
+      data: path.resolve(appPath, 'js/data'),
       helpers: path.resolve(appPath, 'js/helpers'),
       managers: path.resolve(appPath, 'js/managers'),
     }

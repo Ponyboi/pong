@@ -32,8 +32,8 @@ function listen(server) {
     });
 
     // event - client made an input so tell everyone else
-    socket.on('playerInput', (...data) => {
-      socket.broadcast.emit('playerInput', ...data);
+    socket.on('gameStateUpdate', (...data) => {
+      socket.broadcast.emit('newGameStateUpdate', ...data);
     });
   });
 };
