@@ -6,13 +6,28 @@ import { convertPrimaryToSecondaryPos } from 'helpers/gamePositionHelper';
 
 import { handleNewPlayer } from 'managers/gameManager';
 import inputEmitter from 'managers/inputManager';
+import { resetBallToCenter } from 'managers/pixiManager';
 
 /*
-  attach event listeners onto our SocketClient, and handle what to do with it
+  I guess this just passes events around???
 */
 
-// this one's meant to be a very broad update event, handling new player specifically is just temporary
-SocketClient.on('update', handleNewPlayer);
+// the other player(s) is telling us something
+SocketClient.on('message', (message = {}) => {
+  console.log('received message', message);
+  const { action } = message;
+
+  switch(action) {
+    case 'resetBall':
+      resetBallToCenter();
+      break;
+    default:
+      break;
+  }
+});
+
+// number of players has changed
+SocketClient.on('playerUpdate', handleNewPlayer);
 
 // receiving the game state from the other player
 SocketClient.on('newGameStateUpdate', (newGameState) => {
@@ -20,6 +35,7 @@ SocketClient.on('newGameStateUpdate', (newGameState) => {
   const secondaryPlayerPos = convertPrimaryToSecondaryPos(newGameState.primaryPlayerPos);
   updateSecondaryPlayerPositionState(secondaryPlayerPos);
 });
+
 // handle input events
 inputEmitter.on('leftDown', () => {
   updatePrimaryPlayerActionState('left');

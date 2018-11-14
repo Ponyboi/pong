@@ -81,11 +81,12 @@ const initApp = () => {
  * puts the ball back in the middle and pushes it in a random direction
  */
 const resetBallToCenter = () => {
-  updateBallPositionState(new PIXI.Point(BALL_DEFAULT_POS.x, BALL_DEFAULT_POS.y));
+  updateBallPositionState(BALL_DEFAULT_POS);
+  ball.position = gameState.ballPos;
 
   // then reset the velocity
-  const startRight = Math.ceil(Math.random());
-  const startUp = Math.ceil(Math.random());
+  const startRight = Math.round(Math.random());
+  const startUp = Math.round(Math.random());
 
   ball.velocity = new PIXI.Point(
     startRight ? 3 : -3,
@@ -149,4 +150,5 @@ export default app;
 export {
   app,
   initApp,
+  resetBallToCenter,
 };
