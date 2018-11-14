@@ -20,8 +20,19 @@ const DASH_SIZE = {
   height: 3,
 };
 
+const PLAYER_TRAITS = {
+  speed: 3
+}
+
+const PLAYER_LIMITS = {
+  rightEnd: (GAME_SIZE.width / 2) - (PADDLE_SIZE.width/2),
+  leftEnd: (GAME_SIZE.width/2 * -1) + (PADDLE_SIZE.width/2)
+};
+
 export {
   DASH_SIZE,
   GAME_SIZE,
   PADDLE_SIZE,
+  PLAYER_LIMITS,
+  PLAYER_TRAITS
 }
