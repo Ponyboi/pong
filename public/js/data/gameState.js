@@ -5,7 +5,7 @@ import { BALL_DEFAULT_POS, PRIMARY_PLAYER_DEFAULT_POS, SECONDARY_PLAYER_DEFAULT_
 
 import onChange from 'helpers/onChange';
 
-// default state stuff
+// default state
 const defaultState = {
   /** @type {PIXI.Point} */
   ballPos: BALL_DEFAULT_POS,
@@ -21,7 +21,6 @@ const defaultState = {
   /** @type {Number} */
   secondaryPlayerScore: 0,
 };
-
 // clone default state
 const gameState = {...defaultState};
 /**

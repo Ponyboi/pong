@@ -3,7 +3,7 @@ import * as PIXI from 'pixi.js';
 import gameState, { updatePrimaryPlayerPos } from 'data/gameState';
 
 import Player from 'components/Player';
-import Ball from 'components/Ball';
+import BallComponent from 'components/BallComponent';
 import ScoreComponent from 'components/ScoreComponent';
 
 import { GAME_SIZE } from 'constants/sizes';
@@ -16,20 +16,26 @@ import { createFieldView, drawScores } from 'helpers/pixiGameDrawHelper';
   singleton for Pixi.js
     use this to draw and update the view
 */
+
 // set up Application
 const app = new PIXI.Application(GAME_SIZE);
 app.renderer.backgroundColor = 0x080808;
-
 // render it onto document
 const canvas = getCanvasContainer();
 canvas.appendChild(app.view);
 
 // active player
-const primaryPlayer = new Player({position: gameState.primaryPlayerPos});
+const primaryPlayer = new Player({
+  position: gameState.primaryPlayerPos,
+});
 // opposing player
-const secondaryPlayer = new Player({position: gameState.secondaryPlayerPos});
+const secondaryPlayer = new Player({
+  position: gameState.secondaryPlayerPos,
+});
 // ball
-const ball = new Ball({position: gameState.ballPos});
+const ball = new BallComponent({
+  position: gameState.ballPos,
+});
 // primaryPlayerScore
 const primaryScoreComponent = new ScoreComponent({
   position: PRIMARY_SCORE_POS,
@@ -73,8 +79,6 @@ const initApp = () => {
  * add a constant ticker to update the game
  */
 const appInitUpdate = () => {
-  const updateableComponents = [primaryPlayer, secondaryPlayer, ball];
-
   app.ticker.add((delta) => {
     // see if player is moving
     handlePlayerMovement(delta);
@@ -107,13 +111,15 @@ const handlePlayerMovement = (delta) => {
   const playerSpeed = 4.5 * delta;
 
   if (gameState.primaryPlayerState === 'left') {
-    const nextPos = new PIXI.Point(gameState.primaryPlayerPos.x - playerSpeed, gameState.primaryPlayerPos.y);
-    updatePrimaryPlayerPos(nextPos);
+    primaryPlayer.velocity.x = -playerSpeed;
+    // const nextPos = new PIXI.Point(gameState.primaryPlayerPos.x - playerSpeed, gameState.primaryPlayerPos.y);
+    // updatePrimaryPlayerPos(nextPos);
   };
 
   if (gameState.primaryPlayerState === 'right') {
-    const nextPos = new PIXI.Point(gameState.primaryPlayerPos.x + playerSpeed, gameState.primaryPlayerPos.y);
-    updatePrimaryPlayerPos(nextPos);
+    primaryPlayer.velocity.x = playerSpeed;
+    // const nextPos = new PIXI.Point(gameState.primaryPlayerPos.x + playerSpeed, gameState.primaryPlayerPos.y);
+    // updatePrimaryPlayerPos(nextPos);
   };
 };
 
