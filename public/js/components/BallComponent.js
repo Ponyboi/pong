@@ -31,10 +31,6 @@ class BallComponent extends GameComponent {
    * update
    */
   update() {
-    // update our internal position
-    this.position.x += this.velocity.x;
-    this.position.y += this.velocity.y;
-
     // set the view's position
     this.view.position = this.position;
   }

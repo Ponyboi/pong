@@ -3,6 +3,13 @@
  */
 const DEFAULT_PLAYER_SPEED = 4;
 /**
+ * base horizontal speed of the paddle
+ */
+const BASE_BALL_VELOCITY = {
+  x: 3,
+  y: 3,
+};
+/**
  * multiplier that reduces velocity
  */
 const VELOCITY_DRAG = 0.9;

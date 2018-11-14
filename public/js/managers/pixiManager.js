@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 
-import gameState, { updatePrimaryPlayerPositionState } from 'data/gameState';
+import gameState, { updateBallPositionState, updatePrimaryPlayerPositionState } from 'data/gameState';
 
 import Player from 'components/Player';
 import BallComponent from 'components/BallComponent';
@@ -8,7 +8,7 @@ import ScoreComponent from 'components/ScoreComponent';
 
 import { GAME_SIZE } from 'constants/sizes';
 import { DEFAULT_PLAYER_SPEED } from 'constants/physics';
-import { PRIMARY_SCORE_POS, SECONDARY_SCORE_POS } from 'constants/positions';
+import { PRIMARY_SCORE_POS, SECONDARY_SCORE_POS, BALL_DEFAULT_POS } from 'constants/positions';
 
 import { getCanvasContainer } from 'helpers/canvasHelper';
 import { createFieldView, drawScores } from 'helpers/pixiGameDrawHelper';
@@ -72,9 +72,25 @@ const initApp = () => {
 
   // ball
   stage.addChild(ball.view);
+  resetBallToCenter();
 
   // after adding all the components, we can then start a ticker to update everything
   appInitUpdate();
+};
+/**
+ * puts the ball back in the middle and pushes it in a random direction
+ */
+const resetBallToCenter = () => {
+  updateBallPositionState(new PIXI.Point(BALL_DEFAULT_POS.x, BALL_DEFAULT_POS.y));
+
+  // then reset the velocity
+  const startRight = Math.ceil(Math.random());
+  const startUp = Math.ceil(Math.random());
+
+  ball.velocity = new PIXI.Point(
+    startRight ? 3 : -3,
+    startUp ? 3 : -3,
+  );
 };
 /**
  * add a constant ticker to update the game
@@ -82,10 +98,11 @@ const initApp = () => {
 const appInitUpdate = () => {
   app.ticker.add((delta) => {
     // see if player is moving
-    handlePlayerMovement(delta);
+    handleUpdateGameState(delta);
 
     // assign data from state the the components and update them
-    ball.update(); // todo
+    ball.position = gameState.ballPos;
+    ball.update();
 
     // active player
     primaryPlayer.position = gameState.primaryPlayerPos;
@@ -107,20 +124,25 @@ const appInitUpdate = () => {
 /**
  * look at the player's current action and do stuff according to it
  */
-const handlePlayerMovement = (delta) => {
-  const deltaSpeed = DEFAULT_PLAYER_SPEED * delta;
+const handleUpdateGameState = (delta) => {
+
+  // update ball's position
+  const ballVelocityDelta = new PIXI.Point(ball.velocity.x, ball.velocity.y);
+  const ballNextPosition = ball.getNextPosition();
+  updateBallPositionState(ballNextPosition);
 
   // update player position
+  const playerSpeedDelta = DEFAULT_PLAYER_SPEED * delta;
   if (gameState.primaryPlayerState === 'left') {
-    primaryPlayer.velocity.x = -deltaSpeed;
+    primaryPlayer.velocity.x = -playerSpeedDelta;
   };
-
   if (gameState.primaryPlayerState === 'right') {
-    primaryPlayer.velocity.x = deltaSpeed;
+    primaryPlayer.velocity.x = playerSpeedDelta;
   };
 
-  // always update position state
-  updatePrimaryPlayerPositionState(primaryPlayer.getNextPosition());
+  // always update player position state
+  const primaryPlayerNextPosition = primaryPlayer.getNextPosition();
+  updatePrimaryPlayerPositionState(primaryPlayerNextPosition);
 };
 
 export default app;
