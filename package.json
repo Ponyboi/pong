@@ -13,6 +13,7 @@
     "gulp-shell": "^0.6.5",
     "html-webpack-plugin": "^3.2.0",
     "lodash": "^4.17.11",
+    "opn": "^5.4.0",
     "pixi.js": "^4.8.2",
     "requirejs": "^2.3.6",
     "socket.io-client": "^2.1.1",
@@ -39,7 +40,7 @@
   "main": "main.js",
   "scripts": {
     "gulp": "gulp",
-    "start:webapp": "DEV_ENV=webapp gulp",
+    "start:app": "DEV_ENV=webapp gulp",
     "start:server": "DEV_ENV=server gulp"
   },
   "repository": {
