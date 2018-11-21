@@ -5,6 +5,7 @@ import { Rectangle as Intersects_Rectangle } from 'yy-intersects';
 
 import GameComponent from 'components/GameComponent';
 import { BALL_SIZE } from 'constants/sizes';
+import { BASE_BALL_VELOCITY } from 'constants/physics';
 import { WALL_LINES } from 'constants/positions';
 
 class BallComponent extends GameComponent {
@@ -33,6 +34,8 @@ class BallComponent extends GameComponent {
    * update
    */
   update() {
+    this.reduceVelocity(BASE_BALL_VELOCITY);
+
     // set the view's position
     this.view.position = this.position;
 

@@ -72,17 +72,22 @@ class GameComponent {
   };
   /**
    * handles doing the math on reducing velocity
+   * - you can pass in param to reduce it to
+   *
+   * @param {Object} [reduceTo]
    */
-  reduceVelocity() {
+  reduceVelocity(reduceTo = {}) {
+    const { x: minXVelocity, y: minYVelocity } = reduceTo;
+
     this.velocity.x = this.velocity.x * VELOCITY_DRAG;
     this.velocity.y = this.velocity.y * VELOCITY_DRAG;
 
-    // set to zero if velocity gets small enough
-    if (Math.abs(this.velocity.x) < VELOCITY_MIN) {
-      this.velocity.x = 0;
+    // set to given min or zero if velocity gets small enough
+    if (Math.abs(this.velocity.x) < minXVelocity || VELOCITY_MIN) {
+      this.velocity.x = minXVelocity || 0;
     }
-    if (Math.abs(this.velocity.y) < VELOCITY_MIN) {
-      this.velocity.y = 0;
+    if (Math.abs(this.velocity.y) < minYVelocity || VELOCITY_MIN) {
+      this.velocity.y = minYVelocity || 0;
     }
   }
   /**
