@@ -60,7 +60,6 @@ class Player extends GameComponent {
   update(delta) {
     this.reduceVelocity();
 
-    // since graphics have no anchor, we're just going to adjust where the graphics are drawn to match it up
     var playerFuturePos = this.position.x + this.input.x * delta * PLAYER_TRAITS.speed;
     if (playerFuturePos >= PLAYER_LIMITS.rightEnd) {
       this.position.x = PLAYER_LIMITS.rightEnd;
@@ -74,6 +73,9 @@ class Player extends GameComponent {
       this.view.position = new PIXI_Point(adjustedPos.x, adjustedPos.y);
     }
   };
+  /**
+   * since graphics have no anchor, we're just going to adjust where the graphics are drawn to match it up
+   */
   getAdjustedPos(position, size) {
     const { x, y } = position;
     const { width, height } = size;
