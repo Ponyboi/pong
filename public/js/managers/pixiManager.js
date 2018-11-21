@@ -129,6 +129,10 @@ const appInitUpdate = () => {
  * look at the player's current action and do stuff according to it
  */
 const handleUpdateGameState = (delta) => {
+  // check if ball collides with any player
+  if (ball.willCollide(primaryPlayer) || ball.willCollide(secondaryPlayer)) {
+    ball.velocity.y *= -1;
+  };
 
   // update ball's position
   const ballVelocityDelta = new PIXI.Point(ball.velocity.x, ball.velocity.y);

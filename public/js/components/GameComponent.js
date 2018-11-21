@@ -122,21 +122,15 @@ class GameComponent {
    * returns rectangular bounds of where this component will be - given a position
    *
    * @abstract
-   * @param {Intersects.Shape} collider - will assume point if none is passed
+   * @param {GameComponent} collider
    * @returns {Object}
    */
   willCollide(collider) {
-    const nextPosition = this.getNextPosition();
+    if (!collider) {
+      return false;
+    }
 
-    const hitbox = new Intersects_Rectangle(this.view, {
-      width: this.size.width,
-      height: this.size.height,
-      center: nextPosition,
-      noRotate: true,
-    });
-
-    const colliderShape = _.get(collider, 'shape', 'point');
-    return hitbox.collides(colliderShape);
+    return this.getHitbox().collides(collider.getHitbox());
   }
 };
 
