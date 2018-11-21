@@ -64,7 +64,58 @@ class GameComponent {
     if (Math.abs(this.velocity.y) < VELOCITY_MIN) {
       this.velocity.y = 0;
     }
-  };
+  }
+  /**
+   * since graphics have no anchor, we're just going to adjust where the graphics are drawn to match it up
+   *
+   * @abstract
+   * @returns {Object}
+   */
+  getAdjustedPos() {
+    const { x, y } = this.position;
+    const { width, height } = this.size;
+
+    const adjustedPos = {
+      x: x - (width / 2),
+      y: y - (height / 2),
+    };
+
+    return adjustedPos;
+  }
+  /**
+   * returns this object's current rectangular bounds
+   *
+   * @abstract
+   * @returns {Object}
+   */
+  getCurrentBounds() {
+    const { x, y } = this.getAdjustedPos();
+    const { width, height } = this.size;
+
+    return {
+      top: y - height / 2,
+      bottom: y + height / 2,
+      left: x - width / 2,
+      right: x + width / 2,
+    }
+  }
+  /**
+   * returns rectangular bounds of where this component will be
+   *
+   * @abstract
+   * @returns {Object}
+   */
+  getBounds() {
+    const { x, y } = this.getNextPosition();
+    const { width, height } = this.size;
+
+    return {
+      top: y - height / 2,
+      bottom: y + height / 2,
+      left: x - width / 2,
+      right: x + width / 2,
+    }
+  }
 };
 
 export default GameComponent;

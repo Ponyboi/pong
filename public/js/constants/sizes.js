@@ -30,8 +30,8 @@ const PLAYER_TRAITS = {
 }
 
 const PLAYER_LIMITS = {
-  rightEnd: GAME_SIZE.width - (PADDLE_SIZE.width/2),
-  leftEnd: 0 + (PADDLE_SIZE.width/2)
+  rightEnd: GAME_SIZE.width,
+  leftEnd: 0,
 };
 
 export {

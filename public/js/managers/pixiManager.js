@@ -110,11 +110,11 @@ const appInitUpdate = () => {
 
     // active player
     primaryPlayer.position = gameState.primaryPlayerPos;
-    primaryPlayer.update(delta);
+    primaryPlayer.update();
 
     // opposing player
     secondaryPlayer.position = gameState.secondaryPlayerPos;
-    secondaryPlayer.update(delta);
+    secondaryPlayer.update();
 
     // active player's score
     primaryScoreComponent.text = gameState.primaryPlayerScore;
