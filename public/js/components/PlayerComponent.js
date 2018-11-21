@@ -1,36 +1,26 @@
 import {
   Graphics as PIXI_Graphics,
 } from 'pixi.js';
-import { Rectangle as Intersects_Rectangle } from 'yy-intersects';
 
 import gameState, { updatePrimaryPlayerPositionState } from 'data/gameState';
-import { GAME_SIZE, PADDLE_SIZE, PLAYER_LIMITS } from 'constants/sizes';
+
+import { PADDLE_SIZE, PLAYER_LIMITS } from 'constants/sizes';
 
 import Point from '@studiomoniker/point';
 import GameComponent from 'components/GameComponent';
 
-/*
-  Player controller class
-*/
+/**
+ * Player Game Object
+ */
 class Player extends GameComponent {
-  /** @default */
+  /** @override */
   constructor(options = {}) {
-    super(options);
-    const { position, size } = options;
-
-    /** @type {Point} */
-    this.position = position || {x: 0, y: 0};
-    this.input = {x: 0, y: 0};
-
-    /** @type {Object} */
-    this.size = size || PADDLE_SIZE;
-
-    /** @type {PIXI.Graphic} */
-    this.view = this.render();
+    super({
+      size: PADDLE_SIZE,
+      ...options,
+    });
   };
-  /**
-   * @returns {PIXI.Graphic}
-   */
+  /** @override */
   render() {
     let graphics = this.view;
 
@@ -52,10 +42,8 @@ class Player extends GameComponent {
 
     return graphics;
   };
-  /**
-   * update
-   */
-  update(delta) {
+  /** @override */
+  update() {
     this.reduceVelocity();
 
     const bounds = this.getBounds();

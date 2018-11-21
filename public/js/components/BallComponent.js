@@ -3,11 +3,14 @@ import { Rectangle as Intersects_Rectangle } from 'yy-intersects';
 
 import GameComponent from 'components/GameComponent';
 import { BALL_SIZE } from 'constants/sizes';
-import { BASE_BALL_VELOCITY } from 'constants/physics';
-import { WALL_LINES } from 'constants/positions';
+import { GAME_EDGES } from 'constants/positions';
 
+/**
+ * Game Ball
+ *  hopefully its possible to make multiple of these?
+ */
 class BallComponent extends GameComponent {
-  /** @default */
+  /** @override */
   constructor(options = {}) {
     super({
       size: BALL_SIZE,
@@ -29,26 +32,26 @@ class BallComponent extends GameComponent {
     return graphics;
   };
   /**
-   * update
+   * @override
    */
   update() {
-    this.reduceVelocity(BASE_BALL_VELOCITY);
+    this.reduceVelocity();
 
     // set the view's position
     this.view.position = this.position;
 
     const hitbox = this.getHitbox();
 
-    if (hitbox.collidesLine(WALL_LINES.TOP.p1, WALL_LINES.TOP.p2)) {
+    if (hitbox.collidesLine(GAME_EDGES.topEdge.p1, GAME_EDGES.topEdge.p2)) {
       this.velocity.y = -1 * this.velocity.y;
     };
-    if (hitbox.collidesLine(WALL_LINES.RIGHT.p1, WALL_LINES.RIGHT.p2)) {
+    if (hitbox.collidesLine(GAME_EDGES.rightEdge.p1, GAME_EDGES.rightEdge.p2)) {
       this.velocity.x = -1 * this.velocity.x;
     };
-    if (hitbox.collidesLine(WALL_LINES.BOTTOM.p1, WALL_LINES.BOTTOM.p2)) {
+    if (hitbox.collidesLine(GAME_EDGES.bottomEdge.p1, GAME_EDGES.bottomEdge.p2)) {
       this.velocity.y = -1 * this.velocity.y;
     };
-    if (hitbox.collidesLine(WALL_LINES.LEFT.p1, WALL_LINES.LEFT.p2)) {
+    if (hitbox.collidesLine(GAME_EDGES.leftEdge.p1, GAME_EDGES.leftEdge.p2)) {
       this.velocity.x = -1 * this.velocity.x;
     };
   }

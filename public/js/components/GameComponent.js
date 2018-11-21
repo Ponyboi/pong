@@ -1,30 +1,33 @@
 import _ from 'lodash';
 import Point from '@studiomoniker/point';
 
-import { Rectangle as Intersects_Rectangle } from 'yy-intersects';
+import { Rectangle } from 'yy-intersects';
 
-import { VELOCITY_DRAG, VELOCITY_MIN } from 'constants/physics';
+// import { VELOCITY_DRAG, VELOCITY_MIN } from 'constants/physics';
 import { PLAYER_LIMITS } from 'constants/sizes';
 
 /**
  * base component for a game object
- * because most of them should include
+ *  for the most part, everything is considered to be a recntagle
+ *
+ * most components will include the following
+ *  which can be passed in through the options
  * - position
  * - size
  * - view
- *
  */
 class GameComponent {
-  /** @default */
+  /** @override */
   constructor(options = {}) {
-    const { position, size, velocity } = options;
+    /** @type {Point} */
+    this.velocity = options.velocity || new Point(0, 0);
 
     /** @type {Point} */
-    this.velocity = velocity || new Point();
-    /** @type {Point} */
-    this.position = position || new Point();
-    /** @type {Object} */
-    this.size = size || {height: 1, width: 1};
+    this.position = options.position || new Point(0, 0);
+
+    /** @type {Size} */
+    this.size = options.size || {height: 1, width: 1};
+
     /** @type {PIXI.Graphic} */
     this.view = this.render();
   };
@@ -40,12 +43,10 @@ class GameComponent {
    * returns this object's hitbox
    *  by default it uses a rectangle
    *
-   * @abstract
    * @returns {Intersects.Shape}
    */
   getHitbox() {
-    /** @type {Intersects.Rectangle} */
-    return new Intersects_Rectangle(this.view, {
+    return new Rectangle(this.view, {
       width: this.size.width,
       height: this.size.height,
       center: this.position,
@@ -78,8 +79,8 @@ class GameComponent {
   reduceVelocity(reduceTo = {}) {
     const { x: minXVelocity, y: minYVelocity } = reduceTo;
 
-    this.velocity.x = this.velocity.x * VELOCITY_DRAG;
-    this.velocity.y = this.velocity.y * VELOCITY_DRAG;
+    this.velocity.x = this.velocity.x * 0.9;
+    this.velocity.y = this.velocity.y * 0.9;
 
     // set to given min or zero if velocity gets small enough
     if (Math.abs(this.velocity.x) < minXVelocity || VELOCITY_MIN) {
@@ -92,7 +93,6 @@ class GameComponent {
   /**
    * since graphics have no anchor, we're just going to adjust where the graphics are drawn to match it up
    *
-   * @abstract
    * @returns {Object}
    */
   getAdjustedPos() {

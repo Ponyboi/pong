@@ -4,12 +4,12 @@ import Intersects from 'yy-intersects';
 import gameState, { updateBallPositionState, updatePrimaryPlayerPositionState } from 'data/gameState';
 
 import Point from '@studiomoniker/point';
-import Player from 'components/Player';
+import PlayerComponent from 'components/PlayerComponent';
 import BallComponent from 'components/BallComponent';
 import ScoreComponent from 'components/ScoreComponent';
 
 import { GAME_SIZE } from 'constants/sizes';
-import { BASE_BALL_VELOCITY, DEFAULT_PLAYER_SPEED } from 'constants/physics';
+import { DEFAULT_BALL_SPEED, DEFAULT_PLAYER_SPEED } from 'constants/physics';
 import { PRIMARY_SCORE_POS, SECONDARY_SCORE_POS, BALL_DEFAULT_POS } from 'constants/positions';
 
 import { getCanvasContainer } from 'helpers/canvasHelper';
@@ -30,11 +30,11 @@ const canvas = getCanvasContainer();
 canvas.appendChild(app.view);
 
 // active player
-const primaryPlayer = new Player({
+const primaryPlayer = new PlayerComponent({
   position: gameState.primaryPlayerPos,
 });
 // opposing player
-const secondaryPlayer = new Player({
+const secondaryPlayer = new PlayerComponent({
   position: gameState.secondaryPlayerPos,
 });
 // ball
@@ -89,7 +89,7 @@ const resetBallToCenter = () => {
   ball.position = gameState.ballPos;
 
   // then reset the velocity
-  ball.velocity = BASE_BALL_VELOCITY;
+  ball.velocity = new Point(DEFAULT_BALL_SPEED, DEFAULT_BALL_SPEED);
   if (Math.round(Math.random())) {
     ball.velocity.x *= -1;
   }

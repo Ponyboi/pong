@@ -8,7 +8,7 @@ const scoreStyles = {
 };
 
 class ScoreComponent {
-  /** @default */
+  /** @override */
   constructor(options = {}) {
     const {
       position,

@@ -4,78 +4,114 @@ import { GAME_SIZE } from 'constants/sizes';
 
 import Point from '@studiomoniker/point';
 
-/*
-  default positions
+/**
+ * positions for the game stage and objects
+ *  most of which are just the default position
+ * (todo: what if screen is sized differently/dynamically?)
+ *
+ * @typedef {Object} Edge - defined by two points
+ * @property {Point} Edge.p1
+ * @property {Point} Edge.p2
+ *
+ * @typedef {Object} Edges - edge that define a side
+ * @property {Edge} Edges.topEdge
+ * @property {Edge} Edges.bottomEdge
+ * @property {Edge} Edges.leftEdge
+ * @property {Edge} Edges.rightEdge
+ *
+ * @typedef {Object} Bounds - position of each side
+ * @property {Point} Bounds.top
+ * @property {Point} Bounds.bottom
+ * @property {Point} Bounds.left
+ * @property {Point} Bounds.right
+ */
 
-  todo: what if screen is sized differently?
-*/
-
-const gameHorizontalCenter = GAME_SIZE.width / 2; // center of screen
-const gameVerticalCenter = GAME_SIZE.height / 2; // center of screen
-
-// for paddles
-const paddleEdgeDistance = 45; // how many pixels respectively from the edge of the screen?
-
-// player controller, bottom half of screen
-const PRIMARY_PLAYER_DEFAULT_POS = new Point(
-  gameHorizontalCenter,
-  GAME_SIZE.height - paddleEdgeDistance
+/** @type {Point} */
+export const GAME_CENTER_POS = new Point(
+  GAME_SIZE.width / 2,
+  GAME_SIZE.height / 2,
 );
+/** @type {Bounds} */
+export const GAME_BOUNDS = {
+  top: 0,
+  bottom: GAME_SIZE.height,
+  left: 0,
+  right: GAME_SIZE.width,
+};
 
-// other player, top half
-const SECONDARY_PLAYER_DEFAULT_POS = new Point(
-  gameHorizontalCenter,
-  0 + paddleEdgeDistance
-);
-
-// ball
-const BALL_DEFAULT_POS = new Point(gameHorizontalCenter, gameVerticalCenter);
-
-// define the two points that make up a line for the wall
-const TOP_WALL_LINE = {
+/** @type {Edge} */
+export const TOP_WALL_LINE = {
   p1: new Point(0, 0),
   p2: new Point(GAME_SIZE.width, 0),
 };
-const RIGHT_WALL_LINE = {
-  p1: new Point(GAME_SIZE.width, 0),
-  p2: new Point(GAME_SIZE.width, GAME_SIZE.height),
-};
-const BOTTOM_WALL_LINE = {
+/** @type {Edge} */
+export const BOTTOM_WALL_LINE = {
   p1: new Point(0, GAME_SIZE.height),
   p2: new Point(GAME_SIZE.width, GAME_SIZE.height),
 };
-const LEFT_WALL_LINE = {
+/** @type {Edge} */
+export const LEFT_WALL_LINE = {
   p1: new Point(0, 0),
   p2: new Point(0, GAME_SIZE.height),
 };
+/** @type {Edge} */
+export const RIGHT_WALL_LINE = {
+  p1: new Point(GAME_SIZE.width, 0),
+  p2: new Point(GAME_SIZE.width, GAME_SIZE.height),
+};
+/**
+ * these are the edges that make up the wall
+ *
+ * @type {Edges}
+ */
+export const GAME_EDGES = {
+  topEdge: TOP_WALL_LINE,
+  bottomEdge: BOTTOM_WALL_LINE,
+  leftEdge: LEFT_WALL_LINE,
+  rightEdge: RIGHT_WALL_LINE,
+};
+
+/**
+ * ball - starts in the middle
+ *
+ * @type {Point}
+ */
+export const BALL_DEFAULT_POS = new Point(GAME_CENTER_POS.x, GAME_CENTER_POS.y);
+
+// how many pixels a paddle is from the edge of a screen
+const paddleEdgeDistance = 45;
+/**
+ * primary player - starts on the bottom half of screen
+ *
+ * @type {Point}
+ */
+export const PRIMARY_PLAYER_DEFAULT_POS = new Point(
+  GAME_CENTER_POS.x,
+  GAME_BOUNDS.bottom - paddleEdgeDistance,
+);
+/**
+ * secondary player - starts on the top half of screen
+ *
+ * @type {Point}
+ */
+export const SECONDARY_PLAYER_DEFAULT_POS = new Point(
+  GAME_CENTER_POS.x,
+  GAME_BOUNDS.top + paddleEdgeDistance,
+);
 
 // scores
 const scoreOffset = {
   x: 35,
   y: 45,
 };
-const PRIMARY_SCORE_POS = {
-  x: scoreOffset.x,
-  y: gameVerticalCenter + scoreOffset.y,
+/** @type {Point} */
+export const PRIMARY_SCORE_POS = {
+  x: GAME_BOUNDS.left + scoreOffset.x,
+  y: GAME_CENTER_POS.y + scoreOffset.y,
 };
-const SECONDARY_SCORE_POS = {
-  x: scoreOffset.x,
-  y: gameVerticalCenter - scoreOffset.y,
-};
-
-// these are the points that make up the wall
-const WALL_LINES = {
-  TOP: TOP_WALL_LINE,
-  RIGHT: RIGHT_WALL_LINE,
-  BOTTOM: BOTTOM_WALL_LINE,
-  LEFT: LEFT_WALL_LINE,
+/** @type {Point} */
+export const SECONDARY_SCORE_POS = {
+  x: GAME_BOUNDS.left + scoreOffset.x,
+  y: GAME_CENTER_POS.y - scoreOffset.y,
 };
 
-export {
-  BALL_DEFAULT_POS,
-  PRIMARY_PLAYER_DEFAULT_POS,
-  SECONDARY_PLAYER_DEFAULT_POS,
-  WALL_LINES,
-  PRIMARY_SCORE_POS,
-  SECONDARY_SCORE_POS,
-};
