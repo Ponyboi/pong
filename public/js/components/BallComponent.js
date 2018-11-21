@@ -35,7 +35,7 @@ class BallComponent extends GameComponent {
    * @override
    */
   update() {
-    this.reduceVelocity();
+    // this.reduceVelocity();
 
     // set the view's position
     this.view.position = this.position;

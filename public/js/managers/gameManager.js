@@ -13,7 +13,7 @@ const gameManager = {
  *
  * @param {Object} message - from server
  */
-const handleNewPlayer = (message = {}) => {
+function handleNewPlayer(message = {}) {
   const { playerCount } = message;
 
   const canvas = document.getElementById('app-header');

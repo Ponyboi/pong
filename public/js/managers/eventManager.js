@@ -31,7 +31,7 @@ SocketClient.on('playerUpdate', handleNewPlayer);
 
 // receiving the game state from the other player
 SocketClient.on('newGameStateUpdate', (newGameState) => {
-  // the other player's position is the secondary player to us
+  // convert the other player's position is the secondary player to us
   const secondaryPlayerPos = convertPrimaryToSecondaryPos(newGameState.primaryPlayerPos);
   updateSecondaryPlayerPositionState(secondaryPlayerPos);
 });

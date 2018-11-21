@@ -1,16 +1,18 @@
 import * as PIXI from 'pixi.js';
 
 import { DASH_SIZE, GAME_SIZE, PADDLE_SIZE } from 'constants/sizes';
-import { BALL_DEFAULT_POS, PRIMARY_PLAYER_DEFAULT_POS, SECONDARY_PLAYER_DEFAULT_POS } from 'constants/positions';
-
-const fieldVerticalCenter = GAME_SIZE.height / 2;
+import {
+  GAME_CENTER_POS,
+  PRIMARY_PLAYER_DEFAULT_POS,
+  SECONDARY_PLAYER_DEFAULT_POS,
+} from 'constants/positions';
 
 /**
  * draw some graphics for the playing field
  *
- * @returns {PIXI.View?}
+ * @returns {PIXI.View(?)}
  */
-const createFieldView = () => {
+export function createFieldView() {
   const fieldGraphics = new PIXI.Graphics();
 
   const { width, height } = DASH_SIZE;
@@ -28,13 +30,9 @@ const createFieldView = () => {
 
     // center line
     fieldGraphics.beginFill(0x6d6d6d);
-    fieldGraphics.drawRect(dashDistance, fieldVerticalCenter, width, height);
+    fieldGraphics.drawRect(dashDistance, GAME_CENTER_POS.y, width, height);
   };
 
   fieldGraphics.endFill();
   return fieldGraphics;
 };
-
-export {
-  createFieldView,
-}

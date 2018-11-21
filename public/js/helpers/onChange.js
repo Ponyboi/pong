@@ -4,7 +4,7 @@
   watches when an object state changes and then triggers given callback
    the problem is that it updates regardless if the property actually changed or not
 */
-const onChange = (object, callback) => {
+export function onChange(object, callback) {
   const handler = {
     get(target, property, receiver) {
       try {
@@ -25,5 +25,3 @@ const onChange = (object, callback) => {
 
   return new Proxy(object, handler);
 };
-
-export default onChange;

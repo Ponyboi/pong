@@ -7,10 +7,6 @@
  *
  * @returns {Element}
  */
-const getCanvasContainer = () => {
+export function getCanvasContainer() {
   return document.getElementById('pixi-canvas');
 };
-
-export {
-  getCanvasContainer,
-}

@@ -3,7 +3,7 @@ import Point from '@studiomoniker/point';
 
 import { Rectangle } from 'yy-intersects';
 
-// import { VELOCITY_DRAG, VELOCITY_MIN } from 'constants/physics';
+// import { VELOCITY_DRAG, 0.15 } from 'constants/physics';
 import { PLAYER_LIMITS } from 'constants/sizes';
 
 /**
@@ -83,10 +83,10 @@ class GameComponent {
     this.velocity.y = this.velocity.y * 0.9;
 
     // set to given min or zero if velocity gets small enough
-    if (Math.abs(this.velocity.x) < minXVelocity || VELOCITY_MIN) {
+    if (Math.abs(this.velocity.x) < minXVelocity || 0.15) {
       this.velocity.x = minXVelocity || 0;
     }
-    if (Math.abs(this.velocity.y) < minYVelocity || VELOCITY_MIN) {
+    if (Math.abs(this.velocity.y) < minYVelocity || 0.15) {
       this.velocity.y = minYVelocity || 0;
     }
   }

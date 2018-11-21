@@ -15,15 +15,15 @@ import { PRIMARY_SCORE_POS, SECONDARY_SCORE_POS, BALL_DEFAULT_POS } from 'consta
 import { getCanvasContainer } from 'helpers/canvasHelper';
 import { createFieldView, drawScores } from 'helpers/pixiGameDrawHelper';
 
-/*
-  singleton for Pixi.js
-    use this to draw and update the view
-*/
+/**
+ * singleton for Pixi.js
+ *use this to draw and update the view
+ *
+ */
 
 // set up Application
 const app = new PIXI.Application(GAME_SIZE);
 app.renderer.backgroundColor = 0x080808;
-// app.renderer.backgroundColor = 0xffffff;
 
 // render it onto document
 const canvas = getCanvasContainer();
@@ -40,6 +40,7 @@ const secondaryPlayer = new PlayerComponent({
 // ball
 const ball = new BallComponent({
   position: gameState.ballPos,
+  velocity: new Point(DEFAULT_BALL_SPEED, DEFAULT_BALL_SPEED),
 });
 // primaryPlayerScore
 const primaryScoreComponent = new ScoreComponent({
@@ -57,7 +58,7 @@ const secondaryScoreComponent = new ScoreComponent({
  *
  * todo: this will potentially grow to be unmaintainable, figure out a better solution
  */
-const initApp = () => {
+function initApp() {
   const stage = app.stage;
 
   // draw the field
@@ -84,12 +85,14 @@ const initApp = () => {
 /**
  * puts the ball back in the middle and pushes it in a random direction
  */
-const resetBallToCenter = () => {
+function resetBallToCenter() {
   updateBallPositionState(BALL_DEFAULT_POS);
-  ball.position = gameState.ballPos;
+  // ball.position = gameState.ballPos;
 
   // then reset the velocity
   ball.velocity = new Point(DEFAULT_BALL_SPEED, DEFAULT_BALL_SPEED);
+
+  // randomly some direction changes
   if (Math.round(Math.random())) {
     ball.velocity.x *= -1;
   }
@@ -98,11 +101,11 @@ const resetBallToCenter = () => {
   }
 };
 /**
- * add a constant ticker to update the game
+ * add a ticker to constantly update the game
  */
-const appInitUpdate = () => {
+function appInitUpdate() {
   app.ticker.add((delta) => {
-    // see if player is moving
+    // handle state changes
     handleUpdateGameState(delta);
 
     // assign data from state the the components and update them
@@ -127,11 +130,11 @@ const appInitUpdate = () => {
   });
 };
 /**
- * look at the player's current action and do stuff according to it
+ * update everything related to the game state
  *
- * THIS IS DUMBBBBBBBBBBB
+ * @param {Number} delta - I think it's how much time has elapsed since the last update?
  */
-const handleUpdateGameState = (delta) => {
+function handleUpdateGameState(delta) {
   const primaryPlayerCollisions = ball.getCollisionSide(primaryPlayer);
   const secondaryPlayerCollisions = ball.getCollisionSide(secondaryPlayer);
 
@@ -193,7 +196,6 @@ const handleUpdateGameState = (delta) => {
 
 export default app;
 export {
-  app,
   initApp,
   resetBallToCenter,
 };
