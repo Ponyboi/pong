@@ -4,6 +4,8 @@ import {
 
 import GameComponent from 'components/GameComponent';
 import { BALL_SIZE } from 'constants/sizes';
+import { Rectangle as Intersects_Rectangle } from 'yy-intersects';
+import { WALL_LINES, BALL_DEFAULT_POS } from 'constants/positions';
 
 class BallComponent extends GameComponent {
   /** @default */
@@ -12,6 +14,15 @@ class BallComponent extends GameComponent {
       size: BALL_SIZE,
       ...options,
     });
+
+    /** @type {Intersects.Rectangle} */
+    this.shape = new Intersects_Rectangle(this.view, {
+      width: 1,//this.size.width,
+      height: 1,//this.size.height,
+      center: { x: 0, y: 0 },
+      noRotate: true,
+    });
+    console.log('shape:', this.shape);
   };
   /**
    * @returns {PIXI.Graphic}
@@ -21,7 +32,7 @@ class BallComponent extends GameComponent {
 
     graphics.beginFill(0xFFFFFF);
 
-    graphics.drawCircle(0, 0, this.size.height);
+    graphics.drawCircle(BALL_DEFAULT_POS.x/2, BALL_DEFAULT_POS.y/2, this.size.height);
 
     graphics.endFill();
 
@@ -31,8 +42,37 @@ class BallComponent extends GameComponent {
    * update
    */
   update() {
+    // console.log('update');
+    console.log('shape:', this.shape);
+    console.log('pos:', this.position.x, this.position.y);
+
     // set the view's position
     this.view.position = this.position;
+    this.shape.position = this.position;
+
+    // update collision detecter
+    this.shape.update();
+    if (this.shape.collidesLine(WALL_LINES.TOP.p1, WALL_LINES.TOP.p2)) {
+      this.velocity.y = -1 * this.velocity.y;
+      console.log('hit TOP wall');
+    console.log('shape:', this.shape);
+
+    };
+    if (this.shape.collidesLine(WALL_LINES.RIGHT.p1, WALL_LINES.RIGHT.p2)) {
+      this.velocity.x = -1 * this.velocity.x;
+      console.log('hit RIGHT wall');
+    console.log('shape:', this.shape);
+  };
+    if (this.shape.collidesLine(WALL_LINES.BOTTOM.p1, WALL_LINES.BOTTOM.p2)) {
+      this.velocity.y = -1 * this.velocity.y;
+      console.log('hit BOTTOM wall');
+    console.log('shape:', this.shape);
+  };
+    if (this.shape.collidesLine(WALL_LINES.LEFT.p1, WALL_LINES.LEFT.p2)) {
+      this.velocity.x = -1 * this.velocity.x;
+      console.log('hit LEFT wall');
+    console.log('shape:', this.shape);
+  };
   }
 };
 

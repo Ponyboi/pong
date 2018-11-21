@@ -61,18 +61,23 @@ class Player extends GameComponent {
     this.reduceVelocity();
 
     // since graphics have no anchor, we're just going to adjust where the graphics are drawn to match it up
-    var playerFuturePos = this.position.x + this.input.x * delta * PLAYER_TRAITS.speed;
-    if (playerFuturePos >= PLAYER_LIMITS.rightEnd) {
+    var playerFuturePos = { x: this.position.x + this.input.x * delta * PLAYER_TRAITS.speed, y: this.position.y };
+    var adjustedPos = this.getAdjustedPos(playerFuturePos, this.size);
+    if (this.position.x >= PLAYER_LIMITS.rightEnd) {
       this.position.x = PLAYER_LIMITS.rightEnd;
-      this.view.position.x = PLAYER_LIMITS.rightEnd;
-    } else if (playerFuturePos <= PLAYER_LIMITS.leftEnd) {
+      adjustedPos = this.getAdjustedPos(this.position, this.size);
+    } else if (this.position.x <= PLAYER_LIMITS.leftEnd) {
       this.position.x = PLAYER_LIMITS.leftEnd;
-      this.view.position.x = PLAYER_LIMITS.leftEnd;
+      adjustedPos = this.getAdjustedPos(this.position, this.size);
     } else {
-      this.position.x += this.input.x * delta * PLAYER_TRAITS.speed;
-      var adjustedPos = this.getAdjustedPos(this.position, this.size);
-      this.view.position = new PIXI_Point(adjustedPos.x, adjustedPos.y);
+      this.position = playerFuturePos;
     }
+    this.view.position = new PIXI_Point(adjustedPos.x, adjustedPos.y);
+
+    // console.log('player pos: ', this.position.x);
+    // console.log('player apos: ', adjustedPos.x);
+    // console.log('player limits: ', PLAYER_LIMITS.leftEnd, PLAYER_LIMITS.rightEnd);
+    
   };
   getAdjustedPos(position, size) {
     const { x, y } = position;

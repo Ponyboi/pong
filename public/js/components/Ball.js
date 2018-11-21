@@ -22,8 +22,8 @@ class Ball extends PIXI_DisplayObject {
 
     /** @type {Intersects.Rectangle} */
     this.shape = new Intersects_Rectangle(this.view, {
-      width: 15,
-      height: 15,
+      width: this.radius,
+      height: this.radius,
       center: this.position,
       noRotate: true,
     });
@@ -44,25 +44,31 @@ class Ball extends PIXI_DisplayObject {
    * constant update
    */
   update() {
+    console.log("Ball Pos: ");
     // update our internal position
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
 
     // set the view's position
     this.view.position = this.position;
+    console.log("Ball Pos: ", this.position.x, this.position.y);
 
     // update collision detecter
     this.shape.update();
     if (this.shape.collidesLine(WALL_LINES.TOP.p1, WALL_LINES.TOP.p2)) {
+      this.position.y = -1 * this.velocity.y;
       console.log('hit TOP wall');
     };
     if (this.shape.collidesLine(WALL_LINES.RIGHT.p1, WALL_LINES.RIGHT.p2)) {
+      this.position.x = -1 * this.velocity.x;
       console.log('hit RIGHT wall');
     };
     if (this.shape.collidesLine(WALL_LINES.BOTTOM.p1, WALL_LINES.BOTTOM.p2)) {
+      this.position.y = -1 * this.velocity.y;
       console.log('hit BOTTOM wall');
     };
     if (this.shape.collidesLine(WALL_LINES.LEFT.p1, WALL_LINES.LEFT.p2)) {
+      this.position.x = -1 * this.velocity.x;
       console.log('hit LEFT wall');
     };
   }
