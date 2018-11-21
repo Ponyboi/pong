@@ -9,8 +9,18 @@ import BallComponent from 'components/BallComponent';
 import ScoreComponent from 'components/ScoreComponent';
 
 import { GAME_SIZE } from 'constants/sizes';
-import { DEFAULT_BALL_SPEED, DEFAULT_PLAYER_SPEED } from 'constants/physics';
-import { PRIMARY_SCORE_POS, SECONDARY_SCORE_POS, BALL_DEFAULT_POS } from 'constants/positions';
+
+import {
+  DEFAULT_BALL_SPEED,
+  DEFAULT_PLAYER_SPEED,
+  BALL_VELOCITY_LIMITS,
+} from 'constants/physics';
+
+import {
+  PRIMARY_SCORE_POS,
+  SECONDARY_SCORE_POS,
+  BALL_DEFAULT_POS,
+} from 'constants/positions';
 
 import { getCanvasContainer } from 'helpers/canvasHelper';
 import { createFieldView, drawScores } from 'helpers/pixiGameDrawHelper';
@@ -41,6 +51,7 @@ const secondaryPlayer = new PlayerComponent({
 const ball = new BallComponent({
   position: gameState.ballPos,
   velocity: new Point(DEFAULT_BALL_SPEED, DEFAULT_BALL_SPEED),
+  velocityLimits: BALL_VELOCITY_LIMITS,
 });
 // primaryPlayerScore
 const primaryScoreComponent = new ScoreComponent({
@@ -143,7 +154,7 @@ function handleUpdateGameState(delta) {
     if (ball.velocity.x > 0) {
       ball.velocity.x *= -1;
     }
-    ball.velocity.x *= 1.2;
+    // ball.velocity.x *= 1.2;
   };
   // if (primaryPlayerCollisions.left) {
   //   const nextPos = new Point(primaryPlayer.getBounds().left - Math.abs(primaryPlayer.velocity.x * 3 * delta), ball.position.y);
@@ -158,7 +169,7 @@ function handleUpdateGameState(delta) {
     if (ball.velocity.x < 0) {
       ball.velocity.x *= -1;
     }
-    ball.velocity.x *= 1.2;
+    // ball.velocity.x *= 1.2;
   };
   // if (primaryPlayerCollisions.right) {
   //   const nextPos = new Point(primaryPlayer.getBounds().right + Math.abs(primaryPlayer.velocity.x * 3 * delta), ball.position.y);
@@ -172,7 +183,7 @@ function handleUpdateGameState(delta) {
   // if ball collides with any player, flip the velocity to go the other direction
   if (ball.isColliding(primaryPlayer) || ball.isColliding(secondaryPlayer)) {
     ball.velocity.y *= -1;
-    ball.velocity.y *= 1.3;
+    // ball.velocity.y *= 5;
   };
 
   // update ball's position

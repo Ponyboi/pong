@@ -3,7 +3,7 @@ import Point from '@studiomoniker/point';
 
 import { Rectangle } from 'yy-intersects';
 
-// import { VELOCITY_DRAG, 0.15 } from 'constants/physics';
+import { GAME_VELOCITY_LIMITS } from 'constants/physics';
 import { PLAYER_LIMITS } from 'constants/sizes';
 
 /**
@@ -17,16 +17,21 @@ import { PLAYER_LIMITS } from 'constants/sizes';
  * - view
  */
 class GameComponent {
-  /** @override */
+  /**
+   * @params {Object}
+   */
   constructor(options = {}) {
-    /** @type {Point} */
+    /** @type {Velocity} */
     this.velocity = options.velocity || new Point(0, 0);
+
+    /** @type {VelocityLimits} */
+    this.velocityLimits = options.velocityLimits || GAME_VELOCITY_LIMITS;
 
     /** @type {Point} */
     this.position = options.position || new Point(0, 0);
 
     /** @type {Size} */
-    this.size = options.size || {height: 1, width: 1};
+    this.size = options.size || { height: 1, width: 1 };
 
     /** @type {PIXI.Graphic} */
     this.view = this.render();
@@ -54,63 +59,116 @@ class GameComponent {
     });
   }
   /**
-   * get the next position this will end up being in according to
-   * - velocity
+   * get the next position this will ebe
+   *  by adding velocity onto this position
    *
    * @returns {Point}
    */
   getNextPosition() {
-    const currentPosition = {...this.position}; // copy position
-    const currentVelocity = {...this.velocity}; // copy velocity
+    const currentPosition = this.position.clone();
+    const currentVelocity = this.velocity.clone();
 
-    const nextPosition = new Point(
-      currentPosition.x + currentVelocity.x,
-      currentPosition.y + currentVelocity.y,
-    );
-
-    return nextPosition;
+    return currentPosition.add(currentVelocity);
   };
   /**
    * handles doing the math on reducing velocity
-   * - you can pass in param to reduce it to
+   * todo - this function is yuck
    *
-   * @param {Object} [reduceTo]
    */
-  reduceVelocity(reduceTo = {}) {
-    const { x: minXVelocity, y: minYVelocity } = reduceTo;
+  reduceVelocity() {
+    const { x, y } = this.velocity;
+    const { min, max } = this.velocityLimits;
 
-    this.velocity.x = this.velocity.x * 0.9;
-    this.velocity.y = this.velocity.y * 0.9;
+    const xScalar = Math.abs(x);
+    const yScalar = Math.abs(y);
 
-    // set to given min or zero if velocity gets small enough
-    if (Math.abs(this.velocity.x) < minXVelocity || 0.15) {
-      this.velocity.x = minXVelocity || 0;
+    const xDirection = x < 0 ? -1 : 1;
+    const yDirection = y < 0 ? -1 : 1;
+
+    // velocity left
+    if (x < 0) {
+      // too slow
+      if (x > (min.x * -1)) {
+        this.velocity.x = (min.x * -1);
+      }
+      // too fast
+      if (x < (max.x * -1)) {
+        this.velocity.x = (max.x * -1);
+      }
     }
-    if (Math.abs(this.velocity.y) < minYVelocity || 0.15) {
-      this.velocity.y = minYVelocity || 0;
+
+    // velocity right
+    if (x > 0) {
+      // too slow
+      if (x < min.x) {
+        this.velocity.x = min.x;
+      }
+      // too fast
+      if (x > max.x) {
+        this.velocity.x = max.x;
+      }
     }
+
+    // velocity up
+    if (y > 0) {
+      // too slow
+      if (y < min.y) {
+        this.velocity.y = min.x;
+      }
+      // too fast
+      if (y > max.y) {
+        this.velocity.y = max.x;
+      }
+    }
+
+    // velocity down
+    if (y < 0) {
+      // too slow
+      if (y > (min.y * -1)) {
+        this.velocity.y = (min.y * -1);
+      }
+      // too fast
+      if (y < (max.y * -1)) {
+        this.velocity.y = (max.y * -1);
+      }
+    }
+
+    // -- if velocity is actually cahnging
+    if (xScalar > min.x) {
+      this.velocity.x = (xScalar * 0.9) * xDirection;
+    }
+    if (yScalar > min.y) {
+      this.velocity.y = (yScalar * 0.9) * yDirection;
+    }
+
+    // -- set to zero if velocity gets small enough
+    const closeToZero = 0.10;
+    if (xScalar < closeToZero) {
+      this.velocity.x = 0;
+    };
+    if (yScalar < closeToZero) {
+      this.velocity.y = 0;
+    };
   }
   /**
    * since graphics have no anchor, we're just going to adjust where the graphics are drawn to match it up
    *
-   * @returns {Object}
+   * @returns {Point}
    */
   getAdjustedPos() {
     const { x, y } = this.position;
     const { width, height } = this.size;
 
-    const adjustedPos = new Point(
+    return new Point(
       x - (width / 2),
       y - (height / 2),
     );
-
-    return adjustedPos;
   }
   /**
    * returns rectangular bounds of where this component will be - given a position
    *
    * @param {Point | undefined} position
-   * @returns {Object}
+   * @returns {Bounds}
    */
   getBounds(position) {
     const { x, y } = position || this.position;
@@ -127,7 +185,7 @@ class GameComponent {
    * returns the two point lines
    *
    * @param {Point | undefined} position
-   * @returns {Object}
+   * @returns {Edges}
    */
   getEdges(position) {
     const { x, y } = position || this.position;
