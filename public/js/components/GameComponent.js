@@ -1,7 +1,6 @@
 import _ from 'lodash';
-import {
-  Point as PIXI_Point,
-} from 'pixi.js';
+import Point from '@studiomoniker/point';
+
 import { Rectangle as Intersects_Rectangle } from 'yy-intersects';
 
 import { VELOCITY_DRAG, VELOCITY_MIN } from 'constants/physics';
@@ -21,9 +20,9 @@ class GameComponent {
     const { position, size, velocity } = options;
 
     /** @type {Point} */
-    this.velocity = velocity || new PIXI_Point();
+    this.velocity = velocity || new Point();
     /** @type {Point} */
-    this.position = position || new PIXI_Point();
+    this.position = position || new Point();
     /** @type {Object} */
     this.size = size || {height: 1, width: 1};
     /** @type {PIXI.Graphic} */
@@ -57,13 +56,13 @@ class GameComponent {
    * get the next position this will end up being in according to
    * - velocity
    *
-   * @returns {PIXI.Point}
+   * @returns {Point}
    */
   getNextPosition() {
     const currentPosition = {...this.position}; // copy position
     const currentVelocity = {...this.velocity}; // copy velocity
 
-    const nextPosition = new PIXI_Point(
+    const nextPosition = new Point(
       currentPosition.x + currentVelocity.x,
       currentPosition.y + currentVelocity.y,
     );
@@ -100,7 +99,7 @@ class GameComponent {
     const { x, y } = this.position;
     const { width, height } = this.size;
 
-    const adjustedPos = new PIXI_Point(
+    const adjustedPos = new Point(
       x - (width / 2),
       y - (height / 2),
     );
@@ -110,7 +109,7 @@ class GameComponent {
   /**
    * returns rectangular bounds of where this component will be - given a position
    *
-   * @param {PIXI.Point | undefined} position
+   * @param {Point | undefined} position
    * @returns {Object}
    */
   getBounds(position) {
@@ -127,7 +126,7 @@ class GameComponent {
   /**
    * returns the two point lines
    *
-   * @param {PIXI.Point | undefined} position
+   * @param {Point | undefined} position
    * @returns {Object}
    */
   getEdges(position) {
@@ -135,10 +134,10 @@ class GameComponent {
     const { width, height } = this.size;
     const { top, bottom, left, right } = this.getBounds(position);
 
-    const topLeftPoint = new PIXI_Point(left, top);
-    const topRightPoint = new PIXI_Point(right, top);
-    const bottomLeftPoint = new PIXI_Point(left, bottom);
-    const bottomRightPoint = new PIXI_Point(right, bottom);
+    const topLeftPoint = new Point(left, top);
+    const topRightPoint = new Point(right, top);
+    const bottomLeftPoint = new Point(left, bottom);
+    const bottomRightPoint = new Point(right, bottom);
 
     return {
       topEdge: {p1: topLeftPoint, p2: topRightPoint},

@@ -1,10 +1,12 @@
 import { omit } from 'lodash';
 
+import Point from '@studiomoniker/point';
+
 /**
  * sets component's anchor to given point, otherwise uses the center
  *
  * @type {PIXI.Container} component
- * @type {PIXI.Point || PIXI.ObservablePoint} [point]
+ * @type {Point} [point]
  */
 const setDefaultAnchor = (component, point = {}) => {
   if (!component.anchor) return;
@@ -14,7 +16,7 @@ const setDefaultAnchor = (component, point = {}) => {
 };
 /**
  * @type {PIXI.Container} component
- * @type {PIXI.ObservablePoint} [point]
+ * @type {Point} [point]
  */
 const setDefaultPosition = (component, point = {}) => {
   if (!component.position) return;

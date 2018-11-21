@@ -1,5 +1,4 @@
-import { Point as PIXI_Point } from 'pixi.js';
-
+import Point from '@studiomoniker/point';
 import TextComponent from 'components/TextComponent';
 
 const scoreStyles = {
@@ -20,7 +19,7 @@ class ScoreComponent {
     /** @type {String} */
     this.text = text;
     /** @type {Point} */
-    this.position = position || new PIXI_Point();
+    this.position = position || new Point();
     /** @type {PIXI.Text} */
     this.view = this.render();
   };

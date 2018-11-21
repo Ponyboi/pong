@@ -1,6 +1,4 @@
-import {
-  Point as PIXI_Point,
-} from 'pixi.js';
+// import Point from '@studiomoniker/point';
 import { Rectangle as Intersects_Rectangle } from 'yy-intersects';
 
 import GameComponent from 'components/GameComponent';

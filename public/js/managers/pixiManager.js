@@ -3,6 +3,7 @@ import Intersects from 'yy-intersects';
 
 import gameState, { updateBallPositionState, updatePrimaryPlayerPositionState } from 'data/gameState';
 
+import Point from '@studiomoniker/point';
 import Player from 'components/Player';
 import BallComponent from 'components/BallComponent';
 import ScoreComponent from 'components/ScoreComponent';
@@ -142,11 +143,11 @@ const handleUpdateGameState = (delta) => {
     ball.velocity.x *= 1.2;
   };
   // if (primaryPlayerCollisions.left) {
-  //   const nextPos = new PIXI.Point(primaryPlayer.getBounds().left - Math.abs(primaryPlayer.velocity.x * 3 * delta), ball.position.y);
+  //   const nextPos = new Point(primaryPlayer.getBounds().left - Math.abs(primaryPlayer.velocity.x * 3 * delta), ball.position.y);
   //   updateBallPositionState(nextPos);
   // }
   // if (secondaryPlayerCollisions.left) {
-  //   const nextPos = new PIXI.Point(secondaryPlayer.getBounds().left - Math.abs(secondaryPlayer.velocity.x * 3 * delta), ball.position.y);
+  //   const nextPos = new Point(secondaryPlayer.getBounds().left - Math.abs(secondaryPlayer.velocity.x * 3 * delta), ball.position.y);
   //   updateBallPositionState(nextPos);
   // }
   // if paddle's right side hit the ball
@@ -157,11 +158,11 @@ const handleUpdateGameState = (delta) => {
     ball.velocity.x *= 1.2;
   };
   // if (primaryPlayerCollisions.right) {
-  //   const nextPos = new PIXI.Point(primaryPlayer.getBounds().right + Math.abs(primaryPlayer.velocity.x * 3 * delta), ball.position.y);
+  //   const nextPos = new Point(primaryPlayer.getBounds().right + Math.abs(primaryPlayer.velocity.x * 3 * delta), ball.position.y);
   //   updateBallPositionState(nextPos);
   // }
   // if (secondaryPlayerCollisions.right) {
-  //   const nextPos = new PIXI.Point(secondaryPlayer.getBounds().right + Math.abs(secondaryPlayer.velocity.x * 3 * delta), ball.position.y);
+  //   const nextPos = new Point(secondaryPlayer.getBounds().right + Math.abs(secondaryPlayer.velocity.x * 3 * delta), ball.position.y);
   //   updateBallPositionState(nextPos);
   // }
 
@@ -172,7 +173,7 @@ const handleUpdateGameState = (delta) => {
   };
 
   // update ball's position
-  const ballVelocityDelta = new PIXI.Point(ball.velocity.x, ball.velocity.y);
+  const ballVelocityDelta = new Point(ball.velocity.x, ball.velocity.y);
   const ballNextPosition = ball.getNextPosition();
   updateBallPositionState(ballNextPosition);
 

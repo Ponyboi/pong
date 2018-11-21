@@ -1,11 +1,12 @@
 import {
   Graphics as PIXI_Graphics,
-  Point as PIXI_Point,
 } from 'pixi.js';
 import { Rectangle as Intersects_Rectangle } from 'yy-intersects';
 
 import gameState, { updatePrimaryPlayerPositionState } from 'data/gameState';
-import { DASH_SIZE, GAME_SIZE, PADDLE_SIZE, PLAYER_LIMITS, PLAYER_TRAITS } from 'constants/sizes';
+import { GAME_SIZE, PADDLE_SIZE, PLAYER_LIMITS } from 'constants/sizes';
+
+import Point from '@studiomoniker/point';
 import GameComponent from 'components/GameComponent';
 
 /*
@@ -67,7 +68,7 @@ class Player extends GameComponent {
 
     } else {
       var adjustedPos = this.getAdjustedPos();
-      this.view.position = new PIXI_Point(adjustedPos.x, adjustedPos.y);
+      this.view.position = new Point(adjustedPos.x, adjustedPos.y);
     }
   };
 };

@@ -7,13 +7,13 @@ import onChange from 'helpers/onChange';
 
 // default state
 const defaultState = {
-  /** @type {PIXI.Point} */
+  /** @type {Point} */
   ballPos: BALL_DEFAULT_POS,
-  /** @type {PIXI.Point} */
+  /** @type {Point} */
   primaryPlayerPos: PRIMARY_PLAYER_DEFAULT_POS,
-  /** @type {PIXI.Point} */
+  /** @type {Point} */
   primaryPlayerState: null,
-  /** @type {PIXI.Point} */
+  /** @type {Point} */
   secondaryPlayerPos: SECONDARY_PLAYER_DEFAULT_POS,
 
   /** @type {Number} */
@@ -24,7 +24,7 @@ const defaultState = {
 // clone default state
 const gameState = {...defaultState};
 /**
- * @params {PIXI.Point} newState
+ * @params {Point} newState
  */
 const updatePrimaryPlayerPositionState = (newState) => {
   if (gameState.primaryPlayerPos === newState) return; // no update if no change
@@ -43,7 +43,7 @@ const updatePrimaryPlayerActionState = (newState) => {
   gameState.primaryPlayerState = newState;
 };
 /**
- * @params {PIXI.Point} newState
+ * @params {Point} newState
  */
 const updateBallPositionState = (newState) => {
   if (gameState.ballPos === newState) return; // no update if no change
@@ -51,7 +51,7 @@ const updateBallPositionState = (newState) => {
   gameState.ballPos = newState;
 };
 /**
- * @params {PIXI.Point} newState
+ * @params {Point} newState
  */
 const updateSecondaryPlayerPositionState = (newState) => {
   if (gameState.secondaryPlayerPos === newState) return; // no update if no change

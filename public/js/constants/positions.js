@@ -2,6 +2,8 @@ import * as PIXI from 'pixi.js';
 
 import { GAME_SIZE } from 'constants/sizes';
 
+import Point from '@studiomoniker/point';
+
 /*
   default positions
 
@@ -15,36 +17,36 @@ const gameVerticalCenter = GAME_SIZE.height / 2; // center of screen
 const paddleEdgeDistance = 45; // how many pixels respectively from the edge of the screen?
 
 // player controller, bottom half of screen
-const PRIMARY_PLAYER_DEFAULT_POS = new PIXI.Point(
+const PRIMARY_PLAYER_DEFAULT_POS = new Point(
   gameHorizontalCenter,
   GAME_SIZE.height - paddleEdgeDistance
 );
 
 // other player, top half
-const SECONDARY_PLAYER_DEFAULT_POS = new PIXI.Point(
+const SECONDARY_PLAYER_DEFAULT_POS = new Point(
   gameHorizontalCenter,
   0 + paddleEdgeDistance
 );
 
 // ball
-const BALL_DEFAULT_POS = new PIXI.Point(gameHorizontalCenter, gameVerticalCenter);
+const BALL_DEFAULT_POS = new Point(gameHorizontalCenter, gameVerticalCenter);
 
 // define the two points that make up a line for the wall
 const TOP_WALL_LINE = {
-  p1: new PIXI.Point(0, 0),
-  p2: new PIXI.Point(GAME_SIZE.width, 0),
+  p1: new Point(0, 0),
+  p2: new Point(GAME_SIZE.width, 0),
 };
 const RIGHT_WALL_LINE = {
-  p1: new PIXI.Point(GAME_SIZE.width, 0),
-  p2: new PIXI.Point(GAME_SIZE.width, GAME_SIZE.height),
+  p1: new Point(GAME_SIZE.width, 0),
+  p2: new Point(GAME_SIZE.width, GAME_SIZE.height),
 };
 const BOTTOM_WALL_LINE = {
-  p1: new PIXI.Point(0, GAME_SIZE.height),
-  p2: new PIXI.Point(GAME_SIZE.width, GAME_SIZE.height),
+  p1: new Point(0, GAME_SIZE.height),
+  p2: new Point(GAME_SIZE.width, GAME_SIZE.height),
 };
 const LEFT_WALL_LINE = {
-  p1: new PIXI.Point(0, 0),
-  p2: new PIXI.Point(0, GAME_SIZE.height),
+  p1: new Point(0, 0),
+  p2: new Point(0, GAME_SIZE.height),
 };
 
 // scores
