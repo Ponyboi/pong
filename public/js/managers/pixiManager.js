@@ -127,13 +127,43 @@ const appInitUpdate = () => {
 };
 /**
  * look at the player's current action and do stuff according to it
+ *
+ * THIS IS DUMBBBBBBBBBBB
  */
 const handleUpdateGameState = (delta) => {
-  // check if ball collides with any player
-  if (ball.getCollisionSide(primaryPlayer).left || ball.getCollisionSide(primaryPlayer).right) {
-    ball.velocity.x *= -1;
-  };
+  const primaryPlayerCollisions = ball.getCollisionSide(primaryPlayer);
+  const secondaryPlayerCollisions = ball.getCollisionSide(secondaryPlayer);
 
+  // if paddle's left side hit the ball
+  if (primaryPlayerCollisions.left || secondaryPlayerCollisions.left) {
+    if (ball.velocity.x > 0) {
+      ball.velocity.x *= -1;
+    }
+  };
+  // if (primaryPlayerCollisions.left) {
+  //   const nextPos = new PIXI.Point(primaryPlayer.getBounds().left - Math.abs(primaryPlayer.velocity.x * 3 * delta), ball.position.y);
+  //   updateBallPositionState(nextPos);
+  // }
+  // if (secondaryPlayerCollisions.left) {
+  //   const nextPos = new PIXI.Point(secondaryPlayer.getBounds().left - Math.abs(secondaryPlayer.velocity.x * 3 * delta), ball.position.y);
+  //   updateBallPositionState(nextPos);
+  // }
+  // if paddle's right side hit the ball
+  if (primaryPlayerCollisions.right || secondaryPlayerCollisions.right) {
+    if (ball.velocity.x < 0) {
+      ball.velocity.x *= -1;
+    }
+  };
+  // if (primaryPlayerCollisions.right) {
+  //   const nextPos = new PIXI.Point(primaryPlayer.getBounds().right + Math.abs(primaryPlayer.velocity.x * 3 * delta), ball.position.y);
+  //   updateBallPositionState(nextPos);
+  // }
+  // if (secondaryPlayerCollisions.right) {
+  //   const nextPos = new PIXI.Point(secondaryPlayer.getBounds().right + Math.abs(secondaryPlayer.velocity.x * 3 * delta), ball.position.y);
+  //   updateBallPositionState(nextPos);
+  // }
+
+  // if ball collides with any player, flip the velocity to go the other direction
   if (ball.isColliding(primaryPlayer) || ball.isColliding(secondaryPlayer)) {
     ball.velocity.y *= -1;
   };

@@ -12,7 +12,7 @@ const GAME_SIZE = {
 
 const PADDLE_SIZE = {
   width: 85,
-  height: 12,
+  height: 13, // 12
 };
 
 const DASH_SIZE = {

@@ -105,7 +105,6 @@ class GameComponent {
   /**
    * returns rectangular bounds of where this component will be - given a position
    *
-   * @abstract
    * @param {PIXI.Point | undefined} position
    * @returns {Object}
    */
@@ -118,6 +117,29 @@ class GameComponent {
       bottom: y + height / 2,
       left: x - width / 2,
       right: x + width / 2,
+    }
+  }
+  /**
+   * returns the two point lines
+   *
+   * @param {PIXI.Point | undefined} position
+   * @returns {Object}
+   */
+  getEdges(position) {
+    const { x, y } = position || this.position;
+    const { width, height } = this.size;
+    const { top, bottom, left, right } = this.getBounds(position);
+
+    const topLeftPoint = new PIXI_Point(left, top);
+    const topRightPoint = new PIXI_Point(right, top);
+    const bottomLeftPoint = new PIXI_Point(left, bottom);
+    const bottomRightPoint = new PIXI_Point(right, bottom);
+
+    return {
+      topEdge: {p1: topLeftPoint, p2: topRightPoint},
+      bottomEdge: {p1: bottomLeftPoint, p2: bottomRightPoint},
+      leftEdge: {p1: topLeftPoint, p2: bottomLeftPoint},
+      rightEdge: {p1: topRightPoint, p2: bottomRightPoint},
     }
   }
   /**
@@ -141,7 +163,7 @@ class GameComponent {
    * @returns {Object}
    */
   getCollisionSide(collider) {
-    if (!this.isColliding(collider)) {
+    if (!collider) {
       return {
         top: false,
         bottom: false,
@@ -150,14 +172,14 @@ class GameComponent {
       };
     }
 
-    const myBounds = this.getBounds();
-    const otherBounds = collider.getBounds();
+    const hitbox = this.getHitbox();
+    const { topEdge, bottomEdge, leftEdge, rightEdge } = collider.getEdges();
 
     return {
-      top: myBounds.top <= otherBounds.bottom,
-      bottom: myBounds.bottom >= otherBounds.top,
-      left: myBounds.left <= otherBounds.right,
-      right: myBounds.right >= otherBounds.left,
+      top: hitbox.collidesLine(topEdge.p1, topEdge.p2),
+      bottom: hitbox.collidesLine(bottomEdge.p1, bottomEdge.p2),
+      left: hitbox.collidesLine(leftEdge.p1, leftEdge.p2),
+      right: hitbox.collidesLine(rightEdge.p1, rightEdge.p2),
     }
   }
 };
