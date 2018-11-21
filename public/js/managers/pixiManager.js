@@ -22,6 +22,8 @@ import { createFieldView, drawScores } from 'helpers/pixiGameDrawHelper';
 // set up Application
 const app = new PIXI.Application(GAME_SIZE);
 app.renderer.backgroundColor = 0x080808;
+// app.renderer.backgroundColor = 0xffffff;
+
 // render it onto document
 const canvas = getCanvasContainer();
 canvas.appendChild(app.view);
