@@ -10,6 +10,21 @@ var serverWebpackConfig = require('./webpack-server.config.js');
 const isDevEnv = process.env.NODE_ENV === 'development';
 const browser = os.platform() === 'darwin' ? '/Applications/Google\ Chrome.app' : 'google-chrome';
 
+const WATCH_CHANGE_FILES = [
+  '!**/{' + [
+    'bower_components',
+    'bundles',
+    'compiled',
+    'config',
+    'dev',
+    'libraries',
+    'node_modules',
+  ].join(',') +
+  '}/**',
+  './public/*.js',
+  './public/**/*.js',
+];
+
 // build configuration is different for the web and server
 gulp.task('compile-server', function() {
   return gulp.src('./server/server.js')
@@ -26,7 +41,7 @@ gulp.task('compile-webapp', function(done) {
 
 // watch for changes for the webapp
 gulp.task('webapp:watch', function() {
-  gulp.watch('./public', gulp.series('compile-webapp', 'run-webapp-local'));
+  gulp.watch(WATCH_CHANGE_FILES, gulp.series('compile-webapp'));
 });
 
 // run webapp page
@@ -36,7 +51,7 @@ gulp.task("run-webapp-local", function() {
 
 // watch for changes for the server
 gulp.task('server:watch', function() {
-  gulp.watch('./public', gulp.series('compile-webapp', 'run-server-local'));
+  gulp.watch(WATCH_CHANGE_FILES, gulp.series('compile-webapp'));
 });
 
 // Starts node server
@@ -52,9 +67,9 @@ gulp.task("run-server-local", function() {
 });
 
 // default
-gulp.task('dev-webapp', gulp.series('compile-webapp', 'run-webapp-local', 'webapp:watch'));
-gulp.task('dev-server', gulp.series('compile-server', 'run-server-local', 'server:watch'));
-gulp.task('development', gulp.series('compile-webapp', 'compile-server', 'run-server-local'));
+gulp.task('dev-webapp', gulp.series('compile-webapp', 'webapp:watch', 'run-webapp-local'));
+gulp.task('dev-server', gulp.series('compile-server', 'server:watch', 'run-server-local'));
+gulp.task('development', gulp.series('compile-webapp', 'compile-server', 'server:watch', 'run-server-local'));
 
 /**
  * different 'default' task depending on settings

@@ -3,9 +3,6 @@ import KEY from 'constants/key';
 
 const inputEmitter = new EventEmitter();
 
-document.addEventListener('keydown', onKeyDown);
-document.addEventListener('keyup', onKeyUp);
-
 /**
  * when a key is down
  */
@@ -43,10 +40,11 @@ const onKeyUp = (key) => {
   };
 };
 
-export default inputEmitter;
+document.addEventListener('keydown', onKeyDown);
+document.addEventListener('keyup', onKeyUp);
 
+export default inputEmitter;
 export {
-  inputEmitter,
   onKeyDown,
   onKeyUp,
 }
