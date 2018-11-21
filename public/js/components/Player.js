@@ -26,9 +26,6 @@ class Player extends GameComponent {
 
     /** @type {PIXI.Graphic} */
     this.view = this.render();
-
-    /** @type {Intersects.Rectangle} */
-    this.shape = new Intersects_Rectangle(this);
   };
   /**
    * @returns {PIXI.Graphic}
@@ -69,7 +66,7 @@ class Player extends GameComponent {
       this.velocity.x *= -1;
 
     } else {
-      var adjustedPos = this.getAdjustedPos(this.position, this.size);
+      var adjustedPos = this.getAdjustedPos();
       this.view.position = new PIXI_Point(adjustedPos.x, adjustedPos.y);
     }
   };

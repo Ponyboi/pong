@@ -8,7 +8,7 @@ import BallComponent from 'components/BallComponent';
 import ScoreComponent from 'components/ScoreComponent';
 
 import { GAME_SIZE } from 'constants/sizes';
-import { DEFAULT_PLAYER_SPEED } from 'constants/physics';
+import { BASE_BALL_VELOCITY, DEFAULT_PLAYER_SPEED } from 'constants/physics';
 import { PRIMARY_SCORE_POS, SECONDARY_SCORE_POS, BALL_DEFAULT_POS } from 'constants/positions';
 
 import { getCanvasContainer } from 'helpers/canvasHelper';
@@ -88,13 +88,13 @@ const resetBallToCenter = () => {
   ball.position = gameState.ballPos;
 
   // then reset the velocity
-  const startRight = Math.round(Math.random());
-  const startUp = Math.round(Math.random());
-
-  ball.velocity = new PIXI.Point(
-    startRight ? 3 : -3,
-    startUp ? 3 : -3,
-  );
+  ball.velocity = BASE_BALL_VELOCITY;
+  if (Math.round(Math.random())) {
+    ball.velocity.x *= -1;
+  }
+  if (Math.round(Math.random())) {
+    ball.velocity.y *= -1;
+  }
 };
 /**
  * add a constant ticker to update the game
@@ -127,8 +127,49 @@ const appInitUpdate = () => {
 };
 /**
  * look at the player's current action and do stuff according to it
+ *
+ * THIS IS DUMBBBBBBBBBBB
  */
 const handleUpdateGameState = (delta) => {
+  const primaryPlayerCollisions = ball.getCollisionSide(primaryPlayer);
+  const secondaryPlayerCollisions = ball.getCollisionSide(secondaryPlayer);
+
+  // if paddle's left side hit the ball
+  if (primaryPlayerCollisions.left || secondaryPlayerCollisions.left) {
+    if (ball.velocity.x > 0) {
+      ball.velocity.x *= -1;
+    }
+    ball.velocity.x *= 1.2;
+  };
+  // if (primaryPlayerCollisions.left) {
+  //   const nextPos = new PIXI.Point(primaryPlayer.getBounds().left - Math.abs(primaryPlayer.velocity.x * 3 * delta), ball.position.y);
+  //   updateBallPositionState(nextPos);
+  // }
+  // if (secondaryPlayerCollisions.left) {
+  //   const nextPos = new PIXI.Point(secondaryPlayer.getBounds().left - Math.abs(secondaryPlayer.velocity.x * 3 * delta), ball.position.y);
+  //   updateBallPositionState(nextPos);
+  // }
+  // if paddle's right side hit the ball
+  if (primaryPlayerCollisions.right || secondaryPlayerCollisions.right) {
+    if (ball.velocity.x < 0) {
+      ball.velocity.x *= -1;
+    }
+    ball.velocity.x *= 1.2;
+  };
+  // if (primaryPlayerCollisions.right) {
+  //   const nextPos = new PIXI.Point(primaryPlayer.getBounds().right + Math.abs(primaryPlayer.velocity.x * 3 * delta), ball.position.y);
+  //   updateBallPositionState(nextPos);
+  // }
+  // if (secondaryPlayerCollisions.right) {
+  //   const nextPos = new PIXI.Point(secondaryPlayer.getBounds().right + Math.abs(secondaryPlayer.velocity.x * 3 * delta), ball.position.y);
+  //   updateBallPositionState(nextPos);
+  // }
+
+  // if ball collides with any player, flip the velocity to go the other direction
+  if (ball.isColliding(primaryPlayer) || ball.isColliding(secondaryPlayer)) {
+    ball.velocity.y *= -1;
+    ball.velocity.y *= 1.3;
+  };
 
   // update ball's position
   const ballVelocityDelta = new PIXI.Point(ball.velocity.x, ball.velocity.y);

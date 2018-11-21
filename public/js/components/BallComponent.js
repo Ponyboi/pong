@@ -5,6 +5,7 @@ import { Rectangle as Intersects_Rectangle } from 'yy-intersects';
 
 import GameComponent from 'components/GameComponent';
 import { BALL_SIZE } from 'constants/sizes';
+import { BASE_BALL_VELOCITY } from 'constants/physics';
 import { WALL_LINES } from 'constants/positions';
 
 class BallComponent extends GameComponent {
@@ -33,16 +34,12 @@ class BallComponent extends GameComponent {
    * update
    */
   update() {
+    this.reduceVelocity(BASE_BALL_VELOCITY);
+
     // set the view's position
     this.view.position = this.position;
 
-    /** @type {Intersects.Rectangle} */
-    const hitbox = new Intersects_Rectangle(this.view, {
-      width: this.size.width,
-      height: this.size.height,
-      center: this.position,
-      noRotate: true,
-    });
+    const hitbox = this.getHitbox();
 
     if (hitbox.collidesLine(WALL_LINES.TOP.p1, WALL_LINES.TOP.p2)) {
       this.velocity.y = -1 * this.velocity.y;
