@@ -16,12 +16,7 @@ class BallComponent extends GameComponent {
     });
 
     /** @type {Intersects.Rectangle} */
-    this.shape = new Intersects_Rectangle(this.view, {
-      width: 1,//this.size.width,
-      height: 1,//this.size.height,
-      center: { x: 0, y: 0 },
-      noRotate: true,
-    });
+    this.shape = new Intersects_Rectangle(this.view);
     console.log('shape:', this.shape);
   };
   /**
@@ -32,7 +27,7 @@ class BallComponent extends GameComponent {
 
     graphics.beginFill(0xFFFFFF);
 
-    graphics.drawCircle(BALL_DEFAULT_POS.x/2, BALL_DEFAULT_POS.y/2, this.size.height);
+    graphics.drawCircle(BALL_DEFAULT_POS.x, BALL_DEFAULT_POS.y, this.size.height);
 
     graphics.endFill();
 
@@ -48,7 +43,6 @@ class BallComponent extends GameComponent {
 
     // set the view's position
     this.view.position = this.position;
-    this.shape.position = this.position;
 
     // update collision detecter
     this.shape.update();
