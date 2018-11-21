@@ -130,7 +130,11 @@ const appInitUpdate = () => {
  */
 const handleUpdateGameState = (delta) => {
   // check if ball collides with any player
-  if (ball.willCollide(primaryPlayer) || ball.willCollide(secondaryPlayer)) {
+  if (ball.getCollisionSide(primaryPlayer).left || ball.getCollisionSide(primaryPlayer).right) {
+    ball.velocity.x *= -1;
+  };
+
+  if (ball.isColliding(primaryPlayer) || ball.isColliding(secondaryPlayer)) {
     ball.velocity.y *= -1;
   };
 

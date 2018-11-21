@@ -38,8 +38,10 @@ class GameComponent {
    */
   update() {};
   /**
-   * creates a rectangular hitbox
+   * returns this object's hitbox
+   *  by default it uses a rectangle
    *
+   * @abstract
    * @returns {Intersects.Shape}
    */
   getHitbox() {
@@ -119,18 +121,44 @@ class GameComponent {
     }
   }
   /**
-   * returns rectangular bounds of where this component will be - given a position
+   * checks if this object collides with another
    *
-   * @abstract
    * @param {GameComponent} collider
-   * @returns {Object}
+   * @returns {Boolean}
    */
-  willCollide(collider) {
+  isColliding(collider) {
     if (!collider) {
       return false;
     }
 
     return this.getHitbox().collides(collider.getHitbox());
+  }
+  /**
+   * returns which direction this collided with
+   *  returns false if colliding with nothing
+   *
+   * @param {GameComponent} collider
+   * @returns {Object}
+   */
+  getCollisionSide(collider) {
+    if (!this.isColliding(collider)) {
+      return {
+        top: false,
+        bottom: false,
+        left: false,
+        right: false,
+      };
+    }
+
+    const myBounds = this.getBounds();
+    const otherBounds = collider.getBounds();
+
+    return {
+      top: myBounds.top <= otherBounds.bottom,
+      bottom: myBounds.bottom >= otherBounds.top,
+      left: myBounds.left <= otherBounds.right,
+      right: myBounds.right >= otherBounds.left,
+    }
   }
 };
 
