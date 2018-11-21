@@ -1,8 +1,11 @@
+import _ from 'lodash';
 import {
   Point as PIXI_Point,
 } from 'pixi.js';
+import { Rectangle as Intersects_Rectangle } from 'yy-intersects';
 
 import { VELOCITY_DRAG, VELOCITY_MIN } from 'constants/physics';
+import { PLAYER_LIMITS } from 'constants/sizes';
 
 /**
  * base component for a game object
@@ -35,6 +38,20 @@ class GameComponent {
    */
   update() {};
   /**
+   * creates a rectangular hitbox
+   *
+   * @returns {Intersects.Shape}
+   */
+  getHitbox() {
+    /** @type {Intersects.Rectangle} */
+    return new Intersects_Rectangle(this.view, {
+      width: this.size.width,
+      height: this.size.height,
+      center: this.position,
+      noRotate: true,
+    });
+  }
+  /**
    * get the next position this will end up being in according to
    * - velocity
    *
@@ -42,10 +59,11 @@ class GameComponent {
    */
   getNextPosition() {
     const currentPosition = {...this.position}; // copy position
+    const currentVelocity = {...this.velocity}; // copy velocity
 
     const nextPosition = new PIXI_Point(
-      currentPosition.x + this.velocity.x,
-      currentPosition.y + this.velocity.y,
+      currentPosition.x + currentVelocity.x,
+      currentPosition.y + currentVelocity.y,
     );
 
     return nextPosition;
@@ -75,21 +93,22 @@ class GameComponent {
     const { x, y } = this.position;
     const { width, height } = this.size;
 
-    const adjustedPos = {
-      x: x - (width / 2),
-      y: y - (height / 2),
-    };
+    const adjustedPos = new PIXI_Point(
+      x - (width / 2),
+      y - (height / 2),
+    );
 
     return adjustedPos;
   }
   /**
-   * returns this object's current rectangular bounds
+   * returns rectangular bounds of where this component will be - given a position
    *
    * @abstract
+   * @param {PIXI.Point | undefined} position
    * @returns {Object}
    */
-  getCurrentBounds() {
-    const { x, y } = this.getAdjustedPos();
+  getBounds(position) {
+    const { x, y } = position || this.position;
     const { width, height } = this.size;
 
     return {
@@ -100,21 +119,24 @@ class GameComponent {
     }
   }
   /**
-   * returns rectangular bounds of where this component will be
+   * returns rectangular bounds of where this component will be - given a position
    *
    * @abstract
+   * @param {Intersects.Shape} collider - will assume point if none is passed
    * @returns {Object}
    */
-  getBounds() {
-    const { x, y } = this.getNextPosition();
-    const { width, height } = this.size;
+  willCollide(collider) {
+    const nextPosition = this.getNextPosition();
 
-    return {
-      top: y - height / 2,
-      bottom: y + height / 2,
-      left: x - width / 2,
-      right: x + width / 2,
-    }
+    const hitbox = new Intersects_Rectangle(this.view, {
+      width: this.size.width,
+      height: this.size.height,
+      center: nextPosition,
+      noRotate: true,
+    });
+
+    const colliderShape = _.get(collider, 'shape', 'point');
+    return hitbox.collides(colliderShape);
   }
 };
 

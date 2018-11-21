@@ -36,13 +36,7 @@ class BallComponent extends GameComponent {
     // set the view's position
     this.view.position = this.position;
 
-    /** @type {Intersects.Rectangle} */
-    const hitbox = new Intersects_Rectangle(this.view, {
-      width: this.size.width,
-      height: this.size.height,
-      center: this.position,
-      noRotate: true,
-    });
+    const hitbox = this.getHitbox();
 
     if (hitbox.collidesLine(WALL_LINES.TOP.p1, WALL_LINES.TOP.p2)) {
       this.velocity.y = -1 * this.velocity.y;
