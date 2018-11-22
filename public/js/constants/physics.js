@@ -14,7 +14,7 @@ import Point from '@studiomoniker/point';
 
 // game level physics
 /** @type {Speed} */
-export const GAME_SPEED_MAX = 8;
+export const GAME_SPEED_MAX = 10;
 /** @type {VelocityLimits} */
 export const GAME_VELOCITY_LIMITS = {
   min: new Point(0, 0),

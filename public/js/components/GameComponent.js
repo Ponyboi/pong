@@ -50,13 +50,13 @@ class GameComponent {
    * todo: should be separated to outside the component
    */
   update() {
+    this.reduceVelocity();
+
     this.updatePosition();
 
     this.handleCollision();
 
     this.updateView();
-
-    this.reduceVelocity();
 
     this.updateState();
   };
@@ -84,31 +84,13 @@ class GameComponent {
     const { min, max } = this.velocityLimits;
     const { x, y } = this.velocity;
 
-    const xScalar = Math.abs(x);
-    const yScalar = Math.abs(y);
+    // Scalar is the speed ignoring the direction
+    //  we're also going to clamp the values so at the very least they could be between min and max
+    const xScalar = Math.min(Math.max(Math.abs(x), min.x), max.x);
+    const yScalar = Math.min(Math.max(Math.abs(y), min.y), max.y);
 
     const xDirection = x < 0 ? -1 : 1;
     const yDirection = y < 0 ? -1 : 1;
-
-    // -- horizontally too slow
-    if (xScalar < min.x) {
-      this.velocity.x = min.x * xDirection;
-    }
-
-    // -- horizontally too fast
-    if (xScalar > max.x) {
-      this.velocity.x = max.x * xDirection;
-    }
-
-    // -- vertically too slow
-    if (yScalar < min.y) {
-      this.velocity.y = min.y * yDirection;
-    }
-
-    // -- vertically too fast
-    if (yScalar > max.y) {
-      this.velocity.y = max.y * yDirection;
-    }
 
     // -- horizontal is changing
     if (xScalar > min.x) {
