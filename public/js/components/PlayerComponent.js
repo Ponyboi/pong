@@ -4,7 +4,8 @@ import {
 
 import gameState, { updatePrimaryPlayerPositionState } from 'data/gameState';
 
-import { PADDLE_SIZE, PLAYER_LIMITS } from 'constants/sizes';
+import { PADDLE_SIZE } from 'constants/sizes';
+import { GAME_BOUNDS } from 'constants/positions';
 
 import Point from '@studiomoniker/point';
 import GameComponent from 'components/GameComponent';
@@ -61,15 +62,14 @@ class Player extends GameComponent {
   handleCollision() {
     const bounds = this.getBounds();
 
-    if (bounds.right >= PLAYER_LIMITS.rightEnd) {
-      this.velocity.x *= -1;
+    // right
+    if (bounds.right > GAME_BOUNDS.right) {
+      this.velocity.invertX();
+    }
 
-    } else if (bounds.left <= PLAYER_LIMITS.leftEnd) {
-      this.velocity.x *= -1;
-
-    } else {
-      var adjustedPos = this.getPosition();
-      this.view.position = new Point(adjustedPos.x, adjustedPos.y);
+    // left
+    if (bounds.left < GAME_BOUNDS.left) {
+      this.velocity.invertX();
     }
   };
 };

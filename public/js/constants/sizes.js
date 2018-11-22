@@ -30,9 +30,3 @@ export const BALL_SIZE = {
   width: 20,
   height: 20,
 };
-
-/** @type {Object} */
-export const PLAYER_LIMITS = {
-  rightEnd: GAME_SIZE.width,
-  leftEnd: 0,
-};
