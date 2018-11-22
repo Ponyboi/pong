@@ -46,8 +46,7 @@ const ball = new BallComponent({
   velocityLimits: BALL_VELOCITY_LIMITS,
 });
 ball.updateState = () => {
-  // ball.position = gameState.ballPos;
-  updateBallPositionState(ball.position);
+  updateBallPositionState(ball.getPosition());
 };
 
 // active player
@@ -55,8 +54,7 @@ const primaryPlayer = new PlayerComponent({
   position: gameState.primaryPlayerPos,
 });
 primaryPlayer.updateState = () => {
-  // primaryPlayer.position = gameState.primaryPlayerPos;
-  updatePrimaryPlayerPositionState(primaryPlayer.position);
+  updatePrimaryPlayerPositionState(primaryPlayer.getPosition());
 };
 
 // opposing player
@@ -64,7 +62,6 @@ const secondaryPlayer = new PlayerComponent({
   position: gameState.secondaryPlayerPos,
 });
 secondaryPlayer.updateState = () => {
-  // secondaryPlayer.position = gameState.secondaryPlayerPos;
 };
 
 // primaryPlayerScore

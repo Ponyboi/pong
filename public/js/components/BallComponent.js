@@ -60,12 +60,6 @@ class BallComponent extends GameComponent {
       this.velocity.invertX();
     }
   };
-  /**
-   * @override
-   */
-  getAdjustedPos() {
-    return this.position;
-  }
 };
 
 export default BallComponent;

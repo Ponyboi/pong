@@ -27,7 +27,10 @@ class GameComponent {
     /** @type {VelocityLimits} */
     this.velocityLimits = options.velocityLimits || GAME_VELOCITY_LIMITS;
 
-    /** @type {Point} */
+    /**
+     * @private
+     * @type {Point}
+     */
     this.position = options.position || new Point(0, 0);
 
     /** @type {Size} */
@@ -140,7 +143,7 @@ class GameComponent {
    * @abstract
    */
   updateView() {
-    this.view.position = this.getAdjustedPos();
+    this.view.position = this.getPosition();
   };
   /**
    * override this so we update the game state
@@ -159,13 +162,12 @@ class GameComponent {
     return new Rectangle(this.view, {
       width: this.size.width,
       height: this.size.height,
-      center: this.getAdjustedPos(),
+      center: this.getPosition(),
       noRotate: true,
     });
   }
   /**
-   * get the next position this will ebe
-   *  by adding velocity onto this position
+   * get the projected position this will be based on the velocity
    *
    * @returns {Point}
    */
@@ -176,18 +178,12 @@ class GameComponent {
     return currentPosition.add(currentVelocity);
   };
   /**
-   * since graphics have no anchor, we're just going to adjust where the graphics are drawn to match it up
+   * access the position, important because PlayerComponent overrides this
    *
    * @returns {Point}
    */
-  getAdjustedPos() {
-    const { x, y } = this.position;
-    const { width, height } = this.size;
-
-    return new Point(
-      x - (width / 2),
-      y - (height / 2),
-    );
+  getPosition() {
+    return this.position;
   }
   /**
    * returns rectangular bounds of where this component will be - given a position

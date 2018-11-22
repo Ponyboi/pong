@@ -42,6 +42,21 @@ class Player extends GameComponent {
 
     return graphics;
   };
+  /**
+   * rectangle positions start at the top-left so we have to adjust for it
+   *
+   * @override
+   * @returns {Point}
+   */
+  getPosition() {
+    const { x, y } = this.position;
+    const { width, height } = this.size;
+
+    return new Point(
+      x - (width / 2),
+      y - (height / 2),
+    );
+  }
   /** @override */
   handleCollision() {
     const bounds = this.getBounds();
@@ -53,7 +68,7 @@ class Player extends GameComponent {
       this.velocity.x *= -1;
 
     } else {
-      var adjustedPos = this.getAdjustedPos();
+      var adjustedPos = this.getPosition();
       this.view.position = new Point(adjustedPos.x, adjustedPos.y);
     }
   };
