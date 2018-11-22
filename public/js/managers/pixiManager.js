@@ -45,24 +45,26 @@ const ball = new BallComponent({
   velocity: new Point(DEFAULT_BALL_SPEED, DEFAULT_BALL_SPEED),
   velocityLimits: BALL_VELOCITY_LIMITS,
 });
-ball.updatePosition = () => {
-  ball.position = gameState.ballPos;
+ball.updateState = () => {
+  // ball.position = gameState.ballPos;
+  updateBallPositionState(ball.position);
 };
 
 // active player
 const primaryPlayer = new PlayerComponent({
   position: gameState.primaryPlayerPos,
 });
-primaryPlayer.updatePosition = () => {
-  primaryPlayer.position = gameState.primaryPlayerPos;
+primaryPlayer.updateState = () => {
+  // primaryPlayer.position = gameState.primaryPlayerPos;
+  updatePrimaryPlayerPositionState(primaryPlayer.position);
 };
 
 // opposing player
 const secondaryPlayer = new PlayerComponent({
   position: gameState.secondaryPlayerPos,
 });
-secondaryPlayer.updatePosition = () => {
-  secondaryPlayer.position = gameState.secondaryPlayerPos;
+secondaryPlayer.updateState = () => {
+  // secondaryPlayer.position = gameState.secondaryPlayerPos;
 };
 
 // primaryPlayerScore
@@ -181,10 +183,6 @@ function handleUpdateGameState(delta) {
     ball.velocity.y = (ball.velocity.y * 1.5) + (3.5 * yDirection);
   };
 
-  // update ball's position
-  const ballNextPosition = ball.getNextPosition();
-  updateBallPositionState(ballNextPosition);
-
   // update player position
   const playerSpeedDelta = DEFAULT_PLAYER_SPEED * delta;
   if (gameState.primaryPlayerState === 'left') {
@@ -193,10 +191,6 @@ function handleUpdateGameState(delta) {
   if (gameState.primaryPlayerState === 'right') {
     primaryPlayer.velocity.x = playerSpeedDelta;
   };
-
-  // always update player position state
-  const primaryPlayerNextPosition = primaryPlayer.getNextPosition();
-  updatePrimaryPlayerPositionState(primaryPlayerNextPosition);
 };
 
 export default app;

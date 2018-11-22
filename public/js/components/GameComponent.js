@@ -52,6 +52,8 @@ class GameComponent {
     this.updateView();
 
     this.reduceVelocity();
+
+    this.updateState();
   };
   /**
    * check collisions and what to do when it happens
@@ -66,6 +68,7 @@ class GameComponent {
    * @abstract
    */
   updatePosition() {
+    this.position = this.getNextPosition();
   };
   /**
    * handles doing the math on reducing velocity
@@ -138,6 +141,13 @@ class GameComponent {
     this.view.position = this.getAdjustedPos();
   };
   /**
+   * override this so we update the game state
+   *
+   * @abstract
+   */
+  updateState() {
+  };
+  /**
    * returns this object's hitbox
    *  by default it uses a rectangle
    *
@@ -147,7 +157,7 @@ class GameComponent {
     return new Rectangle(this.view, {
       width: this.size.width,
       height: this.size.height,
-      center: this.position,
+      center: this.getAdjustedPos(),
       noRotate: true,
     });
   }
