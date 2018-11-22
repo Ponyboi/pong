@@ -43,6 +43,8 @@ class GameComponent {
   };
   /**
    * primary lifecycle handler
+   *
+   * todo: should be separated to outside the component
    */
   update() {
     this.updatePosition();
@@ -190,30 +192,27 @@ class GameComponent {
   /**
    * returns rectangular bounds of where this component will be - given a position
    *
-   * @param {Point | undefined} position
    * @returns {Bounds}
    */
-  getBounds(position) {
-    const { x, y } = position || this.position;
+  getBounds() {
+    const { x, y } = this.position;
     const { width, height } = this.size;
 
     return {
-      top: y - height / 2,
-      bottom: y + height / 2,
-      left: x - width / 2,
-      right: x + width / 2,
+      top: y - (height / 2),
+      bottom: y + (height / 2),
+      left: x - (width / 2),
+      right: x + (width / 2),
     }
   }
   /**
    * returns the two point lines
    *
-   * @param {Point | undefined} position
    * @returns {Edges}
    */
-  getEdges(position) {
-    const { x, y } = position || this.position;
+  getEdges() {
     const { width, height } = this.size;
-    const { top, bottom, left, right } = this.getBounds(position);
+    const { top, bottom, left, right } = this.getBounds();
 
     const topLeftPoint = new Point(left, top);
     const topRightPoint = new Point(right, top);

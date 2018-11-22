@@ -3,7 +3,7 @@ import { Rectangle as Intersects_Rectangle } from 'yy-intersects';
 
 import GameComponent from 'components/GameComponent';
 import { BALL_SIZE } from 'constants/sizes';
-import { GAME_EDGES } from 'constants/positions';
+import { GAME_BOUNDS } from 'constants/positions';
 
 /**
  * Game Ball
@@ -26,7 +26,8 @@ class BallComponent extends GameComponent {
 
     graphics.beginFill(0xFFFFFF);
 
-    graphics.drawCircle(0, 0, this.size.height);
+    // third param is radius so we'll divide by two since height is basically diameter
+    graphics.drawCircle(0, 0, this.size.height / 2);
 
     graphics.endFill();
 
@@ -36,21 +37,35 @@ class BallComponent extends GameComponent {
    * @override
    */
   handleCollision() {
-    const hitbox = this.getHitbox();
+    // const hitbox = this.getHitbox();
+    const bounds = this.getBounds();
 
-    if (hitbox.collidesLine(GAME_EDGES.topEdge.p1, GAME_EDGES.topEdge.p2)) {
-      this.velocity.y = -1 * this.velocity.y;
-    };
-    if (hitbox.collidesLine(GAME_EDGES.rightEdge.p1, GAME_EDGES.rightEdge.p2)) {
-      this.velocity.x = -1 * this.velocity.x;
-    };
-    if (hitbox.collidesLine(GAME_EDGES.bottomEdge.p1, GAME_EDGES.bottomEdge.p2)) {
-      this.velocity.y = -1 * this.velocity.y;
-    };
-    if (hitbox.collidesLine(GAME_EDGES.leftEdge.p1, GAME_EDGES.leftEdge.p2)) {
-      this.velocity.x = -1 * this.velocity.x;
-    };
+    // top
+    if (bounds.top < GAME_BOUNDS.top) {
+      this.velocity.invertY();
+    }
+
+    // bottom
+    if (bounds.bottom > GAME_BOUNDS.bottom) {
+      this.velocity.invertY();
+    }
+
+    // right
+    if (bounds.right > GAME_BOUNDS.right) {
+      this.velocity.invertX();
+    }
+
+    // left
+    if (bounds.left < GAME_BOUNDS.left) {
+      this.velocity.invertX();
+    }
   };
+  /**
+   * @override
+   */
+  getAdjustedPos() {
+    return this.position;
+  }
 };
 
 export default BallComponent;

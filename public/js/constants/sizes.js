@@ -27,8 +27,8 @@ export const DASH_SIZE = {
 
 /** @type {Size} */
 export const BALL_SIZE = {
-  width: 15,
-  height: 15,
+  width: 20,
+  height: 20,
 };
 
 /** @type {Object} */
