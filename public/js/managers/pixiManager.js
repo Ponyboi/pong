@@ -158,25 +158,29 @@ function handleUpdateGameState(delta) {
 
   // if paddle's left side hit the ball
   if (primaryPlayerCollisions.left || secondaryPlayerCollisions.left) {
+    // invert if ball is going right
     if (ball.velocity.x > 0) {
-      ball.velocity.x *= -1;
-    }
-    // ball.velocity.x *= 1.2;
+      ball.velocity.invertX();
+    };
+
+    ball.velocity.multiplyX(2.0);
   };
 
   // if paddle's right side hit the ball
   if (primaryPlayerCollisions.right || secondaryPlayerCollisions.right) {
+    // invert if ball is going left
     if (ball.velocity.x < 0) {
-      ball.velocity.x *= -1;
-    }
-    // ball.velocity.x *= 1.2;
+      ball.velocity.invertX();
+    };
+
+    ball.velocity.multiplyX(2.0);
   };
 
   // if ball collides with any player, flip the velocity to go the other direction
   if (primaryPlayerCollisions.top || secondaryPlayerCollisions.bottom) {
-    ball.velocity.y *= -1;
+    ball.velocity.invertY();
 
-    const yDirection =  ball.velocity.y < 0 ? -1 : 1;
+    const yDirection = ball.velocity.y < 0 ? -1 : 1;
     ball.velocity.y = (ball.velocity.y * 1.5) + (3.5 * yDirection);
   };
 
