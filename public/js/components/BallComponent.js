@@ -37,7 +37,6 @@ class BallComponent extends GameComponent {
    * @override
    */
   handleCollision() {
-    // const hitbox = this.getHitbox();
     const bounds = this.getBounds();
 
     // top

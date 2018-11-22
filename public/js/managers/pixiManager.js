@@ -1,7 +1,12 @@
 import * as PIXI from 'pixi.js';
 import Intersects from 'yy-intersects';
 
-import gameState, { updateBallPositionState, updatePrimaryPlayerPositionState } from 'data/gameState';
+import gameState, {
+  updateBallPositionState,
+  updatePrimaryPlayerPositionState,
+  updatePrimaryPlayerScore,
+  updateSecondaryPlayerScore,
+} from 'data/gameState';
 
 import Point from '@studiomoniker/point';
 import PlayerComponent from 'components/PlayerComponent';
@@ -11,15 +16,16 @@ import ScoreComponent from 'components/ScoreComponent';
 import { GAME_SIZE } from 'constants/sizes';
 
 import {
+  BALL_VELOCITY_LIMITS,
   DEFAULT_BALL_SPEED,
   DEFAULT_PLAYER_SPEED,
-  BALL_VELOCITY_LIMITS,
 } from 'constants/physics';
 
 import {
+  BALL_DEFAULT_POS,
+  GAME_BOUNDS,
   PRIMARY_SCORE_POS,
   SECONDARY_SCORE_POS,
-  BALL_DEFAULT_POS,
 } from 'constants/positions';
 
 import { getCanvasContainer } from 'helpers/canvasHelper';
@@ -108,9 +114,7 @@ function initApp() {
  * puts the ball back in the middle and pushes it in a random direction
  */
 function resetBallToCenter() {
-  updateBallPositionState(BALL_DEFAULT_POS);
-
-  // then reset the velocity
+  ball.position = new Point(BALL_DEFAULT_POS.x, BALL_DEFAULT_POS.y);
   ball.velocity = new Point(DEFAULT_BALL_SPEED, DEFAULT_BALL_SPEED);
 
   // randomly some direction changes
@@ -120,6 +124,8 @@ function resetBallToCenter() {
   if (Math.round(Math.random())) {
     // ball.velocity.y *= -1;
   }
+
+  updateBallPositionState(ball.position);
 };
 /**
  * add a ticker to constantly update the game
@@ -158,27 +164,45 @@ function handleUpdateGameState(delta) {
 
   // if paddle's left side hit the ball
   if (primaryPlayerCollisions.left || secondaryPlayerCollisions.left) {
+    // invert if ball is going right
     if (ball.velocity.x > 0) {
-      ball.velocity.x *= -1;
-    }
-    // ball.velocity.x *= 1.2;
+      ball.velocity.invertX();
+    };
+
+    ball.velocity.multiplyX(2.0);
   };
 
   // if paddle's right side hit the ball
   if (primaryPlayerCollisions.right || secondaryPlayerCollisions.right) {
+    // invert if ball is going left
     if (ball.velocity.x < 0) {
-      ball.velocity.x *= -1;
-    }
-    // ball.velocity.x *= 1.2;
+      ball.velocity.invertX();
+    };
+
+    ball.velocity.multiplyX(2.0);
   };
 
   // if ball collides with any player, flip the velocity to go the other direction
   if (primaryPlayerCollisions.top || secondaryPlayerCollisions.bottom) {
-    ball.velocity.y *= -1;
+    ball.velocity.invertY();
 
-    const yDirection =  ball.velocity.y < 0 ? -1 : 1;
+    const yDirection = ball.velocity.y < 0 ? -1 : 1;
     ball.velocity.y = (ball.velocity.y * 1.5) + (3.5 * yDirection);
   };
+
+  const ballBounds = ball.getBounds();
+
+  // top means primary player scored
+  if (ballBounds.top < GAME_BOUNDS.top) {
+    updatePrimaryPlayerScore();
+    resetBallToCenter();
+  }
+
+  // bottom means other player scored
+  if (ballBounds.bottom > GAME_BOUNDS.bottom) {
+    updateSecondaryPlayerScore();
+    resetBallToCenter();
+  }
 
   // update player position
   const playerSpeedDelta = DEFAULT_PLAYER_SPEED * delta;
