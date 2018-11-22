@@ -11,15 +11,16 @@ import ScoreComponent from 'components/ScoreComponent';
 import { GAME_SIZE } from 'constants/sizes';
 
 import {
+  BALL_VELOCITY_LIMITS,
   DEFAULT_BALL_SPEED,
   DEFAULT_PLAYER_SPEED,
-  BALL_VELOCITY_LIMITS,
 } from 'constants/physics';
 
 import {
+  BALL_DEFAULT_POS,
+  GAME_BOUNDS,
   PRIMARY_SCORE_POS,
   SECONDARY_SCORE_POS,
-  BALL_DEFAULT_POS,
 } from 'constants/positions';
 
 import { getCanvasContainer } from 'helpers/canvasHelper';
@@ -108,9 +109,7 @@ function initApp() {
  * puts the ball back in the middle and pushes it in a random direction
  */
 function resetBallToCenter() {
-  updateBallPositionState(BALL_DEFAULT_POS);
-
-  // then reset the velocity
+  ball.position = new Point(BALL_DEFAULT_POS.x, BALL_DEFAULT_POS.y);
   ball.velocity = new Point(DEFAULT_BALL_SPEED, DEFAULT_BALL_SPEED);
 
   // randomly some direction changes
@@ -120,6 +119,8 @@ function resetBallToCenter() {
   if (Math.round(Math.random())) {
     // ball.velocity.y *= -1;
   }
+
+  updateBallPositionState(ball.position);
 };
 /**
  * add a ticker to constantly update the game
@@ -183,6 +184,18 @@ function handleUpdateGameState(delta) {
     const yDirection = ball.velocity.y < 0 ? -1 : 1;
     ball.velocity.y = (ball.velocity.y * 1.5) + (3.5 * yDirection);
   };
+
+  // check ball scoring
+  const ballBounds = ball.getBounds();
+  // top
+  if (ballBounds.top < GAME_BOUNDS.top) {
+    resetBallToCenter();
+  }
+
+  // bottom
+  if (ballBounds.bottom > GAME_BOUNDS.bottom) {
+    resetBallToCenter();
+  }
 
   // update player position
   const playerSpeedDelta = DEFAULT_PLAYER_SPEED * delta;
