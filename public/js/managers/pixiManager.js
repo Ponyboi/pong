@@ -1,7 +1,12 @@
 import * as PIXI from 'pixi.js';
 import Intersects from 'yy-intersects';
 
-import gameState, { updateBallPositionState, updatePrimaryPlayerPositionState } from 'data/gameState';
+import gameState, {
+  updateBallPositionState,
+  updatePrimaryPlayerPositionState,
+  updatePrimaryPlayerScore,
+  updateSecondaryPlayerScore,
+} from 'data/gameState';
 
 import Point from '@studiomoniker/point';
 import PlayerComponent from 'components/PlayerComponent';
@@ -185,15 +190,17 @@ function handleUpdateGameState(delta) {
     ball.velocity.y = (ball.velocity.y * 1.5) + (3.5 * yDirection);
   };
 
-  // check ball scoring
   const ballBounds = ball.getBounds();
-  // top
+
+  // top means primary player scored
   if (ballBounds.top < GAME_BOUNDS.top) {
+    updatePrimaryPlayerScore();
     resetBallToCenter();
   }
 
-  // bottom
+  // bottom means other player scored
   if (ballBounds.bottom > GAME_BOUNDS.bottom) {
+    updateSecondaryPlayerScore();
     resetBallToCenter();
   }
 

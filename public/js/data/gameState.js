@@ -62,5 +62,17 @@ export function updateSecondaryPlayerPositionState(newState) {
 
   gameState.secondaryPlayerPos = newState;
 };
+/**
+ * @params {Number} newState
+ */
+export function updatePrimaryPlayerScore(newState) {
+  gameState.primaryPlayerScore = gameState.primaryPlayerScore + 1;
+};
+/**
+ * @params {Number} newState
+ */
+export function updateSecondaryPlayerScore(newState) {
+  gameState.secondaryPlayerScore = gameState.secondaryPlayerScore + 1;
+};
 
 export default gameState;
