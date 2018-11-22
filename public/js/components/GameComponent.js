@@ -76,8 +76,8 @@ class GameComponent {
    *
    */
   reduceVelocity() {
-    const { x, y } = this.velocity;
     const { min, max } = this.velocityLimits;
+    const { x, y } = this.velocity;
 
     const xScalar = Math.abs(x);
     const yScalar = Math.abs(y);
@@ -85,60 +85,42 @@ class GameComponent {
     const xDirection = x < 0 ? -1 : 1;
     const yDirection = y < 0 ? -1 : 1;
 
-    // velocity left
-    if (x < 0) {
-      // too slow
-      if (x > (min.x * -1)) {
-        this.velocity.x = (min.x * -1);
-      }
-      // too fast
-      if (x < (max.x * -1)) {
-        this.velocity.x = (max.x * -1);
-      }
+    // -- horizontally too slow
+    if (xScalar < min.x) {
+      this.velocity.x = min.x * xDirection;
     }
 
-    // velocity right
-    if (x > 0) {
-      // too slow
-      if (x < min.x) {
-        this.velocity.x = min.x;
-      }
-      // too fast
-      if (x > max.x) {
-        this.velocity.x = max.x;
-      }
+    // -- horizontally too fast
+    if (xScalar > max.x) {
+      this.velocity.x = max.x * xDirection;
     }
 
-    // velocity up
-    if (y > 0) {
-      // too slow
-      if (y < min.y) {
-        this.velocity.y = min.x;
-      }
-      // too fast
-      if (y > max.y) {
-        this.velocity.y = max.x;
-      }
+    // -- vertically too slow
+    if (yScalar < min.y) {
+      this.velocity.y = min.y * yDirection;
     }
 
-    // velocity down
-    if (y < 0) {
-      // too slow
-      if (y > (min.y * -1)) {
-        this.velocity.y = (min.y * -1);
-      }
-      // too fast
-      if (y < (max.y * -1)) {
-        this.velocity.y = (max.y * -1);
-      }
+    // -- vertically too fast
+    if (yScalar > max.y) {
+      this.velocity.y = max.y * yDirection;
     }
 
-    // -- if velocity is actually cahnging
+    // -- horizontal is changing
     if (xScalar > min.x) {
-      this.velocity.x = (xScalar * 0.9) * xDirection;
+      if (xScalar > 4) {
+        this.velocity.x = Math.max((xScalar * 0.9), (xScalar - 0.05)) * xDirection;
+      } else {
+        this.velocity.x = xScalar * 0.9 * xDirection;
+      }
     }
+
+    // -- vertical is changing
     if (yScalar > min.y) {
-      this.velocity.y = (yScalar * 0.9) * yDirection;
+      if (yScalar > 4) {
+        this.velocity.y = Math.max((yScalar * 0.9), (yScalar - 0.05)) * yDirection;
+      } else {
+        this.velocity.y = yScalar * 0.9 * yDirection;
+      }
     }
 
     // -- set to zero if velocity gets small enough

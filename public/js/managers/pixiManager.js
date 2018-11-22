@@ -108,7 +108,7 @@ function resetBallToCenter() {
     ball.velocity.x *= -1;
   }
   if (Math.round(Math.random())) {
-    ball.velocity.y *= -1;
+    // ball.velocity.y *= -1;
   }
 };
 /**
@@ -181,13 +181,14 @@ function handleUpdateGameState(delta) {
   // }
 
   // if ball collides with any player, flip the velocity to go the other direction
-  if (ball.isColliding(primaryPlayer) || ball.isColliding(secondaryPlayer)) {
+  if (primaryPlayerCollisions.top || secondaryPlayerCollisions.bottom) {
     ball.velocity.y *= -1;
-    // ball.velocity.y *= 5;
+
+    const yDirection =  ball.velocity.y < 0 ? -1 : 1;
+    ball.velocity.y = (ball.velocity.y * 1.5) + (3.5 * yDirection);
   };
 
   // update ball's position
-  const ballVelocityDelta = new Point(ball.velocity.x, ball.velocity.y);
   const ballNextPosition = ball.getNextPosition();
   updateBallPositionState(ballNextPosition);
 
