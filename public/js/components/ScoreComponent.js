@@ -7,6 +7,7 @@ const scoreStyles = {
   fontWeight: 'bold',
 };
 
+// maybe one day this will be a GameComponent?
 class ScoreComponent {
   /** @override */
   constructor(options = {}) {
@@ -24,6 +25,7 @@ class ScoreComponent {
     this.view = this.render();
   };
   /**
+   * @override
    * @returns {PIXI.Text}
    */
   render() {
@@ -33,7 +35,7 @@ class ScoreComponent {
     })
   };
   /**
-   *
+   * @override
    */
   update() {
     this.view.text = this.text;

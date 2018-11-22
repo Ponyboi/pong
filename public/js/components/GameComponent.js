@@ -39,41 +39,38 @@ class GameComponent {
   /**
    * @abstract
    */
-  render() {};
+  render() {
+  };
   /**
+   * primary lifecycle handler
+   */
+  update() {
+    this.updatePosition();
+
+    this.handleCollision();
+
+    this.updateView();
+
+    this.reduceVelocity();
+  };
+  /**
+   * check collisions and what to do when it happens
+   *
    * @abstract
    */
-  update() {};
+  handleCollision() {
+  };
   /**
-   * returns this object's hitbox
-   *  by default it uses a rectangle
+   * move the player's position
    *
-   * @returns {Intersects.Shape}
+   * @abstract
    */
-  getHitbox() {
-    return new Rectangle(this.view, {
-      width: this.size.width,
-      height: this.size.height,
-      center: this.position,
-      noRotate: true,
-    });
-  }
-  /**
-   * get the next position this will ebe
-   *  by adding velocity onto this position
-   *
-   * @returns {Point}
-   */
-  getNextPosition() {
-    const currentPosition = this.position.clone();
-    const currentVelocity = this.velocity.clone();
-
-    return currentPosition.add(currentVelocity);
+  updatePosition() {
   };
   /**
    * handles doing the math on reducing velocity
-   * todo - this function is yuck
    *
+   * todo - this function is yuck
    */
   reduceVelocity() {
     const { min, max } = this.velocityLimits;
@@ -132,6 +129,40 @@ class GameComponent {
       this.velocity.y = 0;
     };
   }
+  /**
+   * set the view's position
+   *
+   * @abstract
+   */
+  updateView() {
+    this.view.position = this.getAdjustedPos();
+  };
+  /**
+   * returns this object's hitbox
+   *  by default it uses a rectangle
+   *
+   * @returns {Intersects.Shape}
+   */
+  getHitbox() {
+    return new Rectangle(this.view, {
+      width: this.size.width,
+      height: this.size.height,
+      center: this.position,
+      noRotate: true,
+    });
+  }
+  /**
+   * get the next position this will ebe
+   *  by adding velocity onto this position
+   *
+   * @returns {Point}
+   */
+  getNextPosition() {
+    const currentPosition = this.position.clone();
+    const currentVelocity = this.velocity.clone();
+
+    return currentPosition.add(currentVelocity);
+  };
   /**
    * since graphics have no anchor, we're just going to adjust where the graphics are drawn to match it up
    *

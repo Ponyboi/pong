@@ -18,6 +18,7 @@ class BallComponent extends GameComponent {
     });
   };
   /**
+   * @override
    * @returns {PIXI.Graphic}
    */
   render() {
@@ -34,12 +35,7 @@ class BallComponent extends GameComponent {
   /**
    * @override
    */
-  update(delta) {
-    this.reduceVelocity(delta);
-
-    // set the view's position
-    this.view.position = this.position;
-
+  handleCollision() {
     const hitbox = this.getHitbox();
 
     if (hitbox.collidesLine(GAME_EDGES.topEdge.p1, GAME_EDGES.topEdge.p2)) {
@@ -54,7 +50,7 @@ class BallComponent extends GameComponent {
     if (hitbox.collidesLine(GAME_EDGES.leftEdge.p1, GAME_EDGES.leftEdge.p2)) {
       this.velocity.x = -1 * this.velocity.x;
     };
-  }
+  };
 };
 
 export default BallComponent;

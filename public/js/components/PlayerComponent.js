@@ -43,9 +43,7 @@ class Player extends GameComponent {
     return graphics;
   };
   /** @override */
-  update() {
-    this.reduceVelocity();
-
+  handleCollision() {
     const bounds = this.getBounds();
 
     if (bounds.right >= PLAYER_LIMITS.rightEnd) {

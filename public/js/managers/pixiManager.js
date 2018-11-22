@@ -39,20 +39,32 @@ app.renderer.backgroundColor = 0x080808;
 const canvas = getCanvasContainer();
 canvas.appendChild(app.view);
 
-// active player
-const primaryPlayer = new PlayerComponent({
-  position: gameState.primaryPlayerPos,
-});
-// opposing player
-const secondaryPlayer = new PlayerComponent({
-  position: gameState.secondaryPlayerPos,
-});
 // ball
 const ball = new BallComponent({
   position: gameState.ballPos,
   velocity: new Point(DEFAULT_BALL_SPEED, DEFAULT_BALL_SPEED),
   velocityLimits: BALL_VELOCITY_LIMITS,
 });
+ball.updatePosition = () => {
+  ball.position = gameState.ballPos;
+};
+
+// active player
+const primaryPlayer = new PlayerComponent({
+  position: gameState.primaryPlayerPos,
+});
+primaryPlayer.updatePosition = () => {
+  primaryPlayer.position = gameState.primaryPlayerPos;
+};
+
+// opposing player
+const secondaryPlayer = new PlayerComponent({
+  position: gameState.secondaryPlayerPos,
+});
+secondaryPlayer.updatePosition = () => {
+  secondaryPlayer.position = gameState.secondaryPlayerPos;
+};
+
 // primaryPlayerScore
 const primaryScoreComponent = new ScoreComponent({
   position: PRIMARY_SCORE_POS,
@@ -98,7 +110,6 @@ function initApp() {
  */
 function resetBallToCenter() {
   updateBallPositionState(BALL_DEFAULT_POS);
-  // ball.position = gameState.ballPos;
 
   // then reset the velocity
   ball.velocity = new Point(DEFAULT_BALL_SPEED, DEFAULT_BALL_SPEED);
@@ -119,16 +130,13 @@ function appInitUpdate() {
     // handle state changes
     handleUpdateGameState(delta);
 
-    // assign data from state the the components and update them
-    ball.position = gameState.ballPos;
+    // ball
     ball.update();
 
     // active player
-    primaryPlayer.position = gameState.primaryPlayerPos;
     primaryPlayer.update();
 
     // opposing player
-    secondaryPlayer.position = gameState.secondaryPlayerPos;
     secondaryPlayer.update();
 
     // active player's score
@@ -156,14 +164,7 @@ function handleUpdateGameState(delta) {
     }
     // ball.velocity.x *= 1.2;
   };
-  // if (primaryPlayerCollisions.left) {
-  //   const nextPos = new Point(primaryPlayer.getBounds().left - Math.abs(primaryPlayer.velocity.x * 3 * delta), ball.position.y);
-  //   updateBallPositionState(nextPos);
-  // }
-  // if (secondaryPlayerCollisions.left) {
-  //   const nextPos = new Point(secondaryPlayer.getBounds().left - Math.abs(secondaryPlayer.velocity.x * 3 * delta), ball.position.y);
-  //   updateBallPositionState(nextPos);
-  // }
+
   // if paddle's right side hit the ball
   if (primaryPlayerCollisions.right || secondaryPlayerCollisions.right) {
     if (ball.velocity.x < 0) {
@@ -171,14 +172,6 @@ function handleUpdateGameState(delta) {
     }
     // ball.velocity.x *= 1.2;
   };
-  // if (primaryPlayerCollisions.right) {
-  //   const nextPos = new Point(primaryPlayer.getBounds().right + Math.abs(primaryPlayer.velocity.x * 3 * delta), ball.position.y);
-  //   updateBallPositionState(nextPos);
-  // }
-  // if (secondaryPlayerCollisions.right) {
-  //   const nextPos = new Point(secondaryPlayer.getBounds().right + Math.abs(secondaryPlayer.velocity.x * 3 * delta), ball.position.y);
-  //   updateBallPositionState(nextPos);
-  // }
 
   // if ball collides with any player, flip the velocity to go the other direction
   if (primaryPlayerCollisions.top || secondaryPlayerCollisions.bottom) {
