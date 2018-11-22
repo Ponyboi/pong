@@ -1,15 +1,16 @@
-import {
-  Point as PIXI_Point,
-} from 'pixi.js';
+// import Point from '@studiomoniker/point';
 import { Rectangle as Intersects_Rectangle } from 'yy-intersects';
 
 import GameComponent from 'components/GameComponent';
 import { BALL_SIZE } from 'constants/sizes';
-import { BASE_BALL_VELOCITY } from 'constants/physics';
-import { WALL_LINES } from 'constants/positions';
+import { GAME_BOUNDS } from 'constants/positions';
 
+/**
+ * Game Ball
+ *  hopefully its possible to make multiple of these?
+ */
 class BallComponent extends GameComponent {
-  /** @default */
+  /** @override */
   constructor(options = {}) {
     super({
       size: BALL_SIZE,
@@ -17,6 +18,7 @@ class BallComponent extends GameComponent {
     });
   };
   /**
+   * @override
    * @returns {PIXI.Graphic}
    */
   render() {
@@ -24,36 +26,40 @@ class BallComponent extends GameComponent {
 
     graphics.beginFill(0xFFFFFF);
 
-    graphics.drawCircle(0, 0, this.size.height);
+    // third param is radius so we'll divide by two since height is basically diameter
+    graphics.drawCircle(0, 0, this.size.height / 2);
 
     graphics.endFill();
 
     return graphics;
   };
   /**
-   * update
+   * @override
    */
-  update() {
-    this.reduceVelocity(BASE_BALL_VELOCITY);
+  handleCollision() {
+    // const hitbox = this.getHitbox();
+    const bounds = this.getBounds();
 
-    // set the view's position
-    this.view.position = this.position;
+    // top
+    if (bounds.top < GAME_BOUNDS.top) {
+      this.velocity.invertY();
+    }
 
-    const hitbox = this.getHitbox();
+    // bottom
+    if (bounds.bottom > GAME_BOUNDS.bottom) {
+      this.velocity.invertY();
+    }
 
-    if (hitbox.collidesLine(WALL_LINES.TOP.p1, WALL_LINES.TOP.p2)) {
-      this.velocity.y = -1 * this.velocity.y;
-    };
-    if (hitbox.collidesLine(WALL_LINES.RIGHT.p1, WALL_LINES.RIGHT.p2)) {
-      this.velocity.x = -1 * this.velocity.x;
-    };
-    if (hitbox.collidesLine(WALL_LINES.BOTTOM.p1, WALL_LINES.BOTTOM.p2)) {
-      this.velocity.y = -1 * this.velocity.y;
-    };
-    if (hitbox.collidesLine(WALL_LINES.LEFT.p1, WALL_LINES.LEFT.p2)) {
-      this.velocity.x = -1 * this.velocity.x;
-    };
-  }
+    // right
+    if (bounds.right > GAME_BOUNDS.right) {
+      this.velocity.invertX();
+    }
+
+    // left
+    if (bounds.left < GAME_BOUNDS.left) {
+      this.velocity.invertX();
+    }
+  };
 };
 
 export default BallComponent;

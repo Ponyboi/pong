@@ -5,9 +5,11 @@ const inputEmitter = new EventEmitter();
 
 /**
  * when a key is down
+ *
+ * @param (KeyboardEvent) e
  */
-const onKeyDown = (key) => {
-  const keycode = key.keyCode;
+function onKeyDown(e) {
+  const keycode = e.keyCode;
 
   // A Key is 65
   // Left arrow is 37
@@ -21,11 +23,14 @@ const onKeyDown = (key) => {
     inputEmitter.emit('rightDown');
   };
 };
+
 /**
  * when a key is up
+ *
+ * @param (KeyboardEvent) e
  */
-const onKeyUp = (key) => {
-  const keycode = key.keyCode;
+function onKeyUp(e) {
+  const keycode = e.keyCode;
 
   // A Key is 65
   // Left arrow is 37
@@ -40,6 +45,7 @@ const onKeyUp = (key) => {
   };
 };
 
+// attach events
 document.addEventListener('keydown', onKeyDown);
 document.addEventListener('keyup', onKeyUp);
 

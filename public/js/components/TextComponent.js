@@ -14,7 +14,7 @@ const baseStyles = {
   http://pixijs.download/release/docs/PIXI.Text.html
 */
 class TextComponent extends PIXI_Text {
-  /** @default */
+  /** @override */
   constructor(text, options, ...args) {
     // apply base styles and then use styles from options
     const stylesToPass = removeCustomProperties(options);

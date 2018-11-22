@@ -1,5 +1,4 @@
-import { Point as PIXI_Point } from 'pixi.js';
-
+import Point from '@studiomoniker/point';
 import TextComponent from 'components/TextComponent';
 
 const scoreStyles = {
@@ -8,8 +7,9 @@ const scoreStyles = {
   fontWeight: 'bold',
 };
 
+// maybe one day this will be a GameComponent?
 class ScoreComponent {
-  /** @default */
+  /** @override */
   constructor(options = {}) {
     const {
       position,
@@ -20,11 +20,12 @@ class ScoreComponent {
     /** @type {String} */
     this.text = text;
     /** @type {Point} */
-    this.position = position || new PIXI_Point();
+    this.position = position || new Point();
     /** @type {PIXI.Text} */
     this.view = this.render();
   };
   /**
+   * @override
    * @returns {PIXI.Text}
    */
   render() {
@@ -34,7 +35,7 @@ class ScoreComponent {
     })
   };
   /**
-   *
+   * @override
    */
   update() {
     this.view.text = this.text;

@@ -1,144 +1,201 @@
 import _ from 'lodash';
-import {
-  Point as PIXI_Point,
-} from 'pixi.js';
-import { Rectangle as Intersects_Rectangle } from 'yy-intersects';
+import Point from '@studiomoniker/point';
 
-import { VELOCITY_DRAG, VELOCITY_MIN } from 'constants/physics';
+import { Rectangle } from 'yy-intersects';
+
+import { GAME_VELOCITY_LIMITS } from 'constants/physics';
 import { PLAYER_LIMITS } from 'constants/sizes';
 
 /**
  * base component for a game object
- * because most of them should include
+ *  for the most part, everything is considered to be a recntagle
+ *
+ * most components will include the following
+ *  which can be passed in through the options
  * - position
  * - size
  * - view
- *
  */
 class GameComponent {
-  /** @default */
+  /**
+   * @params {Object}
+   */
   constructor(options = {}) {
-    const { position, size, velocity } = options;
+    /** @type {Velocity} */
+    this.velocity = options.velocity || new Point(0, 0);
 
-    /** @type {Point} */
-    this.velocity = velocity || new PIXI_Point();
-    /** @type {Point} */
-    this.position = position || new PIXI_Point();
-    /** @type {Object} */
-    this.size = size || {height: 1, width: 1};
+    /** @type {VelocityLimits} */
+    this.velocityLimits = options.velocityLimits || GAME_VELOCITY_LIMITS;
+
+    /**
+     * @private
+     * @type {Point}
+     */
+    this.position = options.position || new Point(0, 0);
+
+    /** @type {Size} */
+    this.size = options.size || { height: 1, width: 1 };
+
     /** @type {PIXI.Graphic} */
     this.view = this.render();
   };
   /**
    * @abstract
    */
-  render() {};
+  render() {
+  };
   /**
+   * primary lifecycle handler
+   *
+   * todo: should be separated to outside the component
+   */
+  update() {
+    this.reduceVelocity();
+
+    this.updatePosition();
+
+    this.handleCollision();
+
+    this.updateView();
+
+    this.updateState();
+  };
+  /**
+   * check collisions and what to do when it happens
+   *
    * @abstract
    */
-  update() {};
+  handleCollision() {
+  };
+  /**
+   * move the player's position
+   *
+   * @abstract
+   */
+  updatePosition() {
+    this.position = this.getNextPosition();
+  };
+  /**
+   * handles doing the math on reducing velocity
+   *
+   * todo - this function is yuck
+   */
+  reduceVelocity() {
+    const { min, max } = this.velocityLimits;
+    const { x, y } = this.velocity;
+
+    // Scalar is the speed ignoring the direction
+    //  we're also going to clamp the values so at the very least they could be between min and max
+    const xScalar = Math.min(Math.max(Math.abs(x), min.x), max.x);
+    const yScalar = Math.min(Math.max(Math.abs(y), min.y), max.y);
+
+    const xDirection = x < 0 ? -1 : 1;
+    const yDirection = y < 0 ? -1 : 1;
+
+    // -- horizontal is changing
+    if (xScalar > min.x) {
+      if (xScalar > 4) {
+        this.velocity.x = Math.max((xScalar * 0.9), (xScalar - 0.05)) * xDirection;
+      } else {
+        this.velocity.x = xScalar * 0.9 * xDirection;
+      }
+    }
+
+    // -- vertical is changing
+    if (yScalar > min.y) {
+      if (yScalar > 4) {
+        this.velocity.y = Math.max((yScalar * 0.9), (yScalar - 0.05)) * yDirection;
+      } else {
+        this.velocity.y = yScalar * 0.9 * yDirection;
+      }
+    }
+
+    // -- set to zero if velocity gets small enough
+    const closeToZero = 0.10;
+    if (xScalar < closeToZero) {
+      this.velocity.x = 0;
+    };
+    if (yScalar < closeToZero) {
+      this.velocity.y = 0;
+    };
+  }
+  /**
+   * set the view's position
+   *
+   * @abstract
+   */
+  updateView() {
+    this.view.position = this.getPosition();
+  };
+  /**
+   * override this so we update the game state
+   *
+   * @abstract
+   */
+  updateState() {
+  };
   /**
    * returns this object's hitbox
    *  by default it uses a rectangle
    *
-   * @abstract
    * @returns {Intersects.Shape}
    */
   getHitbox() {
-    /** @type {Intersects.Rectangle} */
-    return new Intersects_Rectangle(this.view, {
+    return new Rectangle(this.view, {
       width: this.size.width,
       height: this.size.height,
-      center: this.position,
+      center: this.getPosition(),
       noRotate: true,
     });
   }
   /**
-   * get the next position this will end up being in according to
-   * - velocity
+   * get the projected position this will be based on the velocity
    *
-   * @returns {PIXI.Point}
+   * @returns {Point}
    */
   getNextPosition() {
-    const currentPosition = {...this.position}; // copy position
-    const currentVelocity = {...this.velocity}; // copy velocity
+    const currentPosition = this.position.clone();
+    const currentVelocity = this.velocity.clone();
 
-    const nextPosition = new PIXI_Point(
-      currentPosition.x + currentVelocity.x,
-      currentPosition.y + currentVelocity.y,
-    );
-
-    return nextPosition;
+    return currentPosition.add(currentVelocity);
   };
   /**
-   * handles doing the math on reducing velocity
-   * - you can pass in param to reduce it to
+   * access the position, important because PlayerComponent overrides this
    *
-   * @param {Object} [reduceTo]
+   * @returns {Point}
    */
-  reduceVelocity(reduceTo = {}) {
-    const { x: minXVelocity, y: minYVelocity } = reduceTo;
-
-    this.velocity.x = this.velocity.x * VELOCITY_DRAG;
-    this.velocity.y = this.velocity.y * VELOCITY_DRAG;
-
-    // set to given min or zero if velocity gets small enough
-    if (Math.abs(this.velocity.x) < minXVelocity || VELOCITY_MIN) {
-      this.velocity.x = minXVelocity || 0;
-    }
-    if (Math.abs(this.velocity.y) < minYVelocity || VELOCITY_MIN) {
-      this.velocity.y = minYVelocity || 0;
-    }
-  }
-  /**
-   * since graphics have no anchor, we're just going to adjust where the graphics are drawn to match it up
-   *
-   * @abstract
-   * @returns {Object}
-   */
-  getAdjustedPos() {
-    const { x, y } = this.position;
-    const { width, height } = this.size;
-
-    const adjustedPos = new PIXI_Point(
-      x - (width / 2),
-      y - (height / 2),
-    );
-
-    return adjustedPos;
+  getPosition() {
+    return this.position;
   }
   /**
    * returns rectangular bounds of where this component will be - given a position
    *
-   * @param {PIXI.Point | undefined} position
-   * @returns {Object}
+   * @returns {Bounds}
    */
-  getBounds(position) {
-    const { x, y } = position || this.position;
+  getBounds() {
+    const { x, y } = this.position;
     const { width, height } = this.size;
 
     return {
-      top: y - height / 2,
-      bottom: y + height / 2,
-      left: x - width / 2,
-      right: x + width / 2,
+      top: y - (height / 2),
+      bottom: y + (height / 2),
+      left: x - (width / 2),
+      right: x + (width / 2),
     }
   }
   /**
    * returns the two point lines
    *
-   * @param {PIXI.Point | undefined} position
-   * @returns {Object}
+   * @returns {Edges}
    */
-  getEdges(position) {
-    const { x, y } = position || this.position;
+  getEdges() {
     const { width, height } = this.size;
-    const { top, bottom, left, right } = this.getBounds(position);
+    const { top, bottom, left, right } = this.getBounds();
 
-    const topLeftPoint = new PIXI_Point(left, top);
-    const topRightPoint = new PIXI_Point(right, top);
-    const bottomLeftPoint = new PIXI_Point(left, bottom);
-    const bottomRightPoint = new PIXI_Point(right, bottom);
+    const topLeftPoint = new Point(left, top);
+    const topRightPoint = new Point(right, top);
+    const bottomLeftPoint = new Point(left, bottom);
+    const bottomRightPoint = new Point(right, bottom);
 
     return {
       topEdge: {p1: topLeftPoint, p2: topRightPoint},
