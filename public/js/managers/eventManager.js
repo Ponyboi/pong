@@ -5,7 +5,7 @@ import { updatePrimaryPlayerActionState, updateSecondaryPlayerPositionState } fr
 import { convertPrimaryToSecondaryPos } from 'helpers/gamePositionHelper';
 
 import { handleNewPlayer } from 'managers/gameManager';
-import inputEmitter from 'managers/inputManager';
+import { inputEmitter } from 'managers/inputManager';
 import { resetBallToCenter } from 'managers/pixiManager';
 
 /*

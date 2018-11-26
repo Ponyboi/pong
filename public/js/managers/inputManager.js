@@ -1,14 +1,17 @@
 import EventEmitter from 'events';
 import KEY from 'constants/key';
 
-const inputEmitter = new EventEmitter();
+/**
+ * Emitter for Keyboard events
+ */
+export const inputEmitter = new EventEmitter();
 
 /**
  * when a key is down
  *
  * @param (KeyboardEvent) e
  */
-function onKeyDown(e) {
+export function onKeyDown(e) {
   const keycode = e.keyCode;
 
   // A Key is 65
@@ -29,7 +32,7 @@ function onKeyDown(e) {
  *
  * @param (KeyboardEvent) e
  */
-function onKeyUp(e) {
+export function onKeyUp(e) {
   const keycode = e.keyCode;
 
   // A Key is 65
@@ -48,9 +51,3 @@ function onKeyUp(e) {
 // attach events
 document.addEventListener('keydown', onKeyDown);
 document.addEventListener('keyup', onKeyUp);
-
-export default inputEmitter;
-export {
-  onKeyDown,
-  onKeyUp,
-}
