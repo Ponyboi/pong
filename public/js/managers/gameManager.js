@@ -1,19 +1,19 @@
-import SocketClient from 'components/SocketClient';
+import EventEmitter from 'events';
+
+import SocketClient from 'common/SocketClient';
 
 import { resetBallToCenter } from 'managers/pixiManager';
 
-/*
-  singleton of functions to handle the game
-*/
-const gameManager = {
-  handleNewPlayer: handleNewPlayer,
-};
+/**
+ * Emitter for all game events
+ */
+export const gameEmitter = new EventEmitter();
 /**
  * adds a new player
  *
  * @param {Object} message - from server
  */
-function handleNewPlayer(message = {}) {
+export function handleNewPlayer(message = {}) {
   const { playerCount } = message;
 
   const canvas = document.getElementById('app-header');
@@ -24,11 +24,7 @@ function handleNewPlayer(message = {}) {
     SocketClient.emit('message', {
       action: 'resetBall',
     });
+
     resetBallToCenter();
   }
-};
-
-export default gameManager;
-export {
-  handleNewPlayer,
 };

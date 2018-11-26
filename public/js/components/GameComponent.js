@@ -28,6 +28,10 @@ class GameComponent {
     this.velocityLimits = options.velocityLimits || GAME_VELOCITY_LIMITS;
 
     /**
+     * the actual point that the component is at - but it isn't necessarily accurate when rendered
+     *  use `getPosition()` to get an adjusted position
+     *  use and override `updatePosition()` to handle how `this.position` should be changed
+     *
      * @private
      * @type {Point}
      */

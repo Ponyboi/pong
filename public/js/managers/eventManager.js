@@ -1,4 +1,4 @@
-import SocketClient from 'components/SocketClient';
+import SocketClient from 'common/SocketClient';
 
 import { updatePrimaryPlayerActionState, updateSecondaryPlayerPositionState } from 'data/gameState';
 

@@ -13,6 +13,7 @@ module.exports = {
   },
   resolve: {
     alias: {
+      common: path.resolve(appPath, 'js/common'),
       components: path.resolve(appPath, 'js/components'),
       constants: path.resolve(appPath, 'js/constants'),
       data: path.resolve(appPath, 'js/data'),

@@ -1,5 +1,5 @@
 // import * as PIXI from 'pixi.js';
-import SocketClient from 'components/SocketClient';
+import SocketClient from 'common/SocketClient';
 
 import {
   BALL_DEFAULT_POS,
