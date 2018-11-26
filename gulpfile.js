@@ -69,7 +69,7 @@ gulp.task("run-server-local", function() {
 // default
 gulp.task('dev-webapp', gulp.series('compile-webapp', 'webapp:watch', 'run-webapp-local'));
 gulp.task('dev-server', gulp.series('compile-server', 'server:watch', 'run-server-local'));
-gulp.task('development', gulp.series('compile-webapp', 'compile-server', 'server:watch', 'run-server-local'));
+gulp.task('development', gulp.series('compile-webapp', 'compile-server', 'run-server-local'));
 
 /**
  * different 'default' task depending on settings

@@ -212,6 +212,9 @@ function handleUpdateGameState(delta) {
   if (gameState.primaryPlayerState === 'right') {
     primaryPlayer.velocity.x = playerSpeedDelta;
   };
+
+  // secondary player's position is from the game state
+  secondaryPlayer.position = gameState.secondaryPlayerPos;
 };
 
 export default app;

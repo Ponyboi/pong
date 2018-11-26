@@ -36,7 +36,7 @@ export function updatePrimaryPlayerPositionState(newState) {
   gameState.primaryPlayerPos = newState;
 
   // only tell the other player of changes when position changes
-  SocketClient.emit('gameStateUpdate', gameState);
+  SocketClient.emit('gameStateUpdate', { primaryPlayerPos: gameState.primaryPlayerPos });
 };
 /**
  * @params {String} newState
