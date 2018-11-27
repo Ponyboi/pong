@@ -3,6 +3,7 @@ import Intersects from 'yy-intersects';
 
 import gameState, {
   updateBallPositionState,
+  updateBallVelocityState,
   updatePrimaryPlayerPositionState,
   updatePrimaryPlayerScore,
   updateSecondaryPlayerScore,
@@ -13,6 +14,7 @@ import PlayerComponent from 'components/PlayerComponent';
 import BallComponent from 'components/BallComponent';
 import ScoreComponent from 'components/ScoreComponent';
 
+import GAME_EVENTS from 'constants/gameEvents';
 import { GAME_SIZE } from 'constants/sizes';
 
 import {
@@ -31,6 +33,8 @@ import {
 import { getCanvasContainer } from 'helpers/canvasHelper';
 import { createFieldView, drawScores } from 'helpers/pixiGameDrawHelper';
 
+import { gameEmitter } from 'managers/gameManager';
+
 /**
  * singleton for Pixi.js
  *use this to draw and update the view
@@ -47,13 +51,10 @@ canvas.appendChild(app.view);
 
 // ball
 const ball = new BallComponent({
-  position: gameState.ballPos,
+  position: BALL_DEFAULT_POS,
   velocity: new Point(DEFAULT_BALL_SPEED, DEFAULT_BALL_SPEED),
   velocityLimits: BALL_VELOCITY_LIMITS,
 });
-ball.updateState = () => {
-  updateBallPositionState(ball.getPosition());
-};
 
 // active player
 const primaryPlayer = new PlayerComponent({
@@ -67,8 +68,6 @@ primaryPlayer.updateState = () => {
 const secondaryPlayer = new PlayerComponent({
   position: gameState.secondaryPlayerPos,
 });
-secondaryPlayer.updateState = () => {
-};
 
 // primaryPlayerScore
 const primaryScoreComponent = new ScoreComponent({
@@ -105,7 +104,6 @@ function initApp() {
 
   // ball
   stage.addChild(ball.view);
-  resetBallToCenter();
 
   // after adding all the components, we can then start a ticker to update everything
   appInitUpdate();
@@ -114,18 +112,8 @@ function initApp() {
  * puts the ball back in the middle and pushes it in a random direction
  */
 function resetBallToCenter() {
-  ball.position = new Point(BALL_DEFAULT_POS.x, BALL_DEFAULT_POS.y);
-  ball.velocity = new Point(DEFAULT_BALL_SPEED, DEFAULT_BALL_SPEED);
-
-  // randomly some direction changes
-  if (Math.round(Math.random())) {
-    ball.velocity.x *= -1;
-  }
-  if (Math.round(Math.random())) {
-    // ball.velocity.y *= -1;
-  }
-
-  updateBallPositionState(ball.position);
+  ball.position = BALL_DEFAULT_POS;
+  ball.velocity = gameState.ballPosition || new Point(DEFAULT_BALL_SPEED, DEFAULT_BALL_SPEED);
 };
 /**
  * add a ticker to constantly update the game
@@ -170,6 +158,8 @@ function handleUpdateGameState(delta) {
     };
 
     ball.velocity.multiplyX(2.0);
+    updateBallVelocityState(ball.velocity);
+    gameEmitter.emit(GAME_EVENTS.BALL_HIT_PLAYER);
   };
 
   // if paddle's right side hit the ball
@@ -180,6 +170,8 @@ function handleUpdateGameState(delta) {
     };
 
     ball.velocity.multiplyX(2.0);
+    updateBallVelocityState(ball.velocity);
+    gameEmitter.emit(GAME_EVENTS.BALL_HIT_PLAYER);
   };
 
   // if ball collides with any player, flip the velocity to go the other direction
@@ -188,20 +180,30 @@ function handleUpdateGameState(delta) {
 
     const yDirection = ball.velocity.y < 0 ? -1 : 1;
     ball.velocity.y = (ball.velocity.y * 1.5) + (3.5 * yDirection);
+
+    updateBallVelocityState(ball.velocity);
+    gameEmitter.emit(GAME_EVENTS.BALL_HIT_PLAYER);
   };
+
+  //
+  if (primaryPlayerCollisions.top) {
+    gameEmitter.emit(GAME_EVENTS.BALL_HIT_PLAYER, GAME_EVENTS.BALL_HIT_PRIMARY_PLAYER);
+  }
 
   const ballBounds = ball.getBounds();
 
   // top means primary player scored
   if (ballBounds.top < GAME_BOUNDS.top) {
     updatePrimaryPlayerScore();
-    resetBallToCenter();
+    // resetBallToCenter();
+    gameEmitter.emit(GAME_EVENTS.BALL_TO_END);
   }
 
   // bottom means other player scored
   if (ballBounds.bottom > GAME_BOUNDS.bottom) {
     updateSecondaryPlayerScore();
-    resetBallToCenter();
+    // resetBallToCenter();
+    gameEmitter.emit(GAME_EVENTS.BALL_TO_END);
   }
 
   // update player position

@@ -1,6 +1,12 @@
 // import * as PIXI from 'pixi.js';
+import Point from '@studiomoniker/point';
+
 import SocketClient from 'common/SocketClient';
 
+import {
+  DEFAULT_BALL_SPEED,
+  DEFAULT_PLAYER_SPEED,
+} from 'constants/physics';
 import {
   BALL_DEFAULT_POS,
   PRIMARY_PLAYER_DEFAULT_POS,
@@ -11,6 +17,9 @@ import {
 const defaultState = {
   /** @type {Point} */
   ballPos: BALL_DEFAULT_POS,
+  /** @type {Point} */
+  ballVelocity: new Point(DEFAULT_BALL_SPEED, DEFAULT_BALL_SPEED),
+
   /** @type {Point} */
   primaryPlayerPos: PRIMARY_PLAYER_DEFAULT_POS,
   /** @type {Point} */
@@ -53,6 +62,14 @@ export function updateBallPositionState(newState) {
   if (gameState.ballPos === newState) return; // no update if no change
 
   gameState.ballPos = newState;
+};
+/**
+ * @params {Point} newState
+ */
+export function updateBallVelocityState(newState) {
+  if (gameState.ballVelocity === newState) return; // no update if no change
+
+  gameState.ballVelocity = newState;
 };
 /**
  * @params {Point} newState

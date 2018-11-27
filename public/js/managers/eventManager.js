@@ -1,6 +1,12 @@
 import SocketClient from 'common/SocketClient';
+import Point from '@studiomoniker/point';
 
-import { updatePrimaryPlayerActionState, updateSecondaryPlayerPositionState } from 'data/gameState';
+import {
+  // updateBallPositionState,
+  updateBallVelocityState,
+  updatePrimaryPlayerActionState,
+  updateSecondaryPlayerPositionState,
+} from 'data/gameState';
 
 import { convertPrimaryToSecondaryPos } from 'helpers/gamePositionHelper';
 
@@ -14,12 +20,13 @@ import { resetBallToCenter } from 'managers/pixiManager';
 
 // the other player(s) is telling us something
 SocketClient.on('message', (message = {}) => {
-  console.log('received message', message);
   const { action } = message;
+
+  console.log('SocketClient message', message);
 
   switch(action) {
     case 'resetBall':
-      resetBallToCenter();
+      // resetBallToCenter();
       break;
     default:
       break;
@@ -30,10 +37,25 @@ SocketClient.on('message', (message = {}) => {
 SocketClient.on('playerUpdate', handleNewPlayer);
 
 // receiving the game state from the other player
-SocketClient.on('newGameStateUpdate', (newGameState) => {
+SocketClient.on('newGameStateUpdate', (newGameState = {}) => {
+  const {
+    ballPosition,
+    ballVelocity,
+    primaryPlayerPos,
+  } = newGameState;
+
   // convert the other player's position is the secondary player to us
-  const secondaryPlayerPos = convertPrimaryToSecondaryPos(newGameState.primaryPlayerPos);
+  const secondaryPlayerPos = convertPrimaryToSecondaryPos(primaryPlayerPos);
   updateSecondaryPlayerPositionState(secondaryPlayerPos);
+
+  // receive the new ball velocity
+  // updateBallVelocityState(new Point(ballVelocity.x, ballVelocity.y));
+});
+
+//
+SocketClient.on('resetBallFromServer', () => {
+  console.log('resetBallFromServer');
+  resetBallToCenter();
 });
 
 // handle input events

@@ -1,5 +1,7 @@
 import socketIO from 'socket.io';
 
+import {attachServerEvents} from 'managers/serverEventManager';
+
 /** @type {Socket.IO-server} */
 let socketServer;
 
@@ -13,6 +15,11 @@ function listen(server) {
   // Client connected to us!
   socketServer.on('connection', (socket) => {
     const clientId = socket.id;
+
+    // tell everyone to reset the ball now that we have a new user
+    // socketServer.emit('message', {
+    //   action: 'resetBall',
+    // });
 
     // add client
     clients[clientId] = socket;
@@ -36,10 +43,8 @@ function listen(server) {
       });
     });
 
-    // event - one client wants to update the game state
-    socket.on('gameStateUpdate', (...data) => {
-      socket.broadcast.emit('newGameStateUpdate', ...data);
-    });
+    //
+    attachServerEvents(socket);
   });
 };
 /**
