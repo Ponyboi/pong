@@ -1,6 +1,6 @@
 import socketIO from 'socket.io';
 
-import {attachServerEvents} from 'managers/serverEventManager';
+import { attachGameEventHandler } from 'managers/gameEventManager';
 
 /** @type {Socket.IO-server} */
 let socketServer;
@@ -8,28 +8,26 @@ let socketServer;
 /** @type {Object} */
 let clients = {}; // map of clients based on their socket.id
 
-// listen in on that server
+/**
+ * attach this socket server manager to the server
+ *
+ * @param {HTTP Server}
+ */
 function listen(server) {
   socketServer = socketIO(server);
+
+  socketServer.use(handshake);
 
   // Client connected to us!
   socketServer.on('connection', (socket) => {
     const clientId = socket.id;
-
-    // tell everyone to reset the ball now that we have a new user
-    // socketServer.emit('message', {
-    //   action: 'resetBall',
-    // });
-
-    // add client
-    clients[clientId] = socket;
 
     // server tells everyone there's an update on player count
     socketServer.emit('playerUpdate', {
       playerCount: getClientCount(),
     });
 
-    // generic message from one player to broadcast to others
+    // generic message  which will be sent to everyone else
     socket.on('message', (...data) => {
       socket.broadcast.emit('message', ...data);
     });
@@ -43,16 +41,31 @@ function listen(server) {
       });
     });
 
-    //
-    attachServerEvents(socket);
+    // handle game events emitted from the socket
+    attachGameEventHandler(socket);
   });
 };
 /**
+ * intercepts new connections to keep track of them in cache
+ *
+ * @param {Socket} socket
+ * @param {Function} next
+ */
+function handshake(socket, next) {
+  // add client to our cache
+  clients[clientId] = socket;
+
+  return next();
+}
+/**
  * @returns {Number}
  */
-const getClientCount = () => (Object.keys(clients).length);
-
-// export object
+function getClientCount() {
+  return Object.keys(clients).length;
+};
+/**
+ * primary singleton object
+ */
 const socketManager = {
   get socketServer() {
     return socketServer;

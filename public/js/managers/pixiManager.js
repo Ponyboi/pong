@@ -109,11 +109,12 @@ function initApp() {
   appInitUpdate();
 };
 /**
- * puts the ball back in the middle and pushes it in a random direction
+ * puts the ball back in the middle and pushes it in a given direction
+ *  that means we should update the gameState ball's velocity before calling this
  */
 function resetBallToCenter() {
   ball.position = BALL_DEFAULT_POS;
-  ball.velocity = gameState.ballPosition || new Point(DEFAULT_BALL_SPEED, DEFAULT_BALL_SPEED);
+  ball.velocity = gameState.ballVelocity || new Point(DEFAULT_BALL_SPEED, DEFAULT_BALL_SPEED);
 };
 /**
  * add a ticker to constantly update the game

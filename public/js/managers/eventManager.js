@@ -20,13 +20,12 @@ import { resetBallToCenter } from 'managers/pixiManager';
 
 // the other player(s) is telling us something
 SocketClient.on('message', (message = {}) => {
-  const { action } = message;
-
   console.log('SocketClient message', message);
+  const { action } = message;
 
   switch(action) {
     case 'resetBall':
-      // resetBallToCenter();
+      resetBallToCenter();
       break;
     default:
       break;

@@ -2,23 +2,25 @@ var path = require('path');
 var nodeExternals = require('webpack-node-externals');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const appPath = path.resolve(__dirname, './public/');
+var { BUILD_PATH, APP_PATH, SHARED_PATH } = require('./app-paths.js');
+
 module.exports = {
   mode: 'development',
   target: 'web',
   entry: './app.js',
   output: {
-    path: path.resolve(__dirname, 'build'),
+    path: BUILD_PATH,
     filename: 'main.js'
   },
   resolve: {
     alias: {
-      common: path.resolve(appPath, 'js/common'),
-      components: path.resolve(appPath, 'js/components'),
-      constants: path.resolve(appPath, 'js/constants'),
-      data: path.resolve(appPath, 'js/data'),
-      helpers: path.resolve(appPath, 'js/helpers'),
-      managers: path.resolve(appPath, 'js/managers'),
+      constants: path.resolve(SHARED_PATH, 'constants'),
+
+      common: path.resolve(APP_PATH, 'js/common'),
+      components: path.resolve(APP_PATH, 'js/components'),
+      data: path.resolve(APP_PATH, 'js/data'),
+      helpers: path.resolve(APP_PATH, 'js/helpers'),
+      managers: path.resolve(APP_PATH, 'js/managers'),
     }
   },
   devtool: 'source-map',
