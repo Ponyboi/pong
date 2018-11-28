@@ -200,14 +200,14 @@ function handleUpdateGameState(delta) {
   // update player position
   const playerAccelerationDelta = DEFAULT_PLAYER_ACCELERATION * delta;
 
-  if (gameState.primaryPlayerState === 'left') {
+  if (gameState.primaryPlayerState === 'left' && primaryPlayer.recentlyHitWall < 0) {
     // give a little push if the player was originally going right
     if (primaryPlayer.velocity.x > 0) {
       primaryPlayer.velocity.subtractX(DEFAULT_PLAYER_SPEED);
     }
     primaryPlayer.velocity.subtractX(playerAccelerationDelta);
     primaryPlayer.clampVelocity();
-  } else if (gameState.primaryPlayerState === 'right') {
+  } else if (gameState.primaryPlayerState === 'right' && primaryPlayer.recentlyHitWall < 0) {
     // give a little push if the player was originally going left
     if (primaryPlayer.velocity.x < 0) {
       primaryPlayer.velocity.addX(DEFAULT_PLAYER_SPEED);
