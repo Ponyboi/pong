@@ -3,6 +3,7 @@ import EventEmitter from 'events';
 import SocketClient from 'common/SocketClient';
 
 import GAME_EVENTS from 'constants/gameEvents';
+import { CLIENT_EVENTS } from 'constants/emitEvents';
 
 import gameState from 'data/gameState';
 
@@ -30,5 +31,5 @@ export function handleNewPlayer(message = {}) {
  *  and send out new game state
  */
 gameEmitter.on(GAME_EVENTS.BALL_TO_END, () => {
-  SocketClient.emit('ballEnd');
+  SocketClient.emit(CLIENT_EVENTS.BALL_TO_END);
 });

@@ -20,7 +20,7 @@ function listen(server) {
 
   // Client connected to us!
   socketServer.on('connection', (socket) => {
-    const clientId = socket.id;
+    const socketId = socket.id;
 
     // server tells everyone there's an update on player count
     socketServer.emit('playerUpdate', {
@@ -34,7 +34,7 @@ function listen(server) {
 
     // event - client disconnected so remove them and then tell everyone else
     socket.on('disconnect', () => {
-      delete clients[clientId];
+      delete clients[socketId];
 
       socketServer.emit('playerUpdate', {
         playerCount: getClientCount(),
@@ -53,7 +53,7 @@ function listen(server) {
  */
 function handshake(socket, next) {
   // add client to our cache
-  clients[clientId] = socket;
+  clients[socket.id] = socket;
 
   return next();
 }

@@ -8,19 +8,16 @@ import {
   updateSecondaryPlayerPositionState,
 } from 'data/gameState';
 
+import { /*CLIENT_EVENTS,*/ SERVER_EVENTS } from 'constants/emitEvents';
+
 import { convertPrimaryToSecondaryPos } from 'helpers/gamePositionHelper';
 
 import { handleNewPlayer } from 'managers/gameManager';
 import { inputEmitter } from 'managers/inputManager';
 import { resetBallToCenter } from 'managers/pixiManager';
 
-/*
-  I guess this just passes events around???
-*/
-
 // the other player(s) is telling us something
 SocketClient.on('message', (message = {}) => {
-  console.log('SocketClient message', message);
   const { action } = message;
 
   switch(action) {
@@ -38,22 +35,18 @@ SocketClient.on('playerUpdate', handleNewPlayer);
 // receiving the game state from the other player
 SocketClient.on('newGameStateUpdate', (newGameState = {}) => {
   const {
-    ballPosition,
-    ballVelocity,
     primaryPlayerPos,
   } = newGameState;
 
   // convert the other player's position is the secondary player to us
   const secondaryPlayerPos = convertPrimaryToSecondaryPos(primaryPlayerPos);
   updateSecondaryPlayerPositionState(secondaryPlayerPos);
-
-  // receive the new ball velocity
-  // updateBallVelocityState(new Point(ballVelocity.x, ballVelocity.y));
 });
 
-//
-SocketClient.on('resetBallFromServer', () => {
-  console.log('resetBallFromServer');
+// server told us ball is resetting
+SocketClient.on(SERVER_EVENTS.BALL_RESET, (newBallVelocity) => {
+  const ballVelocity = new Point(newBallVelocity.x, newBallVelocity.y);
+  updateBallVelocityState(ballVelocity);
   resetBallToCenter();
 });
 
