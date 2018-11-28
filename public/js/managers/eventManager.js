@@ -1,19 +1,23 @@
 import { inputEmitter } from 'managers/inputManager';
 
-import {
+import gameState, {
   updatePrimaryPlayerActionState,
 } from 'data/gameState';
 
 // handle input events
 inputEmitter.on('leftDown', () => {
-  updatePrimaryPlayerActionState('left');
+    updatePrimaryPlayerActionState('left');
 });
 inputEmitter.on('leftUp', () => {
-  updatePrimaryPlayerActionState(null);
+  if (gameState.primaryPlayerState === 'left') {
+    updatePrimaryPlayerActionState(null);
+  }
 });
 inputEmitter.on('rightDown', () => {
   updatePrimaryPlayerActionState('right');
 });
 inputEmitter.on('rightUp', () => {
-  updatePrimaryPlayerActionState(null);
+  if (gameState.primaryPlayerState === 'right') {
+    updatePrimaryPlayerActionState(null);
+  }
 });

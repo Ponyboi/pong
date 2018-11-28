@@ -18,12 +18,14 @@ export function onKeyDown(e) {
   // Left arrow is 37
   if (keycode === KEY.A || keycode === KEY.LEFT) {
     inputEmitter.emit('leftDown');
+    return;
   };
 
   // D Key is 68
   // Right arrow is 39
   if (keycode === KEY.D || keycode === KEY.RIGHT) {
     inputEmitter.emit('rightDown');
+    return;
   };
 };
 
@@ -39,12 +41,14 @@ export function onKeyUp(e) {
   // Left arrow is 37
   if (keycode === KEY.A || keycode === KEY.LEFT) {
     inputEmitter.emit('leftUp');
+    return;
   };
 
   // D Key is 68
   // Right arrow is 39
   if (keycode === KEY.D || keycode === KEY.RIGHT) {
     inputEmitter.emit('rightUp');
+    return;
   };
 };
 
