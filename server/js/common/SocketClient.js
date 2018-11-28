@@ -42,9 +42,11 @@ class SocketClient {
       newBallVelocity.invertY();
     };
 
-    // tell everyone to reset to the middle with the new velocity
+    // tell a player the ball is one direction,
     this.socket.emit(SERVER_EVENTS.BALL_RESET, newBallVelocity);
-    this.socket.broadcast.emit(SERVER_EVENTS.BALL_RESET, newBallVelocity);
+
+    // but the other player is inverted
+    this.socket.broadcast.emit(SERVER_EVENTS.BALL_RESET, newBallVelocity.invertY());
   }
   /**
    * client has sent us a snapshot of their gamestate
