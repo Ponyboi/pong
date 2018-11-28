@@ -5,8 +5,6 @@ import gameState, {
   updateBallPositionState,
   updateBallVelocityState,
   updatePrimaryPlayerPositionState,
-  updatePrimaryPlayerScore,
-  updateSecondaryPlayerScore,
 } from 'data/gameState';
 
 import Point from '@studiomoniker/point';
@@ -188,14 +186,12 @@ function handleUpdateGameState(delta) {
 
   // top means primary player scored
   if (ballBounds.top < GAME_BOUNDS.top) {
-    updatePrimaryPlayerScore();
-    gameEmitter.emit(GAME_EVENTS.BALL_TO_END);
+    gameEmitter.emit(GAME_EVENTS.BALL_TO_SECONDARY_END);
   }
 
   // bottom means other player scored
   if (ballBounds.bottom > GAME_BOUNDS.bottom) {
-    updateSecondaryPlayerScore();
-    gameEmitter.emit(GAME_EVENTS.BALL_TO_END);
+    gameEmitter.emit(GAME_EVENTS.BALL_TO_PRIMARY_END);
   }
 
   // update player position
