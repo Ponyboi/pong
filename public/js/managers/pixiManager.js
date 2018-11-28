@@ -19,6 +19,7 @@ import {
   DEFAULT_BALL_SPEED,
   BALL_VELOCITY_LIMITS,
   DEFAULT_PLAYER_ACCELERATION,
+  DEFAULT_PLAYER_SPEED,
   PLAYER_VELOCITY_LIMITS,
 } from 'constants/physics';
 
@@ -197,13 +198,21 @@ function handleUpdateGameState(delta) {
   }
 
   // update player position
-  const playerSpeedDelta = DEFAULT_PLAYER_ACCELERATION * delta;
+  const playerAccelerationDelta = DEFAULT_PLAYER_ACCELERATION * delta;
+
   if (gameState.primaryPlayerState === 'left') {
-    primaryPlayer.velocity.subtractX(playerSpeedDelta);
+    // give a little push if the player was originally going right
+    if (primaryPlayer.velocity.x > 0) {
+      primaryPlayer.velocity.subtractX(DEFAULT_PLAYER_SPEED);
+    }
+    primaryPlayer.velocity.subtractX(playerAccelerationDelta);
     primaryPlayer.clampVelocity();
-  };
-  if (gameState.primaryPlayerState === 'right') {
-    primaryPlayer.velocity.addX(playerSpeedDelta);
+  } else if (gameState.primaryPlayerState === 'right') {
+    // give a little push if the player was originally going left
+    if (primaryPlayer.velocity.x < 0) {
+      primaryPlayer.velocity.addX(DEFAULT_PLAYER_SPEED);
+    }
+    primaryPlayer.velocity.addX(playerAccelerationDelta);
     primaryPlayer.clampVelocity();
   };
 

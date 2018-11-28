@@ -23,7 +23,7 @@ export const GAME_VELOCITY_LIMITS = {
 
 // player
 /** @type {Speed} */
-export const DEFAULT_PLAYER_SPEED = 1;
+export const DEFAULT_PLAYER_SPEED = 1.25;
 export const DEFAULT_PLAYER_ACCELERATION = 0.6;
 /** @type {VelocityLimits} */
 export const PLAYER_VELOCITY_LIMITS = {
