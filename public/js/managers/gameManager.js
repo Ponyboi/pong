@@ -1,30 +1,65 @@
 import EventEmitter from 'events';
+import Point from '@studiomoniker/point';
 
-import SocketClient from 'common/SocketClient';
+import GAME_EVENTS from 'constants/gameEvents';
+import { CLIENT_EVENTS, SERVER_EVENTS } from 'constants/emitEvents';
 
+import {
+  // updateBallPositionState,
+  updateBallVelocityState,
+  updateSecondaryPlayerPositionState,
+} from 'data/gameState';
+
+import { convertPrimaryToSecondaryPos } from 'helpers/gamePositionHelper';
+
+import socketManager from 'managers/socketManager';
 import { resetBallToCenter } from 'managers/pixiManager';
 
 /**
  * Emitter for all game events
  */
 export const gameEmitter = new EventEmitter();
+
 /**
- * adds a new player
  *
- * @param {Object} message - from server
  */
-export function handleNewPlayer(message = {}) {
-  const { playerCount } = message;
+socketManager.on(SERVER_EVENTS.PLAYERS_CHANGED, handlePlayersChanged);
+/**
+ * handles players count changing
+ *
+ * @param {Object} data - from server
+ */
+function handlePlayersChanged(data = {}) {
+  const { playerCount } = data;
 
   const canvas = document.getElementById('app-header');
   canvas.innerText = `${playerCount} connected player(s)`;
-
-  // reset the ball when a new player joins... or leaves
-  if (playerCount > 1) {
-    SocketClient.emit('message', {
-      action: 'resetBall',
-    });
-
-    resetBallToCenter();
-  }
 };
+/**
+ * receiving the game state from the other player
+ */
+socketManager.on(SERVER_EVENTS.GAMESTATE_CHANGED, (newGameState = {}) => {
+  const {
+    secondaryPlayerPos,
+  } = newGameState;
+
+  // convert the other player's position is the secondary player to us
+  const newSecondaryPlayerPos = convertPrimaryToSecondaryPos(secondaryPlayerPos);
+  updateSecondaryPlayerPositionState(newSecondaryPlayerPos);
+});
+/**
+ * server told us ball is resetting
+ */
+socketManager.on(SERVER_EVENTS.BALL_RESET, (newBallVelocity) => {
+  const ballVelocity = new Point(newBallVelocity.x, newBallVelocity.y);
+  updateBallVelocityState(ballVelocity);
+  resetBallToCenter();
+});
+/**
+ * listen to when the ball hits the primaryPlayer (this player)
+ *  and send out new game state
+ */
+gameEmitter.on(GAME_EVENTS.BALL_TO_END, () => {
+  socketManager.emit(CLIENT_EVENTS.BALL_TO_END);
+});
+

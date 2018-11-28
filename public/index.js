@@ -1,12 +1,8 @@
-/*
-  entry for client-side of the app
-*/
+/**
+ * entry for the web app used by the client
+ */
 import 'managers/eventManager';
-// import 'managers/gameManager';
 import 'managers/inputManager';
-import { initApp } from 'managers/pixiManager';
+import 'managers/pixiManager';
 
 import './styles/main.css';
-
-// set up pixi
-initApp();

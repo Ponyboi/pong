@@ -2,6 +2,7 @@
 import { Rectangle as Intersects_Rectangle } from 'yy-intersects';
 
 import GameComponent from 'components/GameComponent';
+
 import { BALL_SIZE } from 'constants/sizes';
 import { GAME_BOUNDS } from 'constants/positions';
 

@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import http from 'http';
 
-import socketManager from 'managers/socketManager';
+import socketServerManager from 'managers/socketServerManager';
 const PORT = 666;
 
 // --- create web server
@@ -20,4 +20,4 @@ app.get("/", (req, res) => {
 });
 
 // Start listening with socket io
-socketManager.listen(server);
+socketServerManager.listen(server);

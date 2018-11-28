@@ -8,10 +8,11 @@ var webpack = require('webpack-stream');
 var appWebpackConfig = require('./webpack-app.config.js');
 var serverWebpackConfig = require('./webpack-server.config.js');
 
-const isDevEnv = process.env.NODE_ENV === 'development';
+const isDevEnv = process.env.NODE_ENV === 'development' || process.env.NODE_ENV !== 'production'; // todo: not 'production' is kinda hacky
 const browser = os.platform() === 'darwin' ? '/Applications/Google\ Chrome.app' : 'google-chrome';
 
-const WATCH_CHANGE_FILES = [
+// files to watch for in the web app
+const WEBAPP_CHANGE_WATCH = [
   '!**/{' + [
     'bower_components',
     'bundles',
@@ -24,6 +25,12 @@ const WATCH_CHANGE_FILES = [
   '}/**',
   './public/*.js',
   './public/**/*.js',
+];
+// files to watch for in the server (which include the webapp)
+const SERVER_CHANGE_WATCH = [
+  ...WEBAPP_CHANGE_WATCH,
+  './server/*.js',
+  './server/**/*.js',
 ];
 
 // build configuration is different for the web and server
@@ -42,7 +49,7 @@ gulp.task('compile-webapp', function(done) {
 
 // watch for changes for the webapp
 gulp.task('webapp:watch', function() {
-  gulp.watch(WATCH_CHANGE_FILES, gulp.series('compile-webapp'));
+  gulp.watch(WEBAPP_CHANGE_WATCH, gulp.series('compile-webapp'));
 });
 
 // run webapp page
@@ -52,31 +59,28 @@ gulp.task("run-webapp-local", function() {
 
 // watch for changes for the server
 gulp.task('server:watch', function() {
-  gulp.watch(WATCH_CHANGE_FILES, gulp.series('compile-webapp'));
-});
-
-// Starts node server
-gulp.task("run-server-local", function() {
-  const serverProcess = childProcess.spawn('node', ['./build/server.js']);
-  return serverProcess.stdout.on('data', function() {
-    // open after server is running
-    opn('http://localhost:666', {app: browser});
-
-    // watch for changes to the app and recompile
-    gulp.watch(WATCH_CHANGE_FILES, gulp.series('compile-webapp'));
-  });
+  gulp.watch(WEBAPP_CHANGE_WATCH, gulp.series('compile-webapp'));
 });
 
 // nodemon start server
 gulp.task('run-nodemon-server', function() {
-  nodemon({
+  var stream = nodemon({
     script: './build/server.js',
+    ignore: ['node_modules/', 'bundles/'],
+    watch: SERVER_CHANGE_WATCH,
+    tasks: ['compile-webapp', 'compile-server']
   });
+
+  if (isDevEnv) {
+    opn('http://localhost:666', {app: browser});
+  }
+
+  return stream;
 })
 
 // default
 gulp.task('dev-webapp', gulp.series('compile-webapp', 'webapp:watch', 'run-webapp-local'));
-gulp.task('dev-server', gulp.series('compile-server', 'run-server-local'));
+gulp.task('dev-server', gulp.series('compile-server', 'run-nodemon-server'));
 gulp.task('development', gulp.series('compile-webapp', 'compile-server', 'run-nodemon-server'));
 
 /**
