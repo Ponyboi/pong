@@ -23,11 +23,12 @@ export const GAME_VELOCITY_LIMITS = {
 
 // player
 /** @type {Speed} */
-export const DEFAULT_PLAYER_SPEED = 3;
+export const DEFAULT_PLAYER_SPEED = 1;
+export const DEFAULT_PLAYER_ACCELERATION = 0.6;
 /** @type {VelocityLimits} */
 export const PLAYER_VELOCITY_LIMITS = {
   min: new Point(0, 0),
-  max: new Point(GAME_SPEED_MAX, GAME_SPEED_MAX),
+  max: new Point(5, 5),
 };
 
 // ball

@@ -124,6 +124,22 @@ class GameComponent {
     };
   }
   /**
+   * sets the velocity to between the limits
+   */
+  clampVelocity() {
+    const { min, max } = this.velocityLimits;
+    const { x, y } = this.velocity;
+
+    // Scalar is the speed ignoring the direction clamped to between the limits
+    const xScalar = Math.min(Math.max(Math.abs(x), min.x), max.x);
+    const yScalar = Math.min(Math.max(Math.abs(y), min.y), max.y);
+
+    const xDirection = x < 0 ? -1 : 1;
+    const yDirection = y < 0 ? -1 : 1;
+
+    this.velocity.set(xScalar * xDirection, yScalar * yDirection);
+  }
+  /**
    * set the view's position
    *
    * @abstract
