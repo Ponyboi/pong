@@ -82,6 +82,12 @@ class Player extends GameComponent {
       this.velocity.invertX();
     }
   };
+  /**
+   * @returns {boolean}
+   */
+  canMove() {
+    return this.recentlyHitWall <= 0;
+  }
 };
 
 export default Player;
