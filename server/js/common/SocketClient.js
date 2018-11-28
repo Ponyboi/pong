@@ -6,7 +6,7 @@ import {
 } from 'constants/physics';
 
 /**
- * represrents a Client that is connected to this server
+ * represents a Client that is connected to this server
  *  simplifies some events
  */
 class SocketClient {
@@ -42,7 +42,7 @@ class SocketClient {
       newBallVelocity.invertY();
     };
 
-    // tell everyone the new velocity
+    // tell everyone to reset to the middle with the new velocity
     this.socket.emit(SERVER_EVENTS.BALL_RESET, newBallVelocity);
     this.socket.broadcast.emit(SERVER_EVENTS.BALL_RESET, newBallVelocity);
   }
@@ -51,9 +51,16 @@ class SocketClient {
    *
    * @params {*} data
    */
-  handleGamestateSend(...data) {
-    // temporary implementation is to just give the gamestate to others
-    this.socket.broadcast.emit(SERVER_EVENTS.GAMESTATE_CHANGED, ...data);
+  handleGamestateSend(data) {
+    // temporary implementation...
+    const {primaryPlayerPos} = data;
+
+    const newState = {
+      ...data,
+      secondaryPlayerPos: primaryPlayerPos,
+    };
+
+    this.socket.broadcast.emit(SERVER_EVENTS.GAMESTATE_CHANGED, newState);
   };
 }
 

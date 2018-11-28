@@ -1,10 +1,11 @@
 import io from 'socket.io-client';
 
+/**
+ * start a connection to the server
+ */
 const serverUrl = 'http://localhost:666';
-
-// connect client
-const client = io(serverUrl, {
+const socketManager = io(serverUrl, {
   reconnection: false,
 });
 
-export default client;
+export default socketManager;

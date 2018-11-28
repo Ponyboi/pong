@@ -1,12 +1,18 @@
 import EventEmitter from 'events';
-
-import socketManager from 'managers/socketManager';
+import Point from '@studiomoniker/point';
 
 import GAME_EVENTS from 'constants/gameEvents';
-import { CLIENT_EVENTS } from 'constants/emitEvents';
+import { CLIENT_EVENTS, SERVER_EVENTS } from 'constants/emitEvents';
 
-import gameState from 'data/gameState';
+import {
+  // updateBallPositionState,
+  updateBallVelocityState,
+  updateSecondaryPlayerPositionState,
+} from 'data/gameState';
 
+import { convertPrimaryToSecondaryPos } from 'helpers/gamePositionHelper';
+
+import socketManager from 'managers/socketManager';
 import { resetBallToCenter } from 'managers/pixiManager';
 
 /**
@@ -15,17 +21,40 @@ import { resetBallToCenter } from 'managers/pixiManager';
 export const gameEmitter = new EventEmitter();
 
 /**
- * adds a new player
  *
- * @param {Object} message - from server
  */
-export function handleNewPlayer(message = {}) {
-  const { playerCount } = message;
+socketManager.on(SERVER_EVENTS.PLAYERS_CHANGED, handlePlayersChanged);
+/**
+ * handles players count changing
+ *
+ * @param {Object} data - from server
+ */
+function handlePlayersChanged(data = {}) {
+  const { playerCount } = data;
 
   const canvas = document.getElementById('app-header');
   canvas.innerText = `${playerCount} connected player(s)`;
 };
+/**
+ * receiving the game state from the other player
+ */
+socketManager.on(SERVER_EVENTS.GAMESTATE_CHANGED, (newGameState = {}) => {
+  const {
+    secondaryPlayerPos,
+  } = newGameState;
 
+  // convert the other player's position is the secondary player to us
+  const newSecondaryPlayerPos = convertPrimaryToSecondaryPos(secondaryPlayerPos);
+  updateSecondaryPlayerPositionState(newSecondaryPlayerPos);
+});
+/**
+ * server told us ball is resetting
+ */
+socketManager.on(SERVER_EVENTS.BALL_RESET, (newBallVelocity) => {
+  const ballVelocity = new Point(newBallVelocity.x, newBallVelocity.y);
+  updateBallVelocityState(ballVelocity);
+  resetBallToCenter();
+});
 /**
  * listen to when the ball hits the primaryPlayer (this player)
  *  and send out new game state
@@ -33,3 +62,4 @@ export function handleNewPlayer(message = {}) {
 gameEmitter.on(GAME_EVENTS.BALL_TO_END, () => {
   socketManager.emit(CLIENT_EVENTS.BALL_TO_END);
 });
+

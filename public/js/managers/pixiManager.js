@@ -37,17 +37,14 @@ import { gameEmitter } from 'managers/gameManager';
 
 /**
  * singleton for Pixi.js
- *use this to draw and update the view
- *
+ *  use this to draw and update the view
  */
-
-// set up Application
-const app = new PIXI.Application(GAME_SIZE);
-app.renderer.backgroundColor = 0x080808;
+const pixiApp = new PIXI.Application(GAME_SIZE);
+pixiApp.renderer.backgroundColor = 0x080808;
 
 // render it onto document
 const canvas = getCanvasContainer();
-canvas.appendChild(app.view);
+canvas.appendChild(pixiApp.view);
 
 // ball
 const ball = new BallComponent({
@@ -79,14 +76,21 @@ const secondaryScoreComponent = new ScoreComponent({
   position: SECONDARY_SCORE_POS,
   text: gameState.secondaryPlayerScore,
 });
-
+/**
+ * puts the ball back in the middle and overrides velocity
+ *  that means we should update the gameState ball's velocity before calling this
+ */
+function resetBallToCenter() {
+  ball.position = BALL_DEFAULT_POS;
+  ball.velocity = gameState.ballVelocity || new Point(DEFAULT_BALL_SPEED, DEFAULT_BALL_SPEED);
+};
 /**
  * set up the components and elements that will show up on the screen
  *
  * todo: this will potentially grow to be unmaintainable, figure out a better solution
  */
 function initApp() {
-  const stage = app.stage;
+  const stage = pixiApp.stage;
 
   // draw the field
   const fieldView = createFieldView();
@@ -104,23 +108,12 @@ function initApp() {
 
   // ball
   stage.addChild(ball.view);
-
-  // after adding all the components, we can then start a ticker to update everything
-  appInitUpdate();
-};
-/**
- * puts the ball back in the middle and pushes it in a given direction
- *  that means we should update the gameState ball's velocity before calling this
- */
-function resetBallToCenter() {
-  ball.position = BALL_DEFAULT_POS;
-  ball.velocity = gameState.ballVelocity || new Point(DEFAULT_BALL_SPEED, DEFAULT_BALL_SPEED);
 };
 /**
  * add a ticker to constantly update the game
  */
 function appInitUpdate() {
-  app.ticker.add((delta) => {
+  pixiApp.ticker.add((delta) => {
     // handle state changes
     handleUpdateGameState(delta);
 
@@ -196,14 +189,12 @@ function handleUpdateGameState(delta) {
   // top means primary player scored
   if (ballBounds.top < GAME_BOUNDS.top) {
     updatePrimaryPlayerScore();
-    // resetBallToCenter();
     gameEmitter.emit(GAME_EVENTS.BALL_TO_END);
   }
 
   // bottom means other player scored
   if (ballBounds.bottom > GAME_BOUNDS.bottom) {
     updateSecondaryPlayerScore();
-    // resetBallToCenter();
     gameEmitter.emit(GAME_EVENTS.BALL_TO_END);
   }
 
@@ -220,8 +211,12 @@ function handleUpdateGameState(delta) {
   secondaryPlayer.position = gameState.secondaryPlayerPos;
 };
 
-export default app;
+// finally - start the app
+initApp();
+// after adding all the components, we can then start a ticker to update everything
+appInitUpdate();
+
+export default pixiApp;
 export {
-  initApp,
   resetBallToCenter,
 };

@@ -3,6 +3,9 @@
  *
  */
 const GAME_EVENTS = {
+  // the ball has collided with a wall
+  BALL_HIT_WALL: 'BALL_HIT_WALL',
+
   // the ball has collided with any player
   BALL_HIT_PLAYER: 'BALL_HIT_PLAYER',
 

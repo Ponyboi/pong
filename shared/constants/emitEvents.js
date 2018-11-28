@@ -13,6 +13,9 @@ const CLIENT_EVENTS = {
  * constants for events sent out from the server (to client)
  */
 const SERVER_EVENTS = {
+  // number of players changed
+  PLAYERS_CHANGED: 'PLAYERS_CHANGED',
+
   // server has the updated gamestate for client
   GAMESTATE_CHANGED: 'GAMESTATE_CHANGED',
 

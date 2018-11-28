@@ -2,6 +2,8 @@ import socketIO from 'socket.io';
 
 import SocketClient from 'common/SocketClient';
 
+import { SERVER_EVENTS } from 'constants/emitEvents';
+
 /** @type {Socket.IO-server} */
 let socketServer;
 
@@ -23,13 +25,8 @@ function listen(server) {
     const socketId = socket.id;
 
     // server tells everyone there's an update on player count
-    socketServer.emit('playerUpdate', {
+    socketServer.emit(SERVER_EVENTS.PLAYERS_CHANGED, {
       playerCount: getClientCount(),
-    });
-
-    // generic message  which will be sent to everyone else
-    socket.on('message', (...data) => {
-      socket.broadcast.emit('message', ...data);
     });
 
     // event - client disconnected so remove them and then tell everyone else
