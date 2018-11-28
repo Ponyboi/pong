@@ -1,6 +1,6 @@
 import socketIO from 'socket.io';
 
-import { attachGameEventHandler } from 'managers/gameEventManager';
+import SocketClient from 'common/SocketClient';
 
 /** @type {Socket.IO-server} */
 let socketServer;
@@ -40,9 +40,6 @@ function listen(server) {
         playerCount: getClientCount(),
       });
     });
-
-    // handle game events emitted from the socket
-    attachGameEventHandler(socket);
   });
 };
 /**
@@ -53,7 +50,7 @@ function listen(server) {
  */
 function handshake(socket, next) {
   // add client to our cache
-  clients[socket.id] = socket;
+  clients[socket.id] = new SocketClient(socket);
 
   return next();
 }

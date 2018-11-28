@@ -1,7 +1,7 @@
 // import * as PIXI from 'pixi.js';
 import Point from '@studiomoniker/point';
 
-import SocketClient from 'common/SocketClient';
+import socketManager from 'managers/socketManager';
 
 import {
   DEFAULT_BALL_SPEED,
@@ -45,7 +45,7 @@ export function updatePrimaryPlayerPositionState(newState) {
   gameState.primaryPlayerPos = newState;
 
   // only tell the other player of changes when position changes
-  SocketClient.emit('gameStateUpdate', { primaryPlayerPos: gameState.primaryPlayerPos });
+  socketManager.emit('GAMESTATE_SEND', { primaryPlayerPos: gameState.primaryPlayerPos });
 };
 /**
  * @params {String} newState

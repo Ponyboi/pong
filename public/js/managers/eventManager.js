@@ -1,4 +1,4 @@
-import SocketClient from 'common/SocketClient';
+import socketManager from 'managers/socketManager';
 import Point from '@studiomoniker/point';
 
 import {
@@ -17,7 +17,7 @@ import { inputEmitter } from 'managers/inputManager';
 import { resetBallToCenter } from 'managers/pixiManager';
 
 // the other player(s) is telling us something
-SocketClient.on('message', (message = {}) => {
+socketManager.on('message', (message = {}) => {
   const { action } = message;
 
   switch(action) {
@@ -30,10 +30,10 @@ SocketClient.on('message', (message = {}) => {
 });
 
 // number of players has changed
-SocketClient.on('playerUpdate', handleNewPlayer);
+socketManager.on('playerUpdate', handleNewPlayer);
 
 // receiving the game state from the other player
-SocketClient.on('newGameStateUpdate', (newGameState = {}) => {
+socketManager.on(SERVER_EVENTS.GAMESTATE_CHANGED, (newGameState = {}) => {
   const {
     primaryPlayerPos,
   } = newGameState;
@@ -44,7 +44,7 @@ SocketClient.on('newGameStateUpdate', (newGameState = {}) => {
 });
 
 // server told us ball is resetting
-SocketClient.on(SERVER_EVENTS.BALL_RESET, (newBallVelocity) => {
+socketManager.on(SERVER_EVENTS.BALL_RESET, (newBallVelocity) => {
   const ballVelocity = new Point(newBallVelocity.x, newBallVelocity.y);
   updateBallVelocityState(ballVelocity);
   resetBallToCenter();
