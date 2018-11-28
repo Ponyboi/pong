@@ -17,6 +17,12 @@ const GAME_EVENTS = {
 
   // ball went to an end zone
   BALL_TO_END: 'BALL_TO_END',
+
+  // ball went to primary player's end zone
+  BALL_TO_PRIMARY_END: 'BALL_TO_PRIMARY_END',
+
+  // ball went to secondary player's end zone
+  BALL_TO_SECONDARY_END: 'BALL_TO_SECONDARY_END',
 };
 
 export default GAME_EVENTS;

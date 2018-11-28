@@ -24,6 +24,8 @@ class SocketClient {
   attachGameEventHandler() {
     this.socket.on(CLIENT_EVENTS.BALL_TO_END, this.handleBallToEnd.bind(this));
 
+    this.socket.on(CLIENT_EVENTS.BALL_TO_PRIMARY_END, this.handleBallToPrimaryEnd.bind(this));
+
     this.socket.on(CLIENT_EVENTS.GAMESTATE_SEND, this.handleGamestateSend.bind(this));
   }
   /**
@@ -47,6 +49,28 @@ class SocketClient {
 
     // but the other player is inverted
     this.socket.broadcast.emit(SERVER_EVENTS.BALL_RESET, newBallVelocity.invertY());
+  }
+  /**
+   * client told us the ball has
+   */
+  handleBallToPrimaryEnd() {
+    const newBallVelocity = new Point(DEFAULT_BALL_SPEED, DEFAULT_BALL_SPEED);
+
+    // randomize directions
+    if (Math.round(Math.random())) {
+      newBallVelocity.invertX();
+    };
+    if (Math.round(Math.random())) {
+      newBallVelocity.invertY();
+    };
+
+    // tell a player the ball is one direction,
+    this.socket.emit(SERVER_EVENTS.BALL_RESET, newBallVelocity);
+    this.socket.emit(SERVER_EVENTS.SCORE_SECONDARY_INCREMENT);
+
+    // but the other player is inverted
+    this.socket.broadcast.emit(SERVER_EVENTS.BALL_RESET, newBallVelocity.invertY());
+    this.socket.broadcast.emit(SERVER_EVENTS.SCORE_PRIMARY_INCREMENT);
   }
   /**
    * client has sent us a snapshot of their gamestate

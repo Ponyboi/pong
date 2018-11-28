@@ -8,6 +8,8 @@ import {
   // updateBallPositionState,
   updateBallVelocityState,
   updateSecondaryPlayerPositionState,
+  updatePrimaryPlayerScore,
+  updateSecondaryPlayerScore,
 } from 'data/gameState';
 
 import { convertPrimaryToSecondaryPos } from 'helpers/gamePositionHelper';
@@ -56,10 +58,22 @@ socketManager.on(SERVER_EVENTS.BALL_RESET, (newBallVelocity) => {
   resetBallToCenter();
 });
 /**
- * listen to when the ball hits the primaryPlayer (this player)
- *  and send out new game state
+ * server told us we scored!!
  */
-gameEmitter.on(GAME_EVENTS.BALL_TO_END, () => {
-  socketManager.emit(CLIENT_EVENTS.BALL_TO_END);
+socketManager.on(SERVER_EVENTS.SCORE_PRIMARY_INCREMENT, () => {
+  updatePrimaryPlayerScore();
 });
+/**
+ * server told us the other player scored :()
+ */
+socketManager.on(SERVER_EVENTS.SCORE_SECONDARY_INCREMENT, () => {
+  updateSecondaryPlayerScore();
+});
+/**
+ * listen to when the ball has gone to this player's end zone, and let the player know they scored
+ */
+gameEmitter.on(GAME_EVENTS.BALL_TO_PRIMARY_END, () => {
+  socketManager.emit(CLIENT_EVENTS.BALL_TO_PRIMARY_END);
+});
+
 

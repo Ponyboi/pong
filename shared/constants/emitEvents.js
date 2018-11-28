@@ -7,6 +7,12 @@ const CLIENT_EVENTS = {
 
   // ball went to an end zone
   BALL_TO_END: 'BALL_TO_END',
+
+  // ball went to primary player's end zone
+  BALL_TO_PRIMARY_END: 'BALL_TO_PRIMARY_END',
+
+  // ball went to secondary player's end zone
+  BALL_TO_SECONDARY_END: 'BALL_TO_SECONDARY_END',
 };
 
 /**
@@ -21,6 +27,12 @@ const SERVER_EVENTS = {
 
   // the ball is reset
   BALL_RESET: 'BALL_RESET',
+
+  // increase primary player's score
+  SCORE_PRIMARY_INCREMENT: 'SCORE_PRIMARY_INCREMENT',
+
+  // increase secondary player's score
+  SCORE_SECONDARY_INCREMENT: 'SCORE_SECONDARY_INCREMENT',
 };
 
 export {
