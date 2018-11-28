@@ -58,7 +58,7 @@ const primaryPlayer = new PlayerComponent({
   position: gameState.primaryPlayerPos,
 });
 primaryPlayer.updateState = () => {
-  updatePrimaryPlayerPositionState(primaryPlayer.getPosition());
+  updatePrimaryPlayerPositionState(primaryPlayer.position);
 };
 
 // opposing player
