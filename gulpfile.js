@@ -25,6 +25,8 @@ const WEBAPP_CHANGE_WATCH = [
   '}/**',
   './public/*.js',
   './public/**/*.js',
+  './shared/*.js',
+  './shared/**/*.js',
 ];
 // files to watch for in the server (which include the webapp)
 const SERVER_CHANGE_WATCH = [
