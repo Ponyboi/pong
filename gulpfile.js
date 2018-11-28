@@ -69,9 +69,14 @@ gulp.task("run-server-local", function() {
 
 // nodemon start server
 gulp.task('run-nodemon-server', function() {
-  nodemon({
+  var stream = nodemon({
     script: './build/server.js',
+    ignore: ['node_modules/', 'bundles/'],
+    watch: WATCH_CHANGE_FILES,
+    tasks: ['compile-webapp', 'compile-server']
   });
+
+  return stream;
 })
 
 // default
