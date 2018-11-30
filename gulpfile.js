@@ -111,6 +111,7 @@ gulp.task('run-nodemon-server', function() {
 gulp.task('dev-webapp', gulp.series('compile-webapp', 'webapp:watch', 'run-webapp-local'));
 gulp.task('dev-server', gulp.series('compile-server', 'run-nodemon-server'));
 gulp.task('development', gulp.series('compile-webapp', 'compile-server', 'run-nodemon-server'));
+gulp.task('production', gulp.series('compile-webapp', 'compile-server', 'run-nodemon-server'));
 
 /**
  * different 'default' task depending on settings
