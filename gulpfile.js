@@ -4,6 +4,7 @@ var nodemon = require('gulp-nodemon');
 var gulp = require('gulp');
 var opn = require('opn');
 var webpack = require('webpack-stream');
+var exec = require('child_process').exec;
 
 var appWebpackConfig = require('./webpack-app.config.js');
 var serverWebpackConfig = require('./webpack-server.config.js');
@@ -107,11 +108,19 @@ gulp.task('run-nodemon-server', function() {
   return stream;
 })
 
+gulp.task('run-production-server', function(cb) {
+  exec('node build/server.js', function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    cb(err);
+  });
+})
+
 // default
 gulp.task('dev-webapp', gulp.series('compile-webapp', 'webapp:watch', 'run-webapp-local'));
 gulp.task('dev-server', gulp.series('compile-server', 'run-nodemon-server'));
 gulp.task('development', gulp.series('compile-webapp', 'compile-server', 'run-nodemon-server'));
-gulp.task('production', gulp.series('compile-webapp', 'compile-server', 'run-nodemon-server'));
+gulp.task('production', gulp.series('compile-webapp', 'compile-server', 'run-production-server'));
 
 /**
  * different 'default' task depending on settings
