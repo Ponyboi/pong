@@ -16,9 +16,11 @@ import GAME_EVENTS from 'constants/gameEvents';
 import { GAME_SIZE } from 'constants/sizes';
 
 import {
-  BALL_VELOCITY_LIMITS,
   DEFAULT_BALL_SPEED,
+  BALL_VELOCITY_LIMITS,
+  DEFAULT_PLAYER_ACCELERATION,
   DEFAULT_PLAYER_SPEED,
+  PLAYER_VELOCITY_LIMITS,
 } from 'constants/physics';
 
 import {
@@ -54,6 +56,7 @@ const ball = new BallComponent({
 // active player
 const primaryPlayer = new PlayerComponent({
   position: gameState.primaryPlayerPos,
+  velocityLimits: PLAYER_VELOCITY_LIMITS,
 });
 primaryPlayer.updateState = () => {
   updatePrimaryPlayerPositionState(primaryPlayer.position);
@@ -195,12 +198,22 @@ function handleUpdateGameState(delta) {
   }
 
   // update player position
-  const playerSpeedDelta = DEFAULT_PLAYER_SPEED * delta;
-  if (gameState.primaryPlayerState === 'left') {
-    primaryPlayer.velocity.x = -playerSpeedDelta;
-  };
-  if (gameState.primaryPlayerState === 'right') {
-    primaryPlayer.velocity.x = playerSpeedDelta;
+  const playerAccelerationDelta = DEFAULT_PLAYER_ACCELERATION * delta;
+
+  if (gameState.primaryPlayerState === 'left' && primaryPlayer.canMove()) {
+    // give a little push if the player was originally going right
+    if (primaryPlayer.velocity.x > 0) {
+      primaryPlayer.velocity.subtractX(DEFAULT_PLAYER_SPEED);
+    }
+    primaryPlayer.velocity.subtractX(playerAccelerationDelta);
+    primaryPlayer.clampVelocity();
+  } else if (gameState.primaryPlayerState === 'right' && primaryPlayer.canMove()) {
+    // give a little push if the player was originally going left
+    if (primaryPlayer.velocity.x < 0) {
+      primaryPlayer.velocity.addX(DEFAULT_PLAYER_SPEED);
+    }
+    primaryPlayer.velocity.addX(playerAccelerationDelta);
+    primaryPlayer.clampVelocity();
   };
 
   // secondary player's position is from the game state

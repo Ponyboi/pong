@@ -20,6 +20,12 @@ class Player extends GameComponent {
       size: PADDLE_SIZE,
       ...options,
     });
+
+    /**
+     * time since this player last hit the wall
+     * @type {number}
+     */
+    this.recentlyHitWall = 0;
   };
   /** @override */
   render() {
@@ -62,16 +68,26 @@ class Player extends GameComponent {
   handleCollision() {
     const bounds = this.getBounds();
 
+    this.recentlyHitWall -= 1;
+
     // right
     if (bounds.right > GAME_BOUNDS.right) {
+      this.recentlyHitWall = 5;
       this.velocity.invertX();
     }
 
     // left
     if (bounds.left < GAME_BOUNDS.left) {
+      this.recentlyHitWall = 5;
       this.velocity.invertX();
     }
   };
+  /**
+   * @returns {boolean}
+   */
+  canMove() {
+    return this.recentlyHitWall <= 0;
+  }
 };
 
 export default Player;
