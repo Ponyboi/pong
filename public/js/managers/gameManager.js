@@ -76,4 +76,5 @@ gameEmitter.on(GAME_EVENTS.BALL_TO_PRIMARY_END, () => {
   socketManager.emit(CLIENT_EVENTS.BALL_TO_PRIMARY_END);
 });
 
+export default gameEmitter;
 
