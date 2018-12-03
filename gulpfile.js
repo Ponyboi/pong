@@ -1,5 +1,5 @@
 var os = require('os');
-var childProcess = require('child_process');
+var exec = require('child_process').exec;
 var nodemon = require('gulp-nodemon');
 var gulp = require('gulp');
 var opn = require('opn');
@@ -9,8 +9,34 @@ var appWebpackConfig = require('./webpack-app.config.js');
 var serverWebpackConfig = require('./webpack-server.config.js');
 
 const isDevEnv = process.env.NODE_ENV === 'development' || process.env.NODE_ENV !== 'production'; // todo: not 'production' is kinda hacky
-const browser = os.platform() === 'darwin' ? '/Applications/Google\ Chrome.app' : 'google-chrome';
+var browser = os.platform() === 'darwin' ? '/Applications/Google\ Chrome.app' : 'google-chrome';
+switch(os.platform())
+{
+  case 'aix':
 
+    break;
+  case 'darwin':
+    browser = '/Applications/Google\ Chrome.app';
+    break;
+  case 'freebsd':
+
+    break;
+  case 'linux':
+
+    break;
+  case 'openbsd':
+
+    break;
+  case 'sunos':
+
+    break;
+  case 'win32':
+    browser = "Chrome";
+    break;
+  default:
+    browser = 'google-chrome';
+    break;
+}
 // files to watch for in the web app
 const WEBAPP_CHANGE_WATCH = [
   '!**/{' + [
