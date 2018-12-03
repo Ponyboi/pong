@@ -22,9 +22,7 @@
     "squirejs": "^0.2.1",
     "underscore": "^1.9.1",
     "yarn": "^1.10.1",
-    "yy-intersects": "^1.0.8"
-  },
-  "devDependencies": {
+    "yy-intersects": "^1.0.8",
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
@@ -37,6 +35,9 @@
     "webpack-cli": "^3.1.2",
     "webpack-node-externals": "^1.7.2",
     "webpack-stream": "^5.1.1"
+  },
+  "devDependencies": {
+
   },
   "main": "main.js",
   "scripts": {
