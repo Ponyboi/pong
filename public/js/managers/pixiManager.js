@@ -199,22 +199,34 @@ function handleUpdateGameState(delta) {
 
   // update player position
   const playerAccelerationDelta = DEFAULT_PLAYER_ACCELERATION * delta;
+  const bounds = primaryPlayer.getBounds();
+  if (gameState.primaryPlayerState === 'left') {
+    if (primaryPlayer.canMove()) {
+      // give a little push if the player was originally going right
+      if (primaryPlayer.velocity.x > 0) {
+        primaryPlayer.velocity.subtractX(DEFAULT_PLAYER_SPEED);
+      }
+      primaryPlayer.velocity.subtractX(playerAccelerationDelta);
+      primaryPlayer.clampVelocity();
+    } else if (bounds.right >= GAME_BOUNDS.right) {
+      primaryPlayer.velocity.subtractX(playerAccelerationDelta);
+      primaryPlayer.clampVelocity();
+    }
 
-  if (gameState.primaryPlayerState === 'left' && primaryPlayer.canMove()) {
-    // give a little push if the player was originally going right
-    if (primaryPlayer.velocity.x > 0) {
-      primaryPlayer.velocity.subtractX(DEFAULT_PLAYER_SPEED);
+  } else if (gameState.primaryPlayerState === 'right') {
+    if (primaryPlayer.canMove()) {
+      // give a little push if the player was originally going left
+      if (primaryPlayer.velocity.x < 0) {
+        primaryPlayer.velocity.addX(DEFAULT_PLAYER_SPEED);
+      }
+      primaryPlayer.velocity.addX(playerAccelerationDelta);
+      primaryPlayer.clampVelocity();
+    } else if (bounds.left <= GAME_BOUNDS.left) {
+      primaryPlayer.velocity.addX(playerAccelerationDelta);
+      primaryPlayer.clampVelocity();
     }
-    primaryPlayer.velocity.subtractX(playerAccelerationDelta);
-    primaryPlayer.clampVelocity();
-  } else if (gameState.primaryPlayerState === 'right' && primaryPlayer.canMove()) {
-    // give a little push if the player was originally going left
-    if (primaryPlayer.velocity.x < 0) {
-      primaryPlayer.velocity.addX(DEFAULT_PLAYER_SPEED);
-    }
-    primaryPlayer.velocity.addX(playerAccelerationDelta);
-    primaryPlayer.clampVelocity();
   };
+  
 
   // secondary player's position is from the game state
   secondaryPlayer.position = gameState.secondaryPlayerPos;
