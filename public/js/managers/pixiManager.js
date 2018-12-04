@@ -219,6 +219,18 @@ function handleUpdateGameState(delta) {
   // secondary player's position is from the game state
   secondaryPlayer.position = gameState.secondaryPlayerPos;
 };
+/**
+ * pause the ticker
+ */
+function pause() {
+  pixiApp.ticker.stop();
+};
+/**
+ * unpause the ticker
+ */
+function unpause() {
+  pixiApp.ticker.start();
+};
 
 // finally - start the app
 initApp();
@@ -228,4 +240,6 @@ appInitUpdate();
 export default pixiApp;
 export {
   resetBallToCenter,
+  pause,
+  unpause,
 };
