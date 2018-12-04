@@ -28,7 +28,7 @@ export function onKeyDown(e) {
     return;
   };
 
-  if (keycode === KEY.P || keycode === KEY.ESC) {
+  if (keycode === KEY.P || keycode === KEY.ESCAPE) {
     inputEmitter.emit('pauseDown');
     return;
   };

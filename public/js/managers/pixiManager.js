@@ -8,9 +8,11 @@ import gameState, {
 } from 'data/gameState';
 
 import Point from '@studiomoniker/point';
-import PlayerComponent from 'components/PlayerComponent';
+
 import BallComponent from 'components/BallComponent';
+import PlayerComponent from 'components/PlayerComponent';
 import ScoreComponent from 'components/ScoreComponent';
+import TextComponent from 'components/TextComponent';
 
 import GAME_EVENTS from 'constants/gameEvents';
 import { GAME_SIZE } from 'constants/sizes';
@@ -25,6 +27,7 @@ import {
 
 import {
   BALL_DEFAULT_POS,
+  GAME_CENTER_POS,
   GAME_BOUNDS,
   PRIMARY_SCORE_POS,
   SECONDARY_SCORE_POS,
@@ -81,6 +84,11 @@ const secondaryScoreComponent = new ScoreComponent({
 const fieldView = createFieldView();
 // pause menu
 const pauseMenu = createPauseMenu();
+const pauseText = new TextComponent('Paused', {
+  position: new Point(GAME_CENTER_POS.x, GAME_CENTER_POS.y),
+  fontSize: 32,
+});
+
 /**
  * puts the ball back in the middle and overrides velocity
  *  that means we should update the gameState ball's velocity before calling this
@@ -115,7 +123,9 @@ function initApp() {
 
   // draw pause menu
   stage.addChild(pauseMenu);
-  // ... but turn it off
+  stage.addChild(pauseText);
+
+  // ... but turn it off first
   togglePauseMenu(false);
 };
 /**
@@ -126,10 +136,12 @@ function initApp() {
 export function togglePauseMenu(shouldShow) {
   if (typeof shouldShow === 'boolean') {
     pauseMenu.visible = shouldShow;
+    pauseText.visible = shouldShow;
     return;
   }
 
   pauseMenu.visible = !pauseMenu.visible;
+  pauseText.visible = !pauseText.visible;
 }
 /**
  * add a ticker to constantly update the game

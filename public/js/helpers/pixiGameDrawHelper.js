@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import Point from '@studiomoniker/point';
 
 import { DASH_SIZE, GAME_SIZE, PADDLE_SIZE } from 'constants/sizes';
 import {
@@ -48,7 +49,7 @@ export function createPauseMenu() {
   const menuHeight = 250;
 
   menuGraphics.beginFill(0x2d2e31);
-  menuGraphics.alpha = 0.8;
+  menuGraphics.alpha = 0.9;
 
   menuGraphics.drawRect(GAME_CENTER_POS.x - (menuWidth / 2), GAME_CENTER_POS.y - (menuHeight / 2), menuWidth, menuHeight);
 
