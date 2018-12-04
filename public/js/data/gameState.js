@@ -15,6 +15,9 @@ import {
 
 // the base state of things
 const defaultState = {
+  /** @type {boolean} */
+  isPaused: false,
+
   /** @type {Point} */
   ballPos: BALL_DEFAULT_POS,
   /** @type {Point} */
@@ -35,7 +38,20 @@ const defaultState = {
 
 // clone default state to use as our default
 const gameState = {...defaultState};
+/**
+ * sets the game's pause state
+ *  if you don't pass in a param then it will just toggle
+ *
+ * @params {boolean} [shouldPause]
+ */
+export function togglePauseState(shouldPause) {
+  if (typeof shouldPause === 'boolean') {
+    gameState.isPaused = shouldPause;
+    return;
+  }
 
+  gameState.isPaused = !gameState.isPaused;
+};
 /**
  * @params {Point} newState
  */
