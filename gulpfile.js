@@ -23,6 +23,8 @@ const WEBAPP_CHANGE_WATCH = [
     'node_modules',
   ].join(',') +
   '}/**',
+  './public/index.html',
+  '*.css',
   './public/*.js',
   './public/**/*.js',
   './shared/*.js',

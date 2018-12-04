@@ -20,3 +20,18 @@ body {
   font-family: 'Roboto';
   padding: 5px;
 }
+
+#app-body {
+  display: flex;
+  flex-direction: row;
+}
+
+#app-body-left {
+  flex: 0 0 auto;
+  width: 100px;
+
+  padding: 5px;
+
+  border: 2px solid #2d2d2d;
+  border-radius: 5px;
+}

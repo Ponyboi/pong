@@ -115,6 +115,11 @@ function initApp() {
  */
 function appInitUpdate() {
   pixiApp.ticker.add((delta) => {
+    // no updating if game is paused
+    if (gameState.isPaused) {
+      return;
+    }
+
     // handle state changes
     handleUpdateGameState(delta);
 
@@ -220,15 +225,16 @@ function handleUpdateGameState(delta) {
   secondaryPlayer.position = gameState.secondaryPlayerPos;
 };
 /**
- * pause the ticker
+ * completely stop the ticker
+ *  (different from pause, because nothing will update)
  */
-function pause() {
+function freeze() {
   pixiApp.ticker.stop();
 };
 /**
- * unpause the ticker
+ * un-stop the ticker freeze
  */
-function unpause() {
+function unfreeze() {
   pixiApp.ticker.start();
 };
 
@@ -240,6 +246,6 @@ appInitUpdate();
 export default pixiApp;
 export {
   resetBallToCenter,
-  pause,
-  unpause,
+  freeze,
+  unfreeze,
 };
