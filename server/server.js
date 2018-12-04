@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 666
 // --- create web server
 const app = express();
 app.use(express.static('build'));
-const server = http.Server(app)
+const server = http.Server(app);
 
 server.listen(PORT, () => {
   console.log(`Server listening at - http://localhost:${PORT}`);

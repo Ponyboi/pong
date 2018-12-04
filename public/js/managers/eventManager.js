@@ -6,6 +6,7 @@ import { resetBallToCenter } from 'managers/pixiManager';
 import socketManager from 'managers/socketManager';
 
 import gameState, {
+  togglePauseState,
   updatePrimaryPlayerActionState,
   updateBallVelocityState,
   updateSecondaryPlayerPositionState,
@@ -34,6 +35,9 @@ inputEmitter.on('rightUp', () => {
   if (gameState.primaryPlayerState === 'right') {
     updatePrimaryPlayerActionState(null);
   }
+});
+inputEmitter.on('pauseDown', () => {
+  togglePauseState();
 });
 
 /**

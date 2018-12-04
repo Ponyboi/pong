@@ -1,9 +1,6 @@
 import EventEmitter from 'events';
 
 import { SERVER_EVENTS } from 'constants/emitEvents';
-import gameState, {
-  togglePauseState,
-} from 'data/gameState';
 
 import socketManager from 'managers/socketManager';
 
@@ -27,22 +24,3 @@ function handlePlayersChanged(data = {}) {
   const canvas = document.getElementById('app-header');
   canvas.innerText = `${playerCount} connected player(s)`;
 };
-
-/**
- *
- */
-const pauseBtn = document.getElementById('pause-btn');
-pauseBtn.addEventListener('click', togglePause);
-/**
- *
- */
-function togglePause() {
-  togglePauseState();
-
-  const nowPaused = gameState.isPaused;
-  if (nowPaused) {
-    pauseBtn.innerText = 'Unpause';
-  } else {
-    pauseBtn.innerText = 'Pause';
-  }
-}
