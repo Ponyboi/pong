@@ -31,7 +31,7 @@ import {
 } from 'constants/positions';
 
 import { getCanvasContainer } from 'helpers/canvasHelper';
-import { createFieldView, drawScores } from 'helpers/pixiGameDrawHelper';
+import { createFieldView, createPauseMenu } from 'helpers/pixiGameDrawHelper';
 
 import { gameEmitter } from 'managers/gameManager';
 
@@ -77,6 +77,10 @@ const secondaryScoreComponent = new ScoreComponent({
   position: SECONDARY_SCORE_POS,
   text: gameState.secondaryPlayerScore,
 });
+// field
+const fieldView = createFieldView();
+// pause menu
+const pauseMenu = createPauseMenu();
 /**
  * puts the ball back in the middle and overrides velocity
  *  that means we should update the gameState ball's velocity before calling this
@@ -94,7 +98,6 @@ function initApp() {
   const stage = pixiApp.stage;
 
   // draw the field
-  const fieldView = createFieldView();
   stage.addChild(fieldView);
 
   // draw scores
@@ -109,13 +112,31 @@ function initApp() {
 
   // ball
   stage.addChild(ball.view);
+
+  // draw pause menu
+  stage.addChild(pauseMenu);
+  // ... but turn it off
+  togglePauseMenu(false);
 };
+/**
+ * turns on the pause menu stuff
+ *
+ * @param {boolean} [shouldShow]
+ */
+export function togglePauseMenu(shouldShow) {
+  if (typeof shouldShow === 'boolean') {
+    pauseMenu.visible = shouldShow;
+    return;
+  }
+
+  pauseMenu.visible = !pauseMenu.visible;
+}
 /**
  * add a ticker to constantly update the game
  */
 function appInitUpdate() {
   pixiApp.ticker.add((delta) => {
-    // no updating if game is paused
+    // don't update gameObjects if paused
     if (gameState.isPaused) {
       return;
     }

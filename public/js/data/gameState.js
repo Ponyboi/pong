@@ -13,6 +13,8 @@ import {
   SECONDARY_PLAYER_DEFAULT_POS,
 } from 'constants/positions';
 
+import { togglePauseMenu } from 'managers/pixiManager';
+
 // the base state of things
 const defaultState = {
   /** @type {boolean} */
@@ -47,10 +49,12 @@ const gameState = {...defaultState};
 export function togglePauseState(shouldPause) {
   if (typeof shouldPause === 'boolean') {
     gameState.isPaused = shouldPause;
+    togglePauseMenu(shouldPause);
     return;
   }
 
   gameState.isPaused = !gameState.isPaused;
+  togglePauseMenu(gameState.isPaused);
 };
 /**
  * @params {Point} newState

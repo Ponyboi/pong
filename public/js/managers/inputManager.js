@@ -27,6 +27,11 @@ export function onKeyDown(e) {
     inputEmitter.emit('rightDown');
     return;
   };
+
+  if (keycode === KEY.P || keycode === KEY.ESC) {
+    inputEmitter.emit('pauseDown');
+    return;
+  };
 };
 
 /**
