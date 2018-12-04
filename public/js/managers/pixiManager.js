@@ -126,7 +126,8 @@ function initApp() {
   stage.addChild(pauseText);
 
   // ... but turn it off first
-  togglePauseMenu(false);
+  togglePauseMenu(true);
+  gameState.isPaused = true;
 };
 /**
  * turns on the pause menu stuff

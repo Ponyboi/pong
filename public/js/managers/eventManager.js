@@ -38,6 +38,7 @@ inputEmitter.on('rightUp', () => {
 });
 inputEmitter.on('pauseDown', () => {
   togglePauseState();
+  socketManager.emit(CLIENT_EVENTS.PAUSE_STATE_TOGGLE, gameState.isPaused);
 });
 
 /**
@@ -77,4 +78,17 @@ socketManager.on(SERVER_EVENTS.SCORE_SECONDARY_INCREMENT, () => {
  */
 gameEmitter.on(GAME_EVENTS.BALL_TO_PRIMARY_END, () => {
   socketManager.emit(CLIENT_EVENTS.BALL_TO_PRIMARY_END);
+});
+
+socketManager.on(SERVER_EVENTS.PAUSE_STATE_TOGGLE, (pauseState = {}) => {
+  togglePauseState(pauseState);
+});
+
+socketManager.on(SERVER_EVENTS.PLAYERS_CHANGED, (data = {}) => {
+  const { playerCount } = data; 
+  if (playerCount >= 2) {
+    togglePauseState(false);
+  } else {
+    togglePauseState(true);
+  }
 });

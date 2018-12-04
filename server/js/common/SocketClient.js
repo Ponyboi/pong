@@ -27,6 +27,8 @@ class SocketClient {
     this.socket.on(CLIENT_EVENTS.BALL_TO_PRIMARY_END, this.handleBallToPrimaryEnd.bind(this));
 
     this.socket.on(CLIENT_EVENTS.GAMESTATE_SEND, this.handleGamestateSend.bind(this));
+
+    this.socket.on(CLIENT_EVENTS.PAUSE_STATE_TOGGLE, this.handlePauseStateToggle.bind(this));
   }
   /**
    * client has told us ball hit an end
@@ -88,6 +90,9 @@ class SocketClient {
 
     this.socket.broadcast.emit(SERVER_EVENTS.GAMESTATE_CHANGED, newState);
   };
+  handlePauseStateToggle(data) {
+    this.socket.broadcast.emit(SERVER_EVENTS.PAUSE_STATE_TOGGLE, data);
+  }
 }
 
 export default SocketClient;

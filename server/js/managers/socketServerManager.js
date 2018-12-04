@@ -33,7 +33,7 @@ function listen(server) {
     socket.on('disconnect', () => {
       delete clients[socketId];
 
-      socketServer.emit('playerUpdate', {
+      socketServer.emit(SERVER_EVENTS.PLAYERS_CHANGED, {
         playerCount: getClientCount(),
       });
     });

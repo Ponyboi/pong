@@ -13,6 +13,7 @@ const CLIENT_EVENTS = {
 
   // ball went to secondary player's end zone
   BALL_TO_SECONDARY_END: 'BALL_TO_SECONDARY_END',
+  PAUSE_STATE_TOGGLE: 'PAUSE_STATE_TOGGLE',
 };
 
 /**
@@ -33,6 +34,7 @@ const SERVER_EVENTS = {
 
   // increase secondary player's score
   SCORE_SECONDARY_INCREMENT: 'SCORE_SECONDARY_INCREMENT',
+  PAUSE_STATE_TOGGLE: 'PAUSE_STATE_TOGGLE',
 };
 
 export {
